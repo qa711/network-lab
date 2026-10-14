@@ -1,0 +1,17 @@
+---
+- name: Interface Description (IOS-XR)
+  hosts: XR
+  gather_facts: false
+  connection: ansible.netcommon.network_cli
+  vars:
+    ansible_network_os: cisco.iosxr.iosxr
+    ansible_network_cli_ssh_type: paramiko
+    ansible_user: "{{ lookup('env', 'LAB_USER') }}"
+    ansible_password: "{{ lookup('env', 'LAB_PASS') }}"
+  tasks:
+    - name: Config Settings
+      cisco.iosxr.iosxr_config:
+        lines:
+          - description Configured by Q
+        parents: interface GigabitEthernet0/0/0/0
+      register: print_output

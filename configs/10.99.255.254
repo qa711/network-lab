@@ -1,0 +1,185 @@
+! -----------------------------------------------------------------------------
+! 0/0/CPU0        RP(Active)      N/A             IOS XR RUN      PWR,NSHUT,MON
+!! Last configuration change at Fri Jul  3 17:22:03 2026 by admin
+!
+hostname CE2
+domain name lab.local
+vrf DMZ
+ address-family ipv4 unicast
+ !
+!
+vrf PLc
+ address-family ipv4 unicast
+  import route-target
+   65000:2
+  !
+  export route-target
+   65000:2
+  !
+ !
+!
+vrf SCADA
+ address-family ipv4 unicast
+  import route-target
+   65000:1
+  !
+  export route-target
+   65000:1
+  !
+ !
+!
+vrf CISCO-CORP
+ address-family ipv4 unicast
+  import route-target
+   65000:3
+  !
+  export route-target
+   65000:3
+  !
+ !
+!
+snmp-server host 10.99.0.12 traps version 2c <SNMP-COMMUNITY>
+snmp-server host 10.99.0.12 informs version 2c <SNMP-COMMUNITY>
+snmp-server view NMSVIEW iso included
+snmp-server community <SNMP-COMMUNITY> RO IPv4 SNMP-NMS
+snmp-server contact <CONTACT>
+snmp-server location Core
+interface Loopback0
+ ipv4 address 200.200.2.200 255.255.255.255
+!
+interface Loopback99
+ vrf DMZ
+ ipv4 address 10.99.255.254 255.255.255.255
+!
+interface MgmtEth0/0/CPU0/0
+ shutdown
+!
+interface GigabitEthernet0/0/0/0.10
+ description CSW-2-SCADA
+ vrf SCADA
+ ipv4 address 10.150.20.1 255.255.255.252
+ encapsulation dot1q 69
+!
+interface GigabitEthernet0/0/0/0.20
+ description CSW-2-PLc
+ vrf PLc
+ ipv4 address 10.250.20.1 255.255.255.252
+ encapsulation dot1q 70
+!
+interface GigabitEthernet0/0/0/0.30
+ description CSW-2-CISCO-CORP
+ vrf CISCO-CORP
+ ipv4 address 10.60.20.1 255.255.255.252
+ encapsulation dot1q 98
+!
+interface GigabitEthernet0/0/0/0.40
+ description CSW2-DMZ
+ vrf DMZ
+ ipv4 address 10.60.90.2 255.255.255.252
+ encapsulation dot1q 99
+!
+interface GigabitEthernet0/0/0/1.10
+ description PE-2-SCADA
+ vrf SCADA
+ ipv4 address 10.150.10.1 255.255.255.252
+ encapsulation dot1q 69
+!
+interface GigabitEthernet0/0/0/1.20
+ description PE-2-PLc
+ vrf PLc
+ ipv4 address 10.250.10.1 255.255.255.252
+ encapsulation dot1q 70
+!
+interface GigabitEthernet0/0/0/1.30
+ description PE-2-CISCO-CORP
+ vrf CISCO-CORP
+ ipv4 address 10.60.10.1 255.255.255.252
+ encapsulation dot1q 98
+!
+interface GigabitEthernet0/0/0/2
+ shutdown
+!
+router ospf 69
+ address-family ipv4 unicast
+ area 0
+ !
+ vrf SCADA
+  router-id 200.200.2.200
+  address-family ipv4 unicast
+  area 0
+   range 10.69.0.0/27 advertise
+   range 10.150.10.0/30 advertise
+   range 10.150.20.0/30 advertise
+   range 200.200.2.200/32 advertise
+   interface GigabitEthernet0/0/0/0.10
+    network point-to-point
+   !
+   interface GigabitEthernet0/0/0/1.10
+    network point-to-point
+   !
+  !
+ !
+!
+router ospf 70
+ address-family ipv4 unicast
+ area 0
+ !
+ vrf PLc
+  router-id 200.200.2.200
+  address-family ipv4 unicast
+  area 0
+   range 10.70.0.0/27 advertise
+   range 10.250.10.0/30 advertise
+   range 10.250.20.0/30 advertise
+   range 200.200.2.200/32 advertise
+   interface GigabitEthernet0/0/0/0.20
+    network point-to-point
+   !
+   interface GigabitEthernet0/0/0/1.20
+    network point-to-point
+   !
+  !
+ !
+!
+router ospf 71
+ address-family ipv4 unicast
+ area 0
+ !
+ vrf CISCO-CORP
+  router-id 200.200.2.200
+  address-family ipv4 unicast
+  area 0
+   range 10.60.10.0/30 advertise
+   range 10.60.20.0/30 advertise
+   range 10.98.0.0/24 advertise
+   range 200.200.2.200/32 advertise
+   interface GigabitEthernet0/0/0/0.30
+    network point-to-point
+   !
+   interface GigabitEthernet0/0/0/1.30
+    network point-to-point
+   !
+  !
+ !
+!
+router ospf 72
+ address-family ipv4 unicast
+ vrf DMZ
+  router-id 200.200.2.200
+  address-family ipv4 unicast
+  area 0
+   range 10.60.90.0/30 advertise
+   range 10.99.255.254/32 advertise
+   interface Loopback99
+   !
+   interface GigabitEthernet0/0/0/0.40
+    network point-to-point
+   !
+  !
+ !
+!
+ssh client vrf DMZ
+ssh server v2
+ssh server vrf DMZ
+end
+

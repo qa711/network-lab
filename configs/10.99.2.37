@@ -1,0 +1,244 @@
+! Cisco IOS Software, Linux Software (I86BI_LINUXL2-ADVENTERPRISEK9-M), Version 15.2(CML_NIGHTLY_20190423)FLO_DSGS7, EARLY DEPLOYMENT DEVELOPMENT BUILD, synced to  V152_6_0_81_E
+! 
+! Image: Software: I86BI_LINUXL2-ADVENTERPRISEK9-M, 15.2(CML_NIGHTLY_20190423)FLO_DSGS7, EARLY DEPLOYMENT DEVELOPMENT BUILD, synced to  V152_6_0_81_E
+! Image: Compiled: Tue 23-Apr-19 02:38 by mmen
+! Image: unix:/opt/unetlab/addons/iol/bin/i86bi_linux_l2-adventerprisek9-ms.SS
+! Chassis type: Unix
+! Memory: main 921491K
+! Processor ID: 67109456
+! CPU: Intel-x86
+! Memory: nvram 1024K
+! 
+! VTP: VTP Version capable             : 1 to 3
+! VTP: VTP version running             : 1
+! VTP: VTP Domain Name                 : 
+! VTP: VTP Pruning Mode                : Disabled
+! VTP: VTP Traps Generation            : Disabled
+! VTP: Device ID                       : aabb.cc82.5000
+! VTP: Feature VLAN:
+! VTP: --------------
+! VTP: VTP Operating Mode                : Transparent
+! VTP: Maximum VLANs supported locally   : 1005
+! VTP: Number of existing VLANs          : 13
+! VTP: Configuration Revision            : 0
+! VTP: MD5 digest                        : 0xF4 0xE3 0x19 0xF1 0x6B 0x9B 0xCD 0x0C 
+! VTP:                                     0xC6 0xB5 0x6F 0x0C 0x84 0x7C 0x0D 0xFE 
+! 
+!
+! Last configuration change at 18:28:38 UTC Thu Aug 6 2026 by netops-admin
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+service compress-config
+!
+hostname Q-SW37
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+username admin privilege 15 password <REDACTED>
+aaa new-model
+!
+!
+aaa group server tacacs+ TAC-GROUP
+ server name NMS-TAC
+!
+aaa group server radius RAD-GROUP
+ server name NMS-RAD
+!
+aaa group server tacacs+ ISE-GROUP
+ server name ISE-TAC
+!
+aaa authentication login default local
+aaa authentication login VTY-AUTH group TAC-GROUP local
+aaa authentication login VTY-OTP group RAD-GROUP local
+aaa authentication login VTY-ISE group ISE-GROUP local
+aaa authorization exec VTY-AUTHZ group TAC-GROUP local 
+aaa authorization exec VTY-OTP-AUTHZ group RAD-GROUP local 
+aaa authorization exec VTY-ISE-AUTHZ group ISE-GROUP local 
+aaa authorization commands 1 CMD-AUTHZ1 group ISE-GROUP local 
+aaa authorization commands 15 CMD-AUTHZ group ISE-GROUP local 
+aaa accounting exec VTY-ACCT start-stop group TAC-GROUP
+aaa accounting commands 15 CMD-ACCT start-stop group ISE-GROUP
+!
+!
+!
+!
+!
+!
+aaa session-id common
+!
+!
+!
+!
+!
+vtp mode transparent
+!
+!
+!
+ip domain-name lab.internal
+ip name-server 10.99.0.12
+ip cef
+no ipv6 cef
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+!
+vlan 10
+ name Phones
+!
+vlan 20
+ name PCs
+!
+vlan 30
+ name Servers
+!
+vlan 40
+ name Wi-Fi
+!
+vlan 69
+ name SCADA
+!
+vlan 70
+ name PLc
+!
+vlan 98
+ name CISCO-CORP
+!
+vlan 99
+ name DMZ-SERVICES
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface Ethernet0/1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface Ethernet0/2
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface Ethernet0/3
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface Ethernet1/0
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface Ethernet1/1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface Ethernet1/2
+!
+interface Ethernet1/3
+!
+interface Ethernet2/0
+!
+interface Ethernet2/1
+!
+interface Ethernet2/2
+!
+interface Ethernet2/3
+!
+interface Ethernet3/0
+!
+interface Ethernet3/1
+!
+interface Ethernet3/2
+!
+interface Ethernet3/3
+!
+interface Vlan99
+ ip address 10.99.2.37 255.255.255.0
+!
+ip forward-protocol nd
+!
+ip http server
+ip http secure-server
+!
+ip route 0.0.0.0 0.0.0.0 10.99.2.1
+ip tacacs source-interface Vlan99
+ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+!
+ip access-list standard SNMP-NMS
+ permit 10.99.0.12
+!
+!
+ip radius source-interface Vlan99 
+!
+!
+snmp-server group nms v3 priv 
+snmp-server group NMSGROUP v3 priv 
+snmp-server view NMSVIEW iso included
+snmp-server community <SNMP-COMMUNITY> RO SNMP-NMS
+snmp-server trap-source Vlan99
+snmp-server source-interface informs Vlan99
+snmp-server location Q
+snmp-server contact <CONTACT>
+snmp-server enable traps snmp linkdown linkup
+snmp-server enable traps ospf state-change
+snmp-server enable traps ospf errors
+snmp-server enable traps ospf retransmit
+snmp-server enable traps ospf lsa
+snmp-server enable traps ospf cisco-specific state-change nssa-trans-change
+snmp-server enable traps ospf cisco-specific state-change shamlink interface
+snmp-server enable traps ospf cisco-specific state-change shamlink neighbor
+snmp-server enable traps ospf cisco-specific errors
+snmp-server enable traps ospf cisco-specific retransmit
+snmp-server enable traps ospf cisco-specific lsa
+snmp-server enable traps hsrp
+snmp-server enable traps event-manager
+snmp-server host 10.99.0.12 version 2c <SNMP-COMMUNITY> 
+tacacs server NMS-TAC
+ address ipv4 10.99.0.12
+ key <REDACTED-KEY>
+tacacs server ISE-TAC
+ address ipv4 10.99.0.50
+ key <REDACTED-KEY>
+!
+!
+radius server NMS-RAD
+ address ipv4 10.99.0.12 auth-port 1812 acct-port 1813
+ key <REDACTED-KEY>
+!
+!
+control-plane
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ authorization exec VTY-ISE-AUTHZ
+ login authentication VTY-ISE
+ transport input ssh
+!
+!
+!
+end
+

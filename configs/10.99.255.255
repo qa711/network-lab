@@ -1,0 +1,341 @@
+! Cisco IOS XE Software, Version 16.12.03
+! 
+! Image: Software: X86_64_LINUX_IOSD-UCMK9-M, 16.12.3, RELEASE SOFTWARE (fc5)
+! Image: Compiled: Mon 09-Mar-20 22:05 by mcpre
+! Image: bootflash:packages.conf
+! Chassis type: CSR1000V
+! Memory: main 2080408K/3075K
+! Processor ID: 92FMQDCMGPU
+! CPU: VXE
+! Memory: nvram 32768K
+! 
+! VTP: show vtp status
+! 
+! NAME: "Chassis", DESCR: "Cisco CSR1000V Chassis"
+! PID: CSR1000V          , VID: V00  , SN: 92FMQDCMGPU
+! 
+! NAME: "module R0", DESCR: "Cisco CSR1000V Route Processor"
+! PID: CSR1000V          , VID: V00  , SN: JAB1303001C
+! 
+! NAME: "module F0", DESCR: "Cisco CSR1000V Embedded Services Processor"
+! PID: CSR1000V          , VID:      , SN:            
+! 
+! 
+!
+! Last configuration change at 20:08:21 UTC Tue Aug 18 2026 by NETCONF
+!
+version 16.12
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+service call-home
+platform qfp utilization monitor load 80
+platform punt-keepalive disable-kernel-core
+platform inspect match-statistics per-filter
+platform console serial
+!
+hostname QSDWAN-Edge
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition 65528
+ !
+ address-family ipv4
+ exit-address-family
+!
+logging buffered 262144
+no logging rate-limit
+!
+aaa new-model
+!
+!
+aaa group server tacacs+ ISE-GROUP
+ server name ISE-TAC
+ ip vrf forwarding DMZ
+ ip tacacs source-interface Loopback99
+!
+aaa group server tacacs+ TAC-GROUP
+ server name NMS-TAC
+ ip vrf forwarding DMZ
+ ip tacacs source-interface Loopback99
+!
+aaa group server radius RAD-GROUP
+ server name NMS-RAD
+ ip vrf forwarding DMZ
+ ip radius source-interface Loopback99
+!
+aaa authentication login default local
+aaa authentication login VTY-AUTH group TAC-GROUP local
+aaa authentication login VTY-ISE group ISE-GROUP local
+aaa authentication login VTY-OTP group RAD-GROUP local
+aaa authorization exec default local 
+aaa authorization exec VTY-AUTHZ group TAC-GROUP local 
+aaa authorization exec VTY-ISE-AUTHZ group ISE-GROUP local 
+aaa authorization exec VTY-OTP-AUTHZ group RAD-GROUP local 
+aaa authorization commands 1 CMD-AUTHZ1 group ISE-GROUP local 
+aaa authorization commands 15 CMD-AUTHZ group ISE-GROUP local 
+aaa accounting exec VTY-ACCT start-stop group TAC-GROUP
+aaa accounting commands 15 CMD-ACCT start-stop group ISE-GROUP
+!
+!
+!
+!
+!
+aaa session-id common
+call-home
+ ! If contact email address in call-home is configured as sch-smart-licensing@cisco.com
+ ! the email address configured in Cisco Smart License Portal will be used as contact email address to send SCH notifications.
+ contact-email-addr sch-smart-licensing@cisco.com
+ profile "CiscoTAC-1"
+  active
+fhrp version vrrp v3
+no ip source-route
+!
+ip vrf DMZ
+!
+!
+!
+!
+!
+!
+!
+ip domain name lab.internal
+no ip dhcp use class
+!
+!
+!
+no ip igmp ssm-map query dns
+login on-success log
+ipv6 unicast-routing
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+! 
+! 
+! 
+! 
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+crypto pki trustpoint TP-self-signed-2477170013
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-2477170013
+ revocation-check none
+ rsakeypair TP-self-signed-2477170013
+!
+crypto pki trustpoint SLA-TrustPoint
+ enrollment pkcs12
+ revocation-check crl
+!
+!
+  <CERTIFICATE-REDACTED>
+  <CERTIFICATE-REDACTED>
+  <CERTIFICATE-REDACTED>
+  <CERTIFICATE-REDACTED>
+!
+license udi pid CSR1000V sn <SERIAL>
+diagnostic bootup level minimal
+memory free low-watermark processor 72347
+!
+!
+spanning-tree extend system-id
+!
+username admin privilege 15 secret <REDACTED>
+!
+redundancy
+!
+!
+!
+no crypto ikev2 diagnose error
+!
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+! 
+! 
+!
+!
+interface Loopback99
+ description LOOOP
+ ip vrf forwarding DMZ
+ ip address 10.99.255.255 255.255.255.255
+!
+interface Loopback65528
+ vrf forwarding 65528
+ ip address 192.168.1.1 255.255.255.255
+!
+interface Tunnel1
+ ip unnumbered GigabitEthernet1
+ tunnel source GigabitEthernet1
+ tunnel mode sdwan
+!
+interface GigabitEthernet1
+ ip address 192.168.20.4 255.255.255.0
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet2
+ description Q-EDGE
+ ip address 10.80.0.33 255.255.255.252
+ ip ospf network point-to-point
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet2.99
+ description MGMTto-DMZ
+ encapsulation dot1Q 99
+ ip vrf forwarding DMZ
+ ip address 10.99.10.17 255.255.255.252
+ ip mtu 1450
+!
+interface GigabitEthernet3
+ no ip address
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet4
+ no ip address
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+router omp
+!
+router ospf 1
+ network 10.80.0.32 0.0.0.3 area 0
+!
+ip forward-protocol nd
+ip http server
+ip http secure-server
+!
+ip nat route vrf 65528 0.0.0.0 0.0.0.0 global
+no ip nat service skinny tcp port 2000
+no ip nat service sip tcp port 5060
+no ip nat service sip udp port 5060
+no ip nat service H225
+no ip nat service ras
+no ip nat service rtsp udp
+no ip nat service rtsp tcp
+no ip nat service dns tcp
+no ip nat service dns udp
+no ip nat service netbios-ns tcp
+no ip nat service netbios-ns udp
+no ip nat service netbios-ssn
+no ip nat service netbios-dgm
+no ip nat service ldap
+no ip nat service sunrpc udp
+no ip nat service sunrpc tcp
+no ip nat service msrpc tcp
+no ip nat service tftp
+no ip nat service rcmd
+no ip nat service pptp
+no ip nat service ftp
+no ip nat service gatekeeper
+no ip nat service dns-reset-ttl
+ip route 172.16.0.0 255.255.255.0 192.168.20.1
+ip route vrf DMZ 10.0.0.0 255.0.0.0 10.99.10.18
+ip ssh version 2
+ip ssh client algorithm encryption aes128-ctr aes256-ctr
+ip scp server enable
+!
+!
+!
+!
+snmp-server group nms v3 priv 
+snmp-server group NMSGROUP v3 priv 
+snmp-server view NMSVIEW iso included
+snmp-server community <SNMP-COMMUNITY> RO SNMP-NMS
+snmp-server location Q
+snmp-server contact <CONTACT>
+snmp-server chassis-id snmp-server enable traps snmp linkdown linkup
+snmp-server enable traps ospf state-change
+snmp-server enable traps ospf errors
+snmp-server enable traps ospf retransmit
+snmp-server enable traps ospf lsa
+snmp-server enable traps ospf cisco-specific state-change nssa-trans-change
+snmp-server enable traps ospf cisco-specific state-change shamlink interface
+snmp-server enable traps ospf cisco-specific state-change shamlink neighbor
+snmp-server enable traps ospf cisco-specific errors
+snmp-server enable traps ospf cisco-specific retransmit
+snmp-server enable traps ospf cisco-specific lsa
+snmp-server enable traps event-manager
+snmp-server enable traps hsrp
+snmp-server host 10.99.0.12 vrf DMZ informs version 2c <SNMP-COMMUNITY> 
+!
+tacacs server ISE-TAC
+ address ipv4 10.99.0.50
+ key <REDACTED-KEY>
+tacacs server NMS-TAC
+ address ipv4 10.99.0.12
+ key <REDACTED-KEY>
+!
+!
+!
+radius server NMS-RAD
+ address ipv4 10.99.0.12 auth-port 1812 acct-port 1813
+ key <REDACTED-KEY>
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+line con 0
+ stopbits 1
+line vty 0 4
+ authorization exec VTY-ISE-AUTHZ
+ login authentication VTY-ISE
+ transport input ssh
+line vty 5 80
+ transport input ssh
+!
+!
+!
+!
+!
+!
+netconf-yang
+netconf-yang feature candidate-datastore
+end
+

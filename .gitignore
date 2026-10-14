@@ -1,0 +1,32 @@
+# never commit raw, unsanitised configs
+raw-configs/
+*.raw
+
+# secrets
+.env
+*.key
+*.pem
+*.p12
+
+# lab images / exports - far too big for git
+*.qcow2
+*.ova
+*.zip
+
+# never commit the raw Oxidized store or any bare-repo internals
+scripts/public/
+**/objects/
+**/refs/
+**/*.pack
+scripts/yangsuite-Docker/ys-data/
+scripts/yangsuite-Docker/ys-backup/
+config.xml
+running-config.xml
+*-backup*
+config.php
+ISE-*.gz
+ers-*.json
+scripts/.public-ips
+
+# personal sanitiser rules (your own domain and names)
+scripts/.sanitize-private

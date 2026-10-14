@@ -1,0 +1,32 @@
+site_name: Multi-Site Enterprise Network Lab
+site_description: Three sites, four Cisco operating systems, and the operations stack that runs them
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - search.suggest
+  palette:
+    - scheme: slate
+      primary: blue grey
+      accent: light blue
+
+markdown_extensions:
+  - admonition          # callout boxes
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.highlight  # colour in code blocks
+  - pymdownx.tasklist   # tick boxes in checklists
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid                 # <-- this block is what draws the diagrams
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+nav:
+  - Overview: index.md
+  - Verify It Yourself: verify.md
+  - Build It Yourself: build-it-yourself.md

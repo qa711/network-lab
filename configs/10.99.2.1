@@ -1,0 +1,411 @@
+! Cisco IOS Software, IOSv Software (VIOS-ADVENTERPRISEK9-M), Version 15.9(3)M3, RELEASE SOFTWARE (fc1)
+! 
+! Image: Software: VIOS-ADVENTERPRISEK9-M, 15.9(3)M3, RELEASE SOFTWARE (fc1)
+! Image: Compiled: Wed 27-Jan-21 09:58 by prod_rel_team
+! Image: flash0:/vios-adventerprisek9-m
+! Chassis type: IOSv
+! Memory: main 1885441K/209920K
+! Processor ID: 95T4D9IXWDXJC4TQK4XNK
+! CPU: 
+! Memory: nvram 256K
+! Memory: flash 0K
+! Memory: flash 0K
+! Memory: flash 0K
+! 
+! VTP: show vtp status
+! 
+! NAME: "IOSv", DESCR: "IOSv chassis, Hw Serial#: 95T4D9IXWDXJC4TQK4XNK, Hw Revision: 1.0"
+! PID: IOSv              , VID: 1.0, SN: 95T4D9IXWDXJC4TQK4XNK
+! 
+! 
+!
+version 15.9
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname Q-EDGE
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+aaa new-model
+!
+!
+aaa group server tacacs+ TAC-GROUP
+ server name NMS-TAC
+ ip vrf forwarding DMZ
+ ip tacacs source-interface GigabitEthernet0/2.99
+!
+aaa group server radius RAD-GROUP
+ server name NMS-RAD
+!
+aaa group server tacacs+ ISE-GROUP
+ server name ISE-TAC
+ ip vrf forwarding DMZ
+ ip tacacs source-interface GigabitEthernet0/2.99
+!
+aaa authentication login default local
+aaa authentication login VTY-AUTH group TAC-GROUP local
+aaa authentication login VTY-OTP group RAD-GROUP local
+aaa authentication login VTY-ISE group ISE-GROUP local
+aaa authorization exec VTY-AUTHZ group TAC-GROUP local 
+aaa authorization exec VTY-OTP-AUTHZ group RAD-GROUP local 
+aaa authorization exec VTY-ISE-AUTHZ group ISE-GROUP local 
+aaa authorization commands 1 CMD-AUTHZ1 group ISE-GROUP local 
+aaa authorization commands 15 CMD-AUTHZ group ISE-GROUP local 
+aaa accounting exec VTY-ACCT start-stop group TAC-GROUP
+aaa accounting commands 15 CMD-ACCT start-stop group ISE-GROUP
+!
+!
+!
+!
+!
+aaa session-id common
+!
+!
+!
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+ip vrf CISCO-CORP
+!
+ip vrf DMZ
+!
+!
+!
+!
+ip domain name lab.internal
+ip name-server vrf DMZ 10.99.0.12
+ip multicast-routing 
+ip multicast-routing vrf CISCO-CORP 
+ip cef
+no ipv6 cef
+!
+!
+flow record FNF-RECORD
+ match ipv4 source address
+ match ipv4 destination address
+ match transport source-port
+ match transport destination-port
+ match ipv4 protocol
+ match interface input
+ collect counter bytes long
+ collect counter packets long
+ collect timestamp sys-uptime first
+ collect timestamp sys-uptime last
+!
+!
+flow exporter FNF-EXPORTER
+ destination 10.99.0.12 vrf DMZ
+ source GigabitEthernet0/2.99
+ transport udp 2055
+ template data timeout 10
+!
+!
+flow monitor FNF-MONITOR
+ exporter FNF-EXPORTER
+ cache timeout active 60
+ record FNF-RECORD
+!
+multilink bundle-name authenticated
+!
+!
+!
+crypto pki trustpoint TP-self-signed-4294967295
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-4294967295
+ revocation-check none
+ rsakeypair TP-self-signed-4294967295
+!
+!
+  <CERTIFICATE-REDACTED>
+  <CERTIFICATE-REDACTED>
+username admin privilege 15 password <REDACTED>
+!
+redundancy
+!
+!
+ip tcp mss 1280
+ip tcp window-size 212000
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0
+ description To-CSW1-E1/10
+ ip vrf forwarding DMZ
+ ip address 192.168.2.1 255.255.255.252
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface GigabitEthernet0/1
+ description To-CSW1-E1/9
+ ip vrf forwarding CISCO-CORP
+ ip address 192.168.3.1 255.255.255.252
+ ip flow monitor FNF-MONITOR input
+ ip pim sparse-mode
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface GigabitEthernet0/2
+ no ip address
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface GigabitEthernet0/2.99
+ encapsulation dot1Q 99
+ ip vrf forwarding DMZ
+ ip address 10.99.2.1 255.255.255.0
+ ip ospf 99 area 0
+!
+interface GigabitEthernet0/3
+ no ip address
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface GigabitEthernet0/3.98
+ encapsulation dot1Q 98
+ ip vrf forwarding CISCO-CORP
+ ip address 10.98.2.1 255.255.255.0
+ ip flow monitor FNF-MONITOR input
+ ip pim sparse-mode
+ ip igmp join-group 239.1.1.10
+!
+interface GigabitEthernet0/4
+ description Q-SDWAN
+ ip vrf forwarding CISCO-CORP
+ ip address 10.80.0.34 255.255.255.252
+ ip ospf network point-to-point
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface GigabitEthernet0/4.99
+ description MGMTto-QSDWAN
+ encapsulation dot1Q 99
+ ip vrf forwarding DMZ
+ ip address 10.99.10.18 255.255.255.252
+ ip mtu 1450
+!
+interface GigabitEthernet0/5
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface GigabitEthernet0/6
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface GigabitEthernet0/7
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface GigabitEthernet0/8
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface GigabitEthernet0/9
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface GigabitEthernet0/10
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface GigabitEthernet0/11
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface GigabitEthernet0/12
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface GigabitEthernet0/13
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface GigabitEthernet0/14
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+ media-type rj45
+!
+interface GigabitEthernet0/15
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+ media-type rj45
+!
+router ospf 99 vrf DMZ
+ router-id 66.66.66.66
+ redistribute static subnets route-map RedistSTATICcloud
+ network 10.81.1.16 0.0.0.3 area 0
+ network 10.99.2.0 0.0.0.255 area 0
+ network 192.168.2.0 0.0.0.3 area 0
+!
+router ospf 98 vrf CISCO-CORP
+ router-id 57.55.55.55
+ network 10.1.2.0 0.0.0.255 area 30
+ network 10.2.2.0 0.0.0.255 area 30
+ network 10.3.2.0 0.0.0.255 area 30
+ network 10.4.2.0 0.0.0.255 area 30
+ network 10.80.0.32 0.0.0.3 area 0
+ network 10.98.2.0 0.0.0.255 area 30
+ network 192.168.3.0 0.0.0.3 area 0
+!
+ip forward-protocol nd
+!
+!
+ip http server
+ip http secure-server
+ip dns view vrf DMZ default
+ip pim ssm default
+ip pim vrf CISCO-CORP rp-address 10.255.100.1
+ip route vrf DMZ 10.99.255.255 255.255.255.255 10.99.10.17
+!
+ip access-list standard SNMP-NMS
+ permit 10.99.0.12
+!
+!
+ip prefix-list RedistSTATICcloud seq 5 permit 10.99.255.255/32
+ipv6 ioam timestamp
+!
+route-map RedistSTATICcloud permit 10
+ match ip address prefix-list RedistSTATICcloud
+!
+snmp-server group nms v3 priv 
+snmp-server group NMSGROUP v3 priv 
+snmp-server view NMSVIEW iso included
+snmp-server community <SNMP-COMMUNITY> RO SNMP-NMS
+snmp-server location Q
+snmp-server contact <CONTACT>
+snmp-server chassis-id 
+snmp-server enable traps snmp linkdown linkup
+snmp-server enable traps ospf state-change
+snmp-server enable traps ospf errors
+snmp-server enable traps ospf retransmit
+snmp-server enable traps ospf lsa
+snmp-server enable traps ospf cisco-specific state-change nssa-trans-change
+snmp-server enable traps ospf cisco-specific state-change shamlink interface
+snmp-server enable traps ospf cisco-specific state-change shamlink neighbor
+snmp-server enable traps ospf cisco-specific errors
+snmp-server enable traps ospf cisco-specific retransmit
+snmp-server enable traps ospf cisco-specific lsa
+snmp-server enable traps hsrp
+snmp-server enable traps event-manager
+snmp-server host 10.99.0.12 vrf DMZ informs version 2c <SNMP-COMMUNITY> 
+snmp-server host 10.99.0.12 version 2c <SNMP-COMMUNITY> 
+snmp-server host 10.99.0.12 vrf DMZ version 2c <SNMP-COMMUNITY> 
+!
+tacacs server NMS-TAC
+ address ipv4 10.99.0.12
+ key <REDACTED-KEY>
+tacacs server ISE-TAC
+ address ipv4 10.99.0.50
+ key <REDACTED-KEY>
+!
+!
+radius server NMS-RAD
+ address ipv4 10.99.0.12 auth-port 1812 acct-port 1813
+ key <REDACTED-KEY>
+!
+!
+control-plane
+!
+banner exec ^C
+**************************************************************************
+* IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+* education. IOSv is provided as-is and is not supported by Cisco's      *
+* Technical Advisory Center. Any use or disclosure, in whole or in part, *
+* of the IOSv Software or Documentation to any third party for any       *
+* purposes is expressly prohibited except as otherwise authorized by     *
+* Cisco in writing.                                                      *
+**************************************************************************^C
+banner incoming ^C
+**************************************************************************
+* IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+* education. IOSv is provided as-is and is not supported by Cisco's      *
+* Technical Advisory Center. Any use or disclosure, in whole or in part, *
+* of the IOSv Software or Documentation to any third party for any       *
+* purposes is expressly prohibited except as otherwise authorized by     *
+* Cisco in writing.                                                      *
+**************************************************************************^C
+banner login ^C
+**************************************************************************
+* IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+* education. IOSv is provided as-is and is not supported by Cisco's      *
+* Technical Advisory Center. Any use or disclosure, in whole or in part, *
+* of the IOSv Software or Documentation to any third party for any       *
+* purposes is expressly prohibited except as otherwise authorized by     *
+* Cisco in writing.                                                      *
+**************************************************************************^C
+!
+line con 0
+ stopbits 1
+line aux 0
+line vty 0 4
+ authorization exec VTY-ISE-AUTHZ
+ login authentication VTY-ISE
+ transport input ssh
+line vty 5 15
+ authorization exec VTY-ISE-AUTHZ
+ login authentication VTY-ISE
+ transport input ssh
+!
+no scheduler allocate
+!
+end
+

@@ -1,0 +1,24 @@
+---
+- name: IP HTTP Secure Server Enable
+  hosts:  corp-pbr-a
+  gather_facts: false
+  connection: ansible.netcommon.network_cli
+  vars:
+    ansible_network_os: cisco.ios.ios
+    ansible_user: "{{ lookup('env', 'LAB_USER') }}"
+    ansible_password: "{{ lookup('env', 'LAB_PASS') }}"
+    ansible_become: true
+    ansible_become_method: enable
+
+  tasks:
+    - name: Global Config Settings
+      cisco.ios.ios_config:
+        lines:
+          - ip http secure-server
+          - no ip http server
+          - username automate privilege 15 secret 5 <HASH>
+      register: print_output
+
+    - name: Gather all legacy facts
+      cisco.ios.ios_facts:
+        gather_subset: all

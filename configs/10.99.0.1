@@ -1,0 +1,542 @@
+! Cisco Nexus Operating System (NX-OS) Software
+! TAC support: http://www.cisco.com/tac
+! Documents: http://www.cisco.com/en/US/products/ps9372/tsd_products_support_series_home.html
+! Copyright (c) 2002-2020, Cisco Systems, Inc. All rights reserved.
+! The copyrights to certain works contained herein are owned by
+! other third parties and are used and distributed under license.
+! Some parts of this software are covered under the GNU Public
+! License. A copy of the license is available at
+! http://www.gnu.org/licenses/gpl.html.
+! 
+! Nexus 9000v is a demo version of the Nexus Operating System
+! 
+! Software
+!   BIOS: version 
+!  NXOS: version 9.3(4)
+!   BIOS compile time:  
+!   NXOS image file is: bootflash:///nxos.9.3.4.bin
+!   NXOS compile time:  4/28/2020 21:00:00 [04/29/2020 06:28:31]
+! 
+! 
+! Hardware
+!   cisco Nexus9000 C9300v Chassis 
+!   Intel(R) Core(TM) i7-11850H @ 2.50GHz with 8159816 kB of memory.
+!   Processor Board ID 9INIT99UZM3
+! 
+!   Device name: NEXUS-A
+! 
+! NAME: "Chassis",  DESCR: "Nexus9000 C9300v Chassis"              
+! PID: N9K-C9300v          ,  VID:     ,  SN: 9EI5K8TFFIZ          
+! 
+! NAME: "Slot 1",  DESCR: "Nexus 9000v 64 port Ethernet Module"   
+! PID: N9K-X9364v          ,  VID:     ,  SN: 9HB7KIM0JCE          
+! 
+! NAME: "Slot 27",  DESCR: "Supervisor Module"                     
+! PID: N9K-vSUP            ,  VID:     ,  SN: 9INIT99UZM3          
+! 
+
+!Command: show running-config
+!No configuration change since last restart
+
+version 9.3(4) Bios:version  
+hostname NEXUS-A
+vdc NEXUS-A id 1
+  limit-resource vlan minimum 16 maximum 4094
+  limit-resource vrf minimum 2 maximum 4096
+  limit-resource port-channel minimum 0 maximum 511
+  limit-resource u4route-mem minimum 248 maximum 248
+  limit-resource u6route-mem minimum 96 maximum 96
+  limit-resource m4route-mem minimum 58 maximum 58
+  limit-resource m6route-mem minimum 8 maximum 8
+
+feature tacacs+
+feature ospf
+feature pim
+feature interface-vlan
+feature lacp
+feature tunnel
+
+no password strength-check
+username admin password <REDACTED>  role network-admin
+username admin role priv-15
+username automate password <REDACTED>  role network-admin
+username automate passphrase  lifetime 99999 warntime 14 gracetime 3
+ip domain-lookup
+ip domain-name lab.internal
+ip name-server 10.99.0.12 use-vrf DMZ
+tacacs-server host 10.99.0.50 key <TACACS-KEY> 
+tacacs-server host 10.99.0.12 key <TACACS-KEY> 
+aaa group server tacacs+ ISE-GROUP 
+    server 10.99.0.50 
+    use-vrf DMZ
+    source-interface Vlan99
+aaa group server tacacs+ TAC-GROUP 
+    server 10.99.0.12 
+    use-vrf DMZ
+    source-interface Vlan99
+ip access-list SNMP-NMS
+  10 permit ip 10.99.0.12/32 any 
+  20 permit ip 10.99.0.50/32 any 
+copp profile strict
+snmp-server contact <CONTACT>
+snmp-server location Gret
+snmp-server source-interface traps Vlan99
+snmp-server source-interface informs Vlan99
+snmp-server user admin priv-15 auth sha <SNMP-V3-KEY> priv aes-128 <SNMP-V3-PASS> localizedkey
+snmp-server user admin network-admin
+snmp-server user automate network-admin auth sha <SNMP-V3-KEY> priv aes-128 <SNMP-V3-PASS> localizedkey
+snmp-server host 10.99.0.12 informs version 2c <SNMP-COMMUNITY> udp-port 161
+rmon event 1 description FATAL(1) owner PMON@FATAL
+rmon event 2 description CRITICAL(2) owner PMON@CRITICAL
+rmon event 3 description ERROR(3) owner PMON@ERROR
+rmon event 4 description WARNING(4) owner PMON@WARNING
+rmon event 5 description INFORMATION(5) owner PMON@INFO
+snmp-server enable traps ospf
+snmp-server enable traps config ccmCLIRunningConfigChanged
+snmp-server enable traps link cisco-xcvr-mon-status-chg
+snmp-server enable traps system Clock-change-notification
+snmp-server enable traps syslog message-generated
+snmp-server community <SNMP-COMMUNITY> group network-operator
+aaa authentication login default group ISE-GROUP local 
+aaa authentication login console local 
+aaa accounting default group ISE-GROUP 
+aaa authentication login error-enable 
+
+vlan 1,10,20,30,40,69-70,98-99,169-170,198-199
+vlan 10
+  name Phones
+vlan 20
+  name PCs
+vlan 30
+  name Servers
+vlan 40
+  name Wi-Fi
+vlan 69
+  name SCADA
+vlan 70
+  name PLc
+vlan 98
+  name CISCO-CORP
+vlan 99
+  name DMZ-SERVICES
+vlan 169
+  name FW-SCADA
+vlan 170
+  name FW-PLC
+vlan 198
+  name FW-CORP
+vlan 199
+  name FW-DMZ
+
+ip prefix-list DENY-VLAN10-OUT seq 5 deny 10.1.0.0/24 
+ip prefix-list DENY-VLAN10-OUT seq 10 permit 0.0.0.0/0 le 32 
+ip prefix-list VPN-Pool seq 5 permit 10.0.10.0/24 
+ip prefix-list VPN-Pool seq 10 permit 172.16.99.0/24 
+ip prefix-list VPN-Pool seq 15 permit 10.250.253.0/24 
+ip prefix-list VPN-Pool seq 20 permit 10.99.254.254/32 
+route-map DENY-VLAN10-OUT permit 10
+  match ip address prefix-list DENY-VLAN10-OUT 
+route-map DMZ-STATIC-TO-OSPF-vpn permit 10
+  match ip address prefix-list VPN-Pool 
+route-map DMZ-STATIC-TO-OSPF-vpn permit 20
+route-map DMZ-STATIC-TO-OSPF-vpn deny 100
+vrf context CISCO-CORP
+  ip route 10.99.0.0/24 10.255.250.10
+  ip pim rp-address 10.255.100.1 group-list 224.0.0.0/4
+  ip pim ssm range 232.0.0.0/8
+vrf context DMZ
+  ip route 0.0.0.0/0 10.255.250.14
+  ip route 10.0.10.0/24 192.168.4.2
+  ip route 10.69.0.0/27 10.255.250.14
+  ip route 10.69.1.0/27 10.255.250.14
+  ip route 10.70.0.0/27 10.255.250.14
+  ip route 10.70.1.0/27 10.255.250.14
+  ip route 10.98.0.0/24 10.255.250.14
+  ip route 10.98.1.0/24 10.255.250.14
+  ip route 10.99.99.0/24 10.99.0.12
+  ip route 10.99.254.254/32 10.99.10.5
+  ip route 10.250.253.0/24 10.255.250.14
+  ip route 172.16.99.0/24 192.168.4.2
+vrf context PLc
+  ip route 10.99.0.10/32 10.255.250.6
+  ip route 10.99.0.11/32 10.255.250.6
+vrf context SCADA
+  description SCADA
+  ip route 10.99.0.10/32 10.255.250.2
+  ip route 10.99.0.11/32 10.255.250.2
+vrf context management
+
+
+interface Vlan1
+
+interface Vlan10
+  description Phones
+  no shutdown
+  no autostate
+  vrf member CISCO-CORP
+  ip address 10.1.0.1/24
+  ip router ospf 1 area 0.0.0.10
+  ip pim sparse-mode
+
+interface Vlan20
+  description PCs
+  no shutdown
+  no autostate
+  vrf member CISCO-CORP
+  ip address 10.2.0.1/24
+  ip router ospf 1 area 0.0.0.10
+
+interface Vlan40
+  description Wi-Fi
+  no shutdown
+  no autostate
+  vrf member CISCO-CORP
+  ip address 10.4.0.1/24
+  ip router ospf 1 area 0.0.0.10
+
+interface Vlan69
+  description SCADA
+  no shutdown
+  no autostate
+  vrf member SCADA
+  ip address 10.69.0.1/27
+  ip router ospf 69 area 0.0.0.0
+
+interface Vlan70
+  description PLc
+  no shutdown
+  no autostate
+  vrf member PLc
+  ip address 10.70.0.1/27
+  ip router ospf 70 area 0.0.0.0
+
+interface Vlan98
+  description CISCO-CORP
+  no shutdown
+  no autostate
+  vrf member CISCO-CORP
+  ip address 10.98.0.1/24
+  ip router ospf 1 area 0.0.0.10
+
+interface Vlan99
+  description DMZ
+  no shutdown
+  no autostate
+  vrf member DMZ
+  ip address 10.99.0.1/24
+  ip router ospf 72 area 0.0.0.0
+
+interface Vlan169
+  description SCADA-to-FW transit
+  no shutdown
+  vrf member SCADA
+  ip address 10.255.250.1/30
+  ip router ospf 69 area 0.0.0.0
+
+interface Vlan170
+  description PLC-to-FW transit
+  no shutdown
+  vrf member PLc
+  ip address 10.255.250.5/30
+  ip router ospf 70 area 0.0.0.0
+
+interface Vlan198
+  description CORP-to-FW transit
+  no shutdown
+  vrf member CISCO-CORP
+  ip address 10.255.250.9/30
+  ip router ospf 1 area 0.0.0.0
+
+interface Vlan199
+  description DMZ-to-FW transit
+  no shutdown
+  vrf member DMZ
+  ip address 10.255.250.13/30
+  ip router ospf 72 area 0.0.0.0
+
+interface port-channel20
+  switchport mode trunk
+  switchport trunk native vlan 10
+  switchport trunk allowed vlan 10,20,30,40,69-70,98-99
+
+interface port-channel21
+  switchport mode trunk
+  switchport trunk native vlan 10
+  switchport trunk allowed vlan 10,20,30,40,69-70,98-99
+
+interface Ethernet1/1
+  description PortChannel-DSW-A1
+  switchport mode trunk
+  switchport trunk native vlan 10
+  switchport trunk allowed vlan 10,20,30,40,69-70,98-99
+  channel-group 20 mode active
+
+interface Ethernet1/2
+  description PortChannel-DSW-A1
+  switchport mode trunk
+  switchport trunk native vlan 10
+  switchport trunk allowed vlan 10,20,30,40,69-70,98-99
+  channel-group 20 mode active
+
+interface Ethernet1/3
+  description PortChannel-DSW-A2
+  switchport mode trunk
+  switchport trunk native vlan 10
+  switchport trunk allowed vlan 10,20,30,40,69-70,98-99
+  channel-group 21 mode active
+
+interface Ethernet1/4
+  description PortChannel-DSW-A2
+  switchport mode trunk
+  switchport trunk native vlan 10
+  switchport trunk allowed vlan 10,20,30,40,69-70,98-99
+  channel-group 21 mode active
+
+interface Ethernet1/5
+  description Gret-EdgeCLOUD
+  no switchport
+  vrf member CISCO-CORP
+  ip address 10.80.0.2/30
+  ip router ospf 1 area 0.0.0.0
+  no shutdown
+
+interface Ethernet1/5.99
+  description MGMTto-GRETcloud
+  mtu 1450
+  encapsulation dot1q 99
+  vrf member DMZ
+  ip address 10.99.10.6/30
+  no shutdown
+
+interface Ethernet1/6
+  description CoreLink-CSW1
+  no switchport
+  no shutdown
+
+interface Ethernet1/6.10
+  encapsulation dot1q 69
+  vrf member SCADA
+  ip address 10.10.10.2/30
+  ip router ospf 69 area 0.0.0.0
+  no shutdown
+
+interface Ethernet1/6.20
+  encapsulation dot1q 70
+  vrf member PLc
+  ip address 10.10.20.2/30
+  ip router ospf 70 area 0.0.0.0
+  no shutdown
+
+interface Ethernet1/6.40
+  encapsulation dot1q 99
+  vrf member DMZ
+  ip address 10.10.90.2/30
+  ip router ospf 72 area 0.0.0.0
+  no shutdown
+
+interface Ethernet1/7
+  description CoreLink-CSW2
+  no switchport
+  no shutdown
+
+interface Ethernet1/7.10
+  encapsulation dot1q 69
+  vrf member SCADA
+  ip address 10.10.40.2/30
+  ip router ospf 69 area 0.0.0.0
+  no shutdown
+
+interface Ethernet1/7.20
+  encapsulation dot1q 70
+  vrf member PLc
+  ip address 10.10.50.2/30
+  ip router ospf 70 area 0.0.0.0
+  no shutdown
+
+interface Ethernet1/7.40
+  encapsulation dot1q 99
+  vrf member DMZ
+  ip address 10.10.90.6/30
+  ip router ospf 72 area 0.0.0.0
+  no shutdown
+
+interface Ethernet1/8
+  no switchport
+  vrf member CISCO-CORP
+  ip address 10.10.70.1/30
+  ip router ospf 1 area 0.0.0.0
+  ip pim sparse-mode
+  no shutdown
+
+interface Ethernet1/8.99
+  description MGMTto-CORP-PBR
+  encapsulation dot1q 99
+  vrf member DMZ
+  ip address 10.99.10.1/30
+  ip router ospf 72 area 0.0.0.0
+  no shutdown
+
+interface Ethernet1/9
+  description PaloAlto-TRUNK (Inter-VRF)
+  switchport mode trunk
+  switchport trunk allowed vlan 169-170,198-199
+
+interface Ethernet1/10
+  description OPNsense-DMZ
+  no switchport
+  vrf member DMZ
+  ip address 192.168.4.1/24
+  ip router ospf 72 area 0.0.0.0
+  no shutdown
+
+interface Ethernet1/11
+
+interface Ethernet1/12
+
+interface Ethernet1/13
+
+interface Ethernet1/14
+
+interface Ethernet1/15
+
+interface Ethernet1/16
+
+interface Ethernet1/17
+
+interface Ethernet1/18
+
+interface Ethernet1/19
+
+interface Ethernet1/20
+
+interface Ethernet1/21
+
+interface Ethernet1/22
+
+interface Ethernet1/23
+
+interface Ethernet1/24
+
+interface Ethernet1/25
+
+interface Ethernet1/26
+
+interface Ethernet1/27
+
+interface Ethernet1/28
+
+interface Ethernet1/29
+
+interface Ethernet1/30
+
+interface Ethernet1/31
+
+interface Ethernet1/32
+
+interface Ethernet1/33
+
+interface Ethernet1/34
+
+interface Ethernet1/35
+
+interface Ethernet1/36
+
+interface Ethernet1/37
+
+interface Ethernet1/38
+
+interface Ethernet1/39
+
+interface Ethernet1/40
+
+interface Ethernet1/41
+
+interface Ethernet1/42
+
+interface Ethernet1/43
+
+interface Ethernet1/44
+
+interface Ethernet1/45
+
+interface Ethernet1/46
+
+interface Ethernet1/47
+
+interface Ethernet1/48
+
+interface Ethernet1/49
+
+interface Ethernet1/50
+
+interface Ethernet1/51
+
+interface Ethernet1/52
+
+interface Ethernet1/53
+
+interface Ethernet1/54
+
+interface Ethernet1/55
+
+interface Ethernet1/56
+
+interface Ethernet1/57
+
+interface Ethernet1/58
+
+interface Ethernet1/59
+
+interface Ethernet1/60
+
+interface Ethernet1/61
+
+interface Ethernet1/62
+
+interface Ethernet1/63
+
+interface Ethernet1/64
+
+interface mgmt0
+  vrf member management
+
+interface loopback0
+  vrf member CISCO-CORP
+  ip address 1.1.1.1/32
+  ip router ospf 1 area 0.0.0.0
+line console
+line vty
+boot nxos bootflash:/nxos.9.3.4.bin sup-1
+router ospf 1
+  router-id 1.1.1.1
+  vrf CISCO-CORP
+    router-id 1.1.1.1
+    area 0.0.0.10 filter-list route-map DENY-VLAN10-OUT out
+    area 0.0.0.0 range 1.1.1.1/32
+    area 0.0.0.0 range 10.10.70.0/30
+    area 0.0.0.0 range 10.80.0.0/30
+    area 0.0.0.10 range 10.1.0.0/24
+    area 0.0.0.10 range 10.2.0.0/24
+    area 0.0.0.10 range 10.4.0.0/24
+    area 0.0.0.10 range 10.98.0.0/24
+router ospf 69
+  vrf SCADA
+    router-id 10.255.69.101
+    area 0.0.0.0 range 10.69.0.0/27
+router ospf 70
+  vrf PLc
+    router-id 10.255.70.101
+    area 0.0.0.0 range 10.70.0.0/27
+router ospf 72
+  vrf DMZ
+    router-id 10.255.72.101
+    redistribute static route-map DMZ-STATIC-TO-OSPF-vpn
+    area 0.0.0.0 range 10.10.90.0/30
+    area 0.0.0.0 range 10.10.90.4/30
+    area 0.0.0.0 range 10.99.0.0/24
+    area 0.0.0.0 range 10.99.10.0/30
+    area 0.0.0.0 range 10.99.10.4/30
+    area 0.0.0.0 range 192.168.4.0/30
+
+
+

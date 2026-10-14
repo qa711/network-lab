@@ -1,0 +1,239 @@
+! Cisco IOS Software [Dublin], Linux Software (X86_64BI_LINUX-ADVENTERPRISEK9-M), Version 17.12.1, RELEASE SOFTWARE (fc5)
+! 
+! Image: Software: X86_64BI_LINUX-ADVENTERPRISEK9-M, 17.12.1, RELEASE SOFTWARE (fc5)
+! Image: Compiled: Thu 27-Jul-23 22:33 by mcpre
+! Image: unix:/opt/unetlab/addons/iol/bin/x86_64_crb_linux-adventerprisek9-ms
+! Chassis type: Unix
+! Memory: main 812259K
+! Processor ID: 67109712
+! CPU: i686
+! Memory: nvram 1024K
+! 
+! VTP: show vtp status
+! 
+!
+! Last configuration change at 18:58:15 UTC Thu Oct 8 2026 by admin
+!
+version 17.12
+service timestamps debug datetime msec
+service timestamps log datetime msec
+!
+hostname R41
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition DMZ
+ description Out-of-band management
+ !
+ address-family ipv4
+ exit-address-family
+!
+aaa new-model
+!
+!
+aaa group server tacacs+ TAC-GROUP
+ server name NMS-TAC
+ ip vrf forwarding DMZ
+ ip tacacs source-interface Ethernet0/0
+!
+aaa group server radius RAD-GROUP
+ server name NMS-RAD
+ ip vrf forwarding DMZ
+ ip radius source-interface Ethernet0/0
+!
+aaa group server tacacs+ ISE-GROUP
+ server name ISE-TAC
+ ip vrf forwarding DMZ
+ ip tacacs source-interface Ethernet0/0
+!
+aaa authentication login default local
+aaa authentication login VTY-AUTH group TAC-GROUP local
+aaa authentication login VTY-OTP group RAD-GROUP local
+aaa authentication login VTY-ISE group ISE-GROUP local
+aaa authorization exec VTY-AUTHZ group TAC-GROUP local 
+aaa authorization exec VTY-OTP-AUTHZ group RAD-GROUP local 
+aaa authorization exec VTY-ISE-AUTHZ group ISE-GROUP local 
+aaa authorization commands 1 CMD-AUTHZ1 group ISE-GROUP local 
+aaa authorization commands 15 CMD-AUTHZ group ISE-GROUP local 
+aaa accounting exec VTY-ACCT start-stop group TAC-GROUP
+aaa accounting commands 15 CMD-ACCT start-stop group ISE-GROUP
+!
+aaa session-id common
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+ip domain name lab.external
+ip cef
+login on-success log
+no ipv6 cef
+!
+!
+!
+!
+!
+!
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+memory free low-watermark processor 81225
+!
+!
+spanning-tree mode rapid-pvst
+!
+!
+username admin privilege 15 secret <REDACTED>
+!
+!
+!
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ description MGMT
+ vrf forwarding DMZ
+ ip dhcp client client-id ascii cisco-aabb.cc03.5000-Et0/0
+ ip address 10.99.99.41 255.255.255.0
+!
+interface Ethernet0/1
+ no ip address
+!
+interface Ethernet0/2
+ no ip address
+!
+interface Ethernet0/3
+ no ip address
+!
+interface Ethernet1/0
+ no ip address
+!
+interface Ethernet1/1
+ no ip address
+!
+interface Ethernet1/2
+ no ip address
+!
+interface Ethernet1/3
+ no ip address
+!
+interface Ethernet2/0
+ no ip address
+!
+interface Ethernet2/1
+ no ip address
+!
+interface Ethernet2/2
+ no ip address
+!
+interface Ethernet2/3
+ no ip address
+!
+interface Ethernet3/0
+ no ip address
+!
+interface Ethernet3/1
+ no ip address
+!
+interface Ethernet3/2
+ no ip address
+!
+interface Ethernet3/3
+ no ip address
+!
+ip forward-protocol nd
+!
+!
+ip http server
+ip http secure-server
+ip http client source-interface Ethernet0/0
+ip route vrf DMZ 0.0.0.0 0.0.0.0 Ethernet0/0 10.99.99.138
+ip ssh bulk-mode 131072
+ip ssh source-interface Ethernet0/0
+!
+!
+!
+snmp-server group nms v3 priv 
+snmp-server group NMSGROUP v3 priv 
+snmp-server view NMSVIEW iso included
+snmp-server community <SNMP-COMMUNITY> RO SNMP-NMS
+snmp-server location Outside
+snmp-server contact <CONTACT>
+snmp-server enable traps snmp linkdown linkup
+snmp-server enable traps ospf state-change
+snmp-server enable traps ospf errors
+snmp-server enable traps ospf retransmit
+snmp-server enable traps ospf lsa
+snmp-server enable traps ospf cisco-specific state-change nssa-trans-change
+snmp-server enable traps ospf cisco-specific state-change shamlink interface
+snmp-server enable traps ospf cisco-specific state-change shamlink neighbor
+snmp-server enable traps ospf cisco-specific errors
+snmp-server enable traps ospf cisco-specific retransmit
+snmp-server enable traps ospf cisco-specific lsa
+snmp-server enable traps event-manager
+snmp-server enable traps hsrp
+snmp-server host 10.99.0.12 vrf DMZ informs version 2c <SNMP-COMMUNITY> 
+snmp-server host 10.99.0.12 version 2c <SNMP-COMMUNITY> 
+snmp-server host 10.99.0.12 vrf DMZ version 2c <SNMP-COMMUNITY> 
+tacacs server NMS-TAC
+ address ipv4 10.99.0.12
+ key <REDACTED-KEY>
+tacacs server ISE-TAC
+ address ipv4 10.99.0.50
+ key <REDACTED-KEY>
+!
+!
+!
+radius server NMS-RAD
+ address ipv4 10.99.0.12 auth-port 1812 acct-port 1813
+ key <REDACTED-KEY>
+!
+!
+control-plane
+!
+!
+!
+line con 0
+ privilege level 15
+ logging synchronous
+line aux 0
+line vty 0 4
+ authorization exec VTY-ISE-AUTHZ
+ login authentication VTY-ISE
+ transport input ssh
+!
+!
+!
+!
+end
+

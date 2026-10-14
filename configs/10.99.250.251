@@ -1,0 +1,462 @@
+! Cisco IOS XE Software, Version 17.03.08a
+! 
+! Image: Software: X86_64_LINUX_IOSD-UNIVERSALK9-M, 17.3.8a, RELEASE SOFTWARE (fc3)
+! Image: Compiled: Fri 20-Oct-23 15:48 by mcpre
+! Image: bootflash:packages.conf
+! Chassis type: CSR1000V
+! Memory: main 2071576K/3075K
+! Processor ID: 9UL0AOEQP8H
+! CPU: VXE
+! Memory: nvram 32768K
+! 
+! VTP: show vtp status
+! 
+! NAME: "Chassis", DESCR: "Cisco CSR1000V Chassis"
+! PID: CSR1000V          , VID: V00  , SN: 9UL0AOEQP8H
+! 
+! NAME: "module R0", DESCR: "Cisco CSR1000V Route Processor"
+! PID: CSR1000V          , VID: V00  , SN: JAB1303001C
+! 
+! NAME: "module F0", DESCR: "Cisco CSR1000V Embedded Services Processor"
+! PID: CSR1000V          , VID:      , SN:            
+! 
+! 
+!
+!
+version 17.3
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+service call-home
+platform qfp utilization monitor load 80
+platform punt-keepalive disable-kernel-core
+platform console serial
+!
+hostname CORP-PBR-B
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+aaa new-model
+!
+!
+aaa group server tacacs+ TAC-GROUP
+ server name NMS-TAC
+ ip vrf forwarding DMZ
+ ip tacacs source-interface Loopback99
+!
+aaa group server radius RAD-GROUP
+ server name NMS-RAD
+!
+aaa group server tacacs+ ISE-GROUP
+ server name ISE-TAC
+ ip vrf forwarding DMZ
+ ip tacacs source-interface Loopback99
+!
+aaa authentication login default local
+aaa authentication login VTY-AUTH group TAC-GROUP local
+aaa authentication login VTY-OTP group RAD-GROUP local
+aaa authentication login VTY-ISE group ISE-GROUP local
+aaa authorization exec VTY-AUTHZ group TAC-GROUP local 
+aaa authorization exec VTY-OTP-AUTHZ group RAD-GROUP local 
+aaa authorization exec VTY-ISE-AUTHZ group ISE-GROUP local 
+aaa authorization commands 1 CMD-AUTHZ1 group ISE-GROUP local 
+aaa authorization commands 15 CMD-AUTHZ group ISE-GROUP local 
+aaa accounting exec VTY-ACCT start-stop group TAC-GROUP
+aaa accounting commands 15 CMD-ACCT start-stop group ISE-GROUP
+!
+!
+!
+!
+!
+!
+aaa session-id common
+!
+ip vrf DMZ
+ rd 65001:4
+!
+ip multicast-routing distributed
+!
+!
+!
+!
+!
+!
+ip name-server vrf DMZ 10.99.0.12
+ip domain name lab.internal
+!
+!
+!
+login on-success log
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+! 
+! 
+! 
+! 
+!
+!
+!
+flow record FNF-RECORD
+ match ipv4 source address
+ match ipv4 destination address
+ match transport source-port
+ match transport destination-port
+ match interface input
+ collect ipv4 dscp
+ collect counter bytes long
+ collect counter packets long
+ collect timestamp sys-uptime first
+ collect timestamp sys-uptime last
+!
+!
+flow exporter FNF-EXPORTER
+ destination 10.99.0.12 vrf DMZ
+ source Loopback99
+ transport udp 2055
+ template data timeout 10
+!
+!
+flow monitor FNF-MONITOR
+ exporter FNF-EXPORTER
+ cache timeout active 60
+ record FNF-RECORD
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+crypto pki trustpoint TP-self-signed-1850762322
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-1850762322
+ revocation-check none
+ rsakeypair TP-self-signed-1850762322
+!
+crypto pki trustpoint SLA-TrustPoint
+ enrollment pkcs12
+ revocation-check crl
+!
+!
+  <CERTIFICATE-REDACTED>
+  <CERTIFICATE-REDACTED>
+  <CERTIFICATE-REDACTED>
+  <CERTIFICATE-REDACTED>
+!
+license udi pid CSR1000V sn <SERIAL>
+diagnostic bootup level minimal
+memory free low-watermark processor 71464
+!
+!
+spanning-tree extend system-id
+!
+username admin privilege 15 password <REDACTED>
+username automate privilege 15 secret <REDACTED>
+!
+redundancy
+!
+!
+!
+!
+!
+!
+cdp timer 5
+cdp holdtime 10
+cdp run
+!
+track 10 ip sla 10 reachability
+!
+track 20 ip sla 20 reachability
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+crypto isakmp policy 10
+ encryption aes 256
+ hash sha256
+ authentication pre-share
+ group 14
+!
+crypto isakmp policy 20
+ encryption aes 256
+ hash sha256
+ authentication pre-share
+ group 14
+crypto isakmp key <PSK> address 10.10.30.2     
+crypto isakmp key <PSK> address 10.10.60.2     
+!
+!
+crypto ipsec transform-set GRE-TS esp-aes 256 esp-sha-hmac 
+ mode transport
+!
+crypto ipsec profile GRE-IPSEC-PROFILE
+ set transform-set GRE-TS 
+!
+!
+!
+!
+!
+!
+! 
+! 
+!
+!
+interface Loopback99
+ ip vrf forwarding DMZ
+ ip address 10.99.250.251 255.255.255.255
+ ip ospf 2 area 0
+!
+interface Loopback100
+ description RP-ANYCAST
+ ip address 10.255.100.1 255.255.255.255
+ ip pim sparse-mode
+!
+interface Loopback101
+ description MSDP
+ ip address 10.255.101.2 255.255.255.255
+!
+interface Tunnel0
+ description GREto-PBR-A
+ ip flow monitor FNF-MONITOR input
+ ip address 172.16.12.2 255.255.255.252
+ ip mtu 1400
+ ip pim sparse-mode
+ ip tcp adjust-mss 1360
+ tunnel source GigabitEthernet2
+ tunnel destination 10.10.30.2
+ tunnel protection ipsec profile GRE-IPSEC-PROFILE
+!
+interface Tunnel10
+ description GREto-PBR-A-viaCSW2
+ ip address 172.16.12.6 255.255.255.252
+ ip mtu 1400
+ ip pim sparse-mode
+ ip tcp adjust-mss 1360
+ tunnel source GigabitEthernet3
+ tunnel destination 10.10.60.2
+ tunnel protection ipsec profile GRE-IPSEC-PROFILE
+!
+interface GigabitEthernet1
+ description Linkto-NEXUS-B
+ ip flow monitor FNF-MONITOR input
+ ip address 10.10.71.2 255.255.255.252
+ ip pim sparse-mode
+ ip igmp join-group 239.1.1.10
+ ip policy route-map PBR-POLICY
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet1.99
+ encapsulation dot1Q 99
+ ip vrf forwarding DMZ
+ ip address 10.99.11.2 255.255.255.252
+!
+interface GigabitEthernet2
+ description Linkto-CSW1
+ ip flow monitor FNF-MONITOR input
+ ip address 10.20.30.2 255.255.255.252
+ ip pim sparse-mode
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet3
+ description Linkto-CSW2
+ ip flow monitor FNF-MONITOR input
+ ip address 10.20.60.2 255.255.255.252
+ ip pim sparse-mode
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet4
+ no ip address
+ shutdown
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+router ospf 2 vrf DMZ
+ network 10.99.11.0 0.0.0.3 area 0
+ network 10.99.250.251 0.0.0.0 area 0
+!
+router ospf 1
+ redistribute static route-map STATIC-OSPF
+ network 10.10.71.0 0.0.0.3 area 0
+ network 10.20.30.0 0.0.0.3 area 0
+ network 10.20.60.0 0.0.0.3 area 0
+ network 10.255.100.1 0.0.0.0 area 0
+ network 10.255.101.2 0.0.0.0 area 0
+ network 172.16.12.0 0.0.0.3 area 0
+ network 172.16.12.4 0.0.0.3 area 0
+ distribute-list prefix RIB-DENY-vlan40 in
+!
+ip forward-protocol nd
+ip pim rp-address 10.255.100.1
+ip pim ssm default
+ip msdp peer 10.255.101.1 connect-source Loopback101
+ip msdp cache-sa-state
+ip msdp originator-id Loopback101
+no ip http server
+ip http authentication local
+ip http secure-server
+!
+ip route 69.69.69.69 255.255.255.255 Null0
+ip ssh source-interface GigabitEthernet1.99
+!
+ip access-list standard SNMP-NMS
+ 10 permit 10.99.0.12
+!
+ip access-list extended PBR-ACL20
+ 10 permit ip 10.2.1.0 0.0.0.255 10.2.0.0 0.0.0.255
+ 20 permit ip 10.2.1.0 0.0.0.255 10.4.0.0 0.0.0.255
+ip access-list extended PBR-ACL40
+ 10 permit ip 10.4.1.0 0.0.0.255 10.2.0.0 0.0.0.255
+ 20 permit ip 10.4.1.0 0.0.0.255 10.4.0.0 0.0.0.255
+!
+!
+ip prefix-list REDIST-STATIC seq 5 permit 69.69.69.69/32
+!
+ip prefix-list RIB-DENY-vlan40 seq 5 deny 10.4.1.0/24
+ip prefix-list RIB-DENY-vlan40 seq 10 permit 0.0.0.0/0 le 32
+ip sla 10
+ icmp-echo 10.20.30.1 source-interface GigabitEthernet2
+  frequency 5
+ip sla schedule 10 life forever start-time now
+ip sla 20
+ icmp-echo 10.20.60.1 source-interface GigabitEthernet3
+  frequency 5
+ip sla schedule 20 life forever start-time now
+!
+!
+route-map STATIC-OSPF permit 10 
+ match ip address prefix-list REDIST-STATIC
+!
+route-map PBR-POLICY permit 10 
+ match ip address PBR-ACL20
+ set ip next-hop verify-availability 10.20.30.1 1 track 10
+ set ip next-hop verify-availability 10.20.60.1 2 track 20
+!
+route-map PBR-POLICY permit 20 
+ match ip address PBR-ACL40
+ set ip next-hop verify-availability 10.20.30.1 1 track 10
+ set ip next-hop verify-availability 10.20.60.1 2 track 20
+!
+route-map PBR-POLICY permit 30 
+!
+snmp-server group nms v3 priv 
+snmp-server group NMSGROUP v3 priv read NMSVIEW access SNMP-NMS
+snmp-server view NMSVIEW iso included
+snmp-server community <SNMP-COMMUNITY> RO SNMP-NMS
+snmp-server trap-source GigabitEthernet1.99
+snmp-server location Belv
+snmp-server contact <CONTACT>
+snmp-server enable traps snmp linkdown linkup
+snmp-server enable traps ospf state-change
+snmp-server enable traps ospf errors
+snmp-server enable traps ospf retransmit
+snmp-server enable traps ospf lsa
+snmp-server enable traps ospf cisco-specific state-change nssa-trans-change
+snmp-server enable traps ospf cisco-specific state-change shamlink interface
+snmp-server enable traps ospf cisco-specific state-change shamlink neighbor
+snmp-server enable traps ospf cisco-specific errors
+snmp-server enable traps ospf cisco-specific retransmit
+snmp-server enable traps ospf cisco-specific lsa
+snmp-server enable traps event-manager
+snmp-server enable traps hsrp
+snmp-server host 10.99.0.12 version 2c <SNMP-COMMUNITY> 
+!
+tacacs server NMS-TAC
+ address ipv4 10.99.0.12
+ key <REDACTED-KEY>
+tacacs server ISE-TAC
+ address ipv4 10.99.0.50
+ key <REDACTED-KEY>
+!
+!
+!
+radius server NMS-RAD
+ address ipv4 10.99.0.12 auth-port 1812 acct-port 1813
+ key <REDACTED-KEY>
+!
+!
+control-plane
+!
+!
+!
+!
+!
+banner exec ^CCCCC
+**************************************************************************
+* IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+* education. IOSv is provided as-is and is not supported by Cisco's      *
+* Technical Advisory Center. Any use or disclosure, in whole or in part, *
+* of the IOSv Software or Documentation to any third party for any       *
+* purposes is expressly prohibited except as otherwise authorized by     *
+* Cisco in writing.                                                      *
+**************************************************************************^C
+banner incoming ^CCCCC
+**************************************************************************
+* IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+* education. IOSv is provided as-is and is not supported by Cisco's      *
+* Technical Advisory Center. Any use or disclosure, in whole or in part, *
+* of the IOSv Software or Documentation to any third party for any       *
+* purposes is expressly prohibited except as otherwise authorized by     *
+* Cisco in writing.                                                      *
+**************************************************************************^C
+banner login ^CCCCC
+**************************************************************************
+* IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+* education. IOSv is provided as-is and is not supported by Cisco's      *
+* Technical Advisory Center. Any use or disclosure, in whole or in part, *
+* of the IOSv Software or Documentation to any third party for any       *
+* purposes is expressly prohibited except as otherwise authorized by     *
+* Cisco in writing.                                                      *
+**************************************************************************^C
+!
+line con 0
+ stopbits 1
+line vty 0 4
+ authorization exec VTY-ISE-AUTHZ
+ login authentication VTY-ISE
+ transport input ssh
+!
+call-home
+ ! If contact email address in call-home is configured as sch-smart-licensing@cisco.com
+ ! the email address configured in Cisco Smart License Portal will be used as contact email address to send SCH notifications.
+ contact-email-addr sch-smart-licensing@cisco.com
+ profile "CiscoTAC-1"
+  active
+  destination transport-method http
+!
+!
+!
+!
+!
+end
+

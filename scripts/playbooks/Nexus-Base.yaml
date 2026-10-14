@@ -1,0 +1,18 @@
+- name: Service Password Encryption (Nexus)
+  hosts: Nexus
+  gather_facts: false
+  connection: ansible.netcommon.network_cli
+  vars:
+    ansible_network_os: cisco.nxos.nxos
+    ansible_network_cli_ssh_type: paramiko
+    ansible_user: "{{ lookup('env', 'LAB_USER') }}"
+    ansible_password: "{{ lookup('env', 'LAB_PASS') }}"
+    ansible_become: true
+    ansible_become_method: enable
+
+  tasks:
+    - name: Global Config Settings
+      cisco.nxos.nxos_config:
+        lines:
+          - feature restconf
+      register: print_output
