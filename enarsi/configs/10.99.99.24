@@ -12,6 +12,8 @@
 ! VTP: show vtp status
 ! 
 !
+! Last configuration change at 19:10:45 UTC Thu Oct 15 2026 by automate
+!
 version 17.12
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -127,18 +129,22 @@ username admin privilege 15 secret <REDACTED>
 !
 !
 !
+interface Loopback0
+ description Router ID
+ ip address 24.24.24.24 255.255.255.255
+!
 interface Ethernet0/0
  description MGMT
  vrf forwarding DMZ
  ip address 10.99.99.24 255.255.255.0
 !
 interface Ethernet0/1
- no ip address
- shutdown
+ description R22 e0/2
+ ip address 200.22.24.24 255.255.255.0
 !
 interface Ethernet0/2
- no ip address
- shutdown
+ description R23 e0/2
+ ip address 200.23.24.24 255.255.255.0
 !
 interface Ethernet0/3
  no ip address

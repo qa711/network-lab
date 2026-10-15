@@ -12,7 +12,7 @@
 ! VTP: show vtp status
 ! 
 !
-! Last configuration change at 18:59:41 UTC Thu Oct 8 2026 by admin
+! Last configuration change at 19:11:21 UTC Thu Oct 15 2026 by automate
 !
 version 17.12
 service timestamps debug datetime msec
@@ -89,7 +89,16 @@ no ipv6 cef
 multilink bundle-name authenticated
 !
 !
+crypto pki trustpoint TP-self-signed-67109024
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-67109024
+ revocation-check none
+ rsakeypair TP-self-signed-67109024
+ hash sha256
 !
+!
+  <CERTIFICATE-REDACTED>
+  <CERTIFICATE-REDACTED>
 !
 !
 memory free low-watermark processor 81225
@@ -120,6 +129,10 @@ username admin privilege 15 secret <REDACTED>
 !
 !
 !
+interface Loopback0
+ description Router ID
+ ip address 13.13.13.13 255.255.255.255
+!
 interface Ethernet0/0
  description MGMT
  vrf forwarding DMZ
@@ -127,49 +140,65 @@ interface Ethernet0/0
  ip address 10.99.99.13 255.255.255.0
 !
 interface Ethernet0/1
- no ip address
+ description R11 e0/2
+ ip address 100.11.13.13 255.255.255.0
 !
 interface Ethernet0/2
- no ip address
+ description R12 e0/2
+ ip address 100.12.13.13 255.255.255.0
 !
 interface Ethernet0/3
- no ip address
+ description R14 e0/2
+ ip address 100.13.14.13 255.255.255.0
 !
 interface Ethernet1/0
+ description RESERVED Phase 5: Belv B edge
  no ip address
+ shutdown
 !
 interface Ethernet1/1
  no ip address
+ shutdown
 !
 interface Ethernet1/2
  no ip address
+ shutdown
 !
 interface Ethernet1/3
  no ip address
+ shutdown
 !
 interface Ethernet2/0
  no ip address
+ shutdown
 !
 interface Ethernet2/1
  no ip address
+ shutdown
 !
 interface Ethernet2/2
  no ip address
+ shutdown
 !
 interface Ethernet2/3
  no ip address
+ shutdown
 !
 interface Ethernet3/0
  no ip address
+ shutdown
 !
 interface Ethernet3/1
  no ip address
+ shutdown
 !
 interface Ethernet3/2
  no ip address
+ shutdown
 !
 interface Ethernet3/3
  no ip address
+ shutdown
 !
 ip forward-protocol nd
 !

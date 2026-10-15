@@ -12,7 +12,7 @@
 ! VTP: show vtp status
 ! 
 !
-! Last configuration change at 19:00:23 UTC Thu Oct 8 2026 by admin
+! Last configuration change at 19:11:26 UTC Thu Oct 15 2026 by automate
 !
 version 17.12
 service timestamps debug datetime msec
@@ -89,7 +89,16 @@ no ipv6 cef
 multilink bundle-name authenticated
 !
 !
+crypto pki trustpoint TP-self-signed-67109328
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-67109328
+ revocation-check none
+ rsakeypair TP-self-signed-67109328
+ hash sha256
 !
+!
+  <CERTIFICATE-REDACTED>
+  <CERTIFICATE-REDACTED>
 !
 !
 memory free low-watermark processor 81225
@@ -120,6 +129,22 @@ username admin privilege 15 secret <REDACTED>
 !
 !
 !
+interface Loopback0
+ description Router ID
+ ip address 31.31.31.31 255.255.255.255
+!
+interface Loopback1
+ description Fake internet 150.150.1.0/24
+ ip address 150.150.1.1 255.255.255.0
+!
+interface Loopback2
+ description Fake internet 150.150.2.0/24
+ ip address 150.150.2.1 255.255.255.0
+!
+interface Loopback3
+ description Fake internet 150.150.3.0/24
+ ip address 150.150.3.1 255.255.255.0
+!
 interface Ethernet0/0
  description MGMT
  vrf forwarding DMZ
@@ -127,13 +152,16 @@ interface Ethernet0/0
  ip address 10.99.99.31 255.255.255.0
 !
 interface Ethernet0/1
- no ip address
+ description R11 e0/3
+ ip address 150.11.31.31 255.255.255.0
 !
 interface Ethernet0/2
- no ip address
+ description R21 e0/2
+ ip address 150.21.31.31 255.255.255.0
 !
 interface Ethernet0/3
  no ip address
+ shutdown
 !
 ip forward-protocol nd
 !

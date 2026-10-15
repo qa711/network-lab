@@ -12,7 +12,7 @@
 ! VTP: show vtp status
 ! 
 !
-! Last configuration change at 18:59:18 UTC Thu Oct 8 2026 by admin
+! Last configuration change at 19:17:47 UTC Thu Oct 15 2026 by automate
 !
 version 17.12
 service timestamps debug datetime msec
@@ -89,7 +89,16 @@ no ipv6 cef
 multilink bundle-name authenticated
 !
 !
+crypto pki trustpoint TP-self-signed-67109648
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-67109648
+ revocation-check none
+ rsakeypair TP-self-signed-67109648
+ hash sha256
 !
+!
+  <CERTIFICATE-REDACTED>
+  <CERTIFICATE-REDACTED>
 !
 !
 memory free low-watermark processor 81225
@@ -120,6 +129,10 @@ username admin privilege 15 secret <REDACTED>
 !
 !
 !
+interface Loopback0
+ description Router ID
+ ip address 51.51.51.51 255.255.255.255
+!
 interface Ethernet0/0
  description MGMT
  vrf forwarding DMZ
@@ -127,13 +140,16 @@ interface Ethernet0/0
  ip address 10.99.99.51 255.255.255.0
 !
 interface Ethernet0/1
- no ip address
+ description R14 e0/3
+ ip address 100.14.51.51 255.255.255.0
 !
 interface Ethernet0/2
- no ip address
+ description BR1-PC e0/0
+ ip address 10.51.1.1 255.255.255.0
 !
 interface Ethernet0/3
  no ip address
+ shutdown
 !
 ip forward-protocol nd
 !
