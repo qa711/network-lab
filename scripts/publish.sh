@@ -46,6 +46,25 @@ done < <(find "$DEST" -type f ! -path "$LAB_DEST/*" -print0)
 find "$DEST" -mindepth 1 -type d -empty ! -path "$LAB_DEST" -delete
 echo "   moved $moved file(s)"
 
+# Oxidized saves each group in its own repo next to output/, so the ENARSI group's
+# current configs are in ENARSI.git. They replace any older copies moved in above.
+LAB_STORE="${LAB_STORE:-/opt/oxidized/ENARSI.git}"
+if [[ -d "$LAB_STORE" ]]; then
+  echo ">> adding the ENARSI group's own Oxidized repo ($LAB_STORE)"
+  git config --global --get-all safe.directory 2>/dev/null | grep -qxF "$LAB_STORE" || \
+    git config --global --add safe.directory "$LAB_STORE"
+  rm -rf "$PLAIN-lab" "$PLAIN-lab-clean"
+  git clone --quiet "$LAB_STORE" "$PLAIN-lab"
+  "$PUB/scripts/sanitize-configs.sh" -i "$PLAIN-lab" -o "$PLAIN-lab-clean" --audit
+  took=0
+  while IFS= read -r -d '' f; do
+    mv -f "$f" "$LAB_DEST/$(basename "$f")"
+    took=$((took+1))
+  done < <(find "$PLAIN-lab-clean" -type f -print0)
+  rm -rf "$PLAIN-lab" "$PLAIN-lab-clean"
+  echo "   took $took current file(s) from $LAB_STORE"
+fi
+
 echo ">> committing"
 cd "$PUB"
 git add -A configs/ "$LAB_DIR"
