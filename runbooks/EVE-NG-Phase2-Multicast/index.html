@@ -1,0 +1,1177 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Three sites, four Cisco operating systems, and the operations stack that runs them">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Phase 2 — Multicast Across the CORP VRF - Multi-Site Enterprise Network Lab</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="light-blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#phase-2-multicast-across-the-corp-vrf" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Multi-Site Enterprise Network Lab" class="md-header__button md-logo" aria-label="Multi-Site Enterprise Network Lab" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Multi-Site Enterprise Network Lab
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Phase 2 — Multicast Across the CORP VRF
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="light-blue"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Multi-Site Enterprise Network Lab" class="md-nav__button md-logo" aria-label="Multi-Site Enterprise Network Lab" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Multi-Site Enterprise Network Lab
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../verify/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Verify It Yourself
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../build-it-yourself/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build It Yourself
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-multicast-domain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The multicast domain
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-0-prerequisite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 0 — prerequisite
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-a-pim-sm-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part A — PIM-SM foundation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part A — PIM-SM foundation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#corp-pbr-a-ios-xe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CORP-PBR-A (IOS-XE)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#corp-pbr-b-ios-xe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CORP-PBR-B (IOS-XE)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#csw1-and-csw2-nx-os-identical-block-on-both" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CSW1 and CSW2 (NX-OS — identical block on both)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nexus-a-nx-os" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NEXUS-A (NX-OS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nexus-b-nx-os" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NEXUS-B (NX-OS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify-part-a-do-this-before-part-b" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify Part A (do this before Part B)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-b-first-stream-igmpv2-register-spt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part B — first stream (IGMPv2, Register, SPT)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part B — first stream (IGMPv2, Register, SPT)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-join-the-receiver-corp-pbr-b" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Join the receiver — CORP-PBR-B
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-watch-registration-happen-on-pbr-a" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Watch registration happen — on PBR-A
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-start-the-source-nexus-a" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Start the source — NEXUS-A
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-read-the-steady-state-tree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Read the steady-state tree
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-c-receiver-on-a-real-lan-svi-nx-os-igmp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part C — receiver on a real LAN SVI (NX-OS IGMP)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part C — receiver on a real LAN SVI (NX-OS IGMP)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nexus-b" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NEXUS-B
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-d-ssm-with-igmpv3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part D — SSM with IGMPv3
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part D — SSM with IGMPv3">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#corp-pbr-a-and-corp-pbr-b" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CORP-PBR-A and CORP-PBR-B
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#receiver-nexus-b-igmpv3-join-with-the-source-specified" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Receiver — NEXUS-B (IGMPv3 join with the source specified)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#source-nexus-a" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Source — NEXUS-A
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify-the-ssm-signature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify — the SSM signature
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-e-deliberate-breaks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part E — deliberate breaks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part E — deliberate breaks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#e1-rpf-failover-the-one-that-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E1 — RPF failover (the one that matters)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#e2-ssm-without-igmpv3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E2 — SSM without IGMPv3
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#e3-rp-dependency-asm-vs-ssm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E3 — RP dependency (ASM vs SSM)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#e4-static-mroute-steering-rpf-without-touching-unicast" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E4 — static mroute: steering RPF without touching unicast
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-f-msdp-anycast-rp-the-stretch-that-teaches-why-msdp-exists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part F — MSDP anycast-RP (the stretch that teaches why MSDP exists)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part F — MSDP anycast-RP (the stretch that teaches why MSDP exists)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#f1-create-the-anycast-condition-and-watch-asm-break" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        F1 — create the anycast condition (and watch ASM break)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#f2-peer-the-rps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        F2 — peer the RPs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#f3-prove-the-redundancy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        F3 — prove the redundancy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-g-bidir-pim-describe-level-10-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part G — BiDir PIM (describe-level, 10 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting-quick-hits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting quick hits
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rollback-complete-removal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rollback (complete removal)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checklist-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checklist mapping
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="phase-2-multicast-across-the-corp-vrf">Phase 2 — Multicast Across the CORP VRF<a class="headerlink" href="#phase-2-multicast-across-the-corp-vrf" title="Permanent link">&para;</a></h1>
+<p>Covers the whole multicast line of your checklist: <strong>PIM-SM, IGMPv2, IGMPv3, SSM, MSDP</strong> (as anycast-RP), plus <strong>BiDir</strong> at describe-level and RPF manipulation with static mroutes. Everything runs on existing devices — no new nodes.</p>
+<p><strong>Time budget:</strong> Parts A–D one evening. Part E ~45 min. Parts F–G another hour.</p>
+<hr />
+<h2 id="the-multicast-domain">The multicast domain<a class="headerlink" href="#the-multicast-domain" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code> SOURCE                                                        RECEIVER
+ NEXUS-A Vlan10 (10.1.0.1/24, area 10)          NEXUS-B Vlan10 (10.1.1.1/24, area 10)
+        |                                                          |
+      E1/8 ──── Gi1  PBR-A  Gi2 ──── E1/5 CSW1 E1/6 ──── Gi2  PBR-B  Gi1 ──── E1/8
+                 |  (RP: Lo100)                                |
+                 Gi3 ─────── E1/5 CSW2 E1/6 ─────────────────── Gi3
+                 |                                             |
+                 └──────────── Tunnel0 (172.16.12.0/30) ────────┘   (in OSPF, high cost)
+</code></pre></div>
+<p>All in VRF <strong>CISCO-CORP</strong> on the NX-OS boxes, global table on the PBR CSRs (they're the same OSPF domain).</p>
+<p><strong>Address plan</strong> (verified unused in the lab):</p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ASM group</td>
+<td>239.1.1.10</td>
+</tr>
+<tr>
+<td>SSM group</td>
+<td>232.1.1.1</td>
+</tr>
+<tr>
+<td>BiDir group range</td>
+<td>239.200.1.0/24</td>
+</tr>
+<tr>
+<td>RP (later anycast)</td>
+<td>10.255.100.1/32 = PBR-A <strong>Loopback100</strong> (Part F adds the same on PBR-B)</td>
+</tr>
+<tr>
+<td>MSDP peer IDs</td>
+<td>PBR-A Lo101 = 10.255.101.1/32, PBR-B Lo101 = 10.255.101.2/32</td>
+</tr>
+</tbody>
+</table>
+<p><strong>RPF prediction worth knowing up front:</strong> PBR-B has two equal-cost paths toward site A (via CSW1 next-hop 10.20.30.1, via CSW2 next-hop 10.20.60.1). With ECMP, IOS RPF picks the <strong>highest next-hop IP</strong> → expect the tree to pin through <strong>CSW2</strong>. You'll verify and then break this in Part E.</p>
+<h2 id="part-0-prerequisite">Part 0 — prerequisite<a class="headerlink" href="#part-0-prerequisite" title="Permanent link">&para;</a></h2>
+<p>Apply the outstanding NEXUS-A fix first, or RPF toward PBR-A's Gi2/Gi3 subnets is ambiguous and this lab will behave randomly:</p>
+<div class="highlight"><pre><span></span><code>! NEXUS-A
+no interface Ethernet1/6.30
+no interface Ethernet1/7.30
+</code></pre></div>
+<p>Confirm before continuing: <code>show ip route 10.10.30.2 vrf CISCO-CORP</code> on CSW1 shows a single path via E1/5.</p>
+<hr />
+<h2 id="part-a-pim-sm-foundation">Part A — PIM-SM foundation<a class="headerlink" href="#part-a-pim-sm-foundation" title="Permanent link">&para;</a></h2>
+<h3 id="corp-pbr-a-ios-xe">CORP-PBR-A (IOS-XE)<a class="headerlink" href="#corp-pbr-a-ios-xe" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>ip multicast-routing distributed
+!
+interface Loopback100
+ description RP-ANYCAST
+ ip address 10.255.100.1 255.255.255.255
+ ip pim sparse-mode
+!
+interface GigabitEthernet1
+ ip pim sparse-mode
+interface GigabitEthernet2
+ ip pim sparse-mode
+interface GigabitEthernet3
+ ip pim sparse-mode
+!
+router ospf 1
+ network 10.255.100.1 0.0.0.0 area 0
+!
+ip pim rp-address 10.255.100.1
+</code></pre></div>
+<h3 id="corp-pbr-b-ios-xe">CORP-PBR-B (IOS-XE)<a class="headerlink" href="#corp-pbr-b-ios-xe" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>ip multicast-routing distributed
+!
+interface GigabitEthernet1
+ ip pim sparse-mode
+interface GigabitEthernet2
+ ip pim sparse-mode
+interface GigabitEthernet3
+ ip pim sparse-mode
+!
+ip pim rp-address 10.255.100.1
+</code></pre></div>
+<h3 id="csw1-and-csw2-nx-os-identical-block-on-both">CSW1 and CSW2 (NX-OS — identical block on both)<a class="headerlink" href="#csw1-and-csw2-nx-os-identical-block-on-both" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>feature pim
+!
+interface Ethernet1/5
+  ip pim sparse-mode
+interface Ethernet1/6
+  ip pim sparse-mode
+!
+vrf context CISCO-CORP
+  ip pim rp-address 10.255.100.1 group-list 224.0.0.0/4
+</code></pre></div>
+<h3 id="nexus-a-nx-os">NEXUS-A (NX-OS)<a class="headerlink" href="#nexus-a-nx-os" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>feature pim
+!
+interface Ethernet1/8
+  ip pim sparse-mode
+interface Vlan10
+  ip pim sparse-mode
+!
+vrf context CISCO-CORP
+  ip pim rp-address 10.255.100.1 group-list 224.0.0.0/4
+</code></pre></div>
+<h3 id="nexus-b-nx-os">NEXUS-B (NX-OS)<a class="headerlink" href="#nexus-b-nx-os" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>feature pim
+!
+interface Ethernet1/8
+  ip pim sparse-mode
+interface Vlan10
+  ip pim sparse-mode
+!
+vrf context CISCO-CORP
+  ip pim rp-address 10.255.100.1 group-list 224.0.0.0/4
+</code></pre></div>
+<h3 id="verify-part-a-do-this-before-part-b">Verify Part A (do this before Part B)<a class="headerlink" href="#verify-part-a-do-this-before-part-b" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>! IOS-XE
+show ip pim neighbor          ! PBR-A expects 3 (Gi1/Gi2/Gi3); PBR-B expects 3
+show ip pim rp mapping        ! Static: 10.255.100.1 for 224.0.0.0/4
+show ip pim interface
+
+! NX-OS
+show ip pim neighbor vrf CISCO-CORP    ! CSWs expect 2; NEXUS boxes expect 1 (E1/8)
+show ip pim rp vrf CISCO-CORP
+show ip pim interface vrf CISCO-CORP brief
+</code></pre></div>
+<p>Nothing forwards yet — that's correct. PIM-SM is pull-based: no receivers, no tree.</p>
+<hr />
+<h2 id="part-b-first-stream-igmpv2-register-spt">Part B — first stream (IGMPv2, Register, SPT)<a class="headerlink" href="#part-b-first-stream-igmpv2-register-spt" title="Permanent link">&para;</a></h2>
+<p>Receiver goes on <strong>PBR-B Gi1 first</strong> because IOS-XE reliably answers pings to joined groups — a clean success gate before you involve NX-OS punting quirks.</p>
+<h3 id="1-join-the-receiver-corp-pbr-b">1. Join the receiver — CORP-PBR-B<a class="headerlink" href="#1-join-the-receiver-corp-pbr-b" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>interface GigabitEthernet1
+ ip igmp join-group 239.1.1.10
+</code></pre></div>
+<p>Immediately check the shared tree built toward the RP:
+<div class="highlight"><pre><span></span><code>show ip mroute 239.1.1.10              ! on PBR-B: (*,G), RP 10.255.100.1, flags SJCL, OIF Gi1
+show ip mroute vrf CISCO-CORP 239.1.1.10   ! on CSW2: (*,G) IIF E1/5, OIF E1/6
+show ip mroute 239.1.1.10              ! on PBR-A (RP): (*,G) with OIF toward CSW2 (Gi3)
+</code></pre></div>
+If CSW1 has the (*,G) instead of CSW2, your ECMP tiebreak landed differently — fine, just note which core switch owns the tree and mirror the Part E break accordingly.</p>
+<h3 id="2-watch-registration-happen-on-pbr-a">2. Watch registration happen — on PBR-A<a class="headerlink" href="#2-watch-registration-happen-on-pbr-a" title="Permanent link">&para;</a></h3>
+<p><div class="highlight"><pre><span></span><code>debug condition interface GigabitEthernet1
+debug ip pim 239.1.1.10
+</code></pre></div>
+(Conditional debug from your checklist, applied for real: the Register arrives as unicast from NEXUS-A via Gi1.)</p>
+<h3 id="3-start-the-source-nexus-a">3. Start the source — NEXUS-A<a class="headerlink" href="#3-start-the-source-nexus-a" title="Permanent link">&para;</a></h3>
+<p><div class="highlight"><pre><span></span><code>ping multicast 239.1.1.10 interface vlan 10 count 100
+</code></pre></div>
+(If your NX-OS build rejects that syntax, try <code>ping 239.1.1.10 interface vlan 10 count 100</code>.)</p>
+<p><strong>Expected:</strong> replies from <strong>10.10.71.2</strong> (PBR-B's Gi1 — multicast pings are answered unicast by each joined responder). On PBR-A's debug: <code>Received v2 Register</code> then <code>Send v2 Register-Stop</code> — the FHR-to-RP handshake, once. Then <code>undebug all</code>.</p>
+<h3 id="4-read-the-steady-state-tree">4. Read the steady-state tree<a class="headerlink" href="#4-read-the-steady-state-tree" title="Permanent link">&para;</a></h3>
+<p><div class="highlight"><pre><span></span><code>! PBR-B
+show ip mroute 239.1.1.10       ! now ALSO an (S,G): (10.1.0.1, 239.1.1.10), flags include T = SPT
+show ip rpf 10.1.0.1            ! RPF neighbor 10.20.60.1 via Gi3 (the CSW2 prediction)
+show ip mroute count            ! forwarded counters incrementing
+
+! NX-OS hops
+show ip mroute vrf CISCO-CORP detail   ! per-entry packet stats
+</code></pre></div>
+The *<em>(<em>,G) → Register → Register-Stop → (S,G)/SPT</em></em> sequence you just watched is the entire PIM-SM exam narrative in one ping.</p>
+<hr />
+<h2 id="part-c-receiver-on-a-real-lan-svi-nx-os-igmp">Part C — receiver on a real LAN SVI (NX-OS IGMP)<a class="headerlink" href="#part-c-receiver-on-a-real-lan-svi-nx-os-igmp" title="Permanent link">&para;</a></h2>
+<p>Now move the receiver where it belongs — site B's user VLAN:</p>
+<h3 id="nexus-b">NEXUS-B<a class="headerlink" href="#nexus-b" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>interface Vlan10
+  ip igmp join-group 239.1.1.10
+</code></pre></div>
+<p>Re-run the source ping from NEXUS-A. Verify:
+<div class="highlight"><pre><span></span><code>show ip igmp groups vrf CISCO-CORP          ! 239.1.1.10 on Vlan10, v2
+show ip mroute vrf CISCO-CORP 239.1.1.10    ! on NEXUS-B: OIF Vlan10, IIF E1/8
+</code></pre></div></p>
+<p>Two NX-OS realities worth knowing (both exam-adjacent):
+- <code>join-group</code> punts the traffic to the supervisor. N9Kv may or may not answer the pings — <strong>the mroute counters are your proof of forwarding</strong>, replies are a bonus.
+- The production-grade alternative is <code>ip igmp static-oif 239.1.1.10</code> — adds the OIF without punting, switch won't reply at all. Swap it in and observe the difference if you like.</p>
+<p>Optionally remove the PBR-B join now to keep state clean:
+<div class="highlight"><pre><span></span><code>interface GigabitEthernet1
+ no ip igmp join-group 239.1.1.10
+</code></pre></div></p>
+<hr />
+<h2 id="part-d-ssm-with-igmpv3">Part D — SSM with IGMPv3<a class="headerlink" href="#part-d-ssm-with-igmpv3" title="Permanent link">&para;</a></h2>
+<p>Platform asymmetry to notice: <strong>NX-OS enables the 232.0.0.0/8 SSM range by default</strong> the moment PIM is on; <strong>IOS-XE needs it switched on</strong>.</p>
+<h3 id="corp-pbr-a-and-corp-pbr-b">CORP-PBR-A and CORP-PBR-B<a class="headerlink" href="#corp-pbr-a-and-corp-pbr-b" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>ip pim ssm default
+</code></pre></div>
+<h3 id="receiver-nexus-b-igmpv3-join-with-the-source-specified">Receiver — NEXUS-B (IGMPv3 join with the source specified)<a class="headerlink" href="#receiver-nexus-b-igmpv3-join-with-the-source-specified" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>interface Vlan10
+  ip igmp version 3
+  ip igmp join-group 232.1.1.1 source 10.1.0.1
+</code></pre></div>
+<h3 id="source-nexus-a">Source — NEXUS-A<a class="headerlink" href="#source-nexus-a" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>ping multicast 232.1.1.1 interface vlan 10 count 100
+</code></pre></div>
+<h3 id="verify-the-ssm-signature">Verify — the SSM signature<a class="headerlink" href="#verify-the-ssm-signature" title="Permanent link">&para;</a></h3>
+<p><div class="highlight"><pre><span></span><code>show ip mroute 232.1.1.1                     ! IOS: (S,G) ONLY - no (*,G), flags include s
+show ip mroute vrf CISCO-CORP 232.1.1.1      ! NX-OS: same story
+show ip pim group-range vrf CISCO-CORP       ! NX-OS: shows 232.0.0.0/8 = SSM
+show ip igmp groups detail                   ! receiver: v3, include-mode, source 10.1.0.1
+</code></pre></div>
+No (*,G), no Register, <strong>RP never consulted</strong> — that's the whole point of SSM, visible in one mroute.</p>
+<hr />
+<h2 id="part-e-deliberate-breaks">Part E — deliberate breaks<a class="headerlink" href="#part-e-deliberate-breaks" title="Permanent link">&para;</a></h2>
+<p>Restore each break before moving to the next.</p>
+<h3 id="e1-rpf-failover-the-one-that-matters">E1 — RPF failover (the one that matters)<a class="headerlink" href="#e1-rpf-failover-the-one-that-matters" title="Permanent link">&para;</a></h3>
+<p>With the source pinging continuously (<code>count 1000</code>):
+<div class="highlight"><pre><span></span><code>! PBR-B — confirm current RPF path
+show ip rpf 10.1.0.1                  ! expect via Gi3 / 10.20.60.1 (CSW2)
+
+! Break it
+interface GigabitEthernet3
+ shutdown
+</code></pre></div>
+<strong>Expected:</strong> a handful of lost replies, then the stream recovers. <code>show ip rpf 10.1.0.1</code> now shows Gi2 / 10.20.30.1 — the (S,G) rebuilt through CSW1, driven purely by the unicast table changing. Confirm CSW1 now carries the (S,G) it didn't have before. <code>no shutdown</code> and note the tree doesn't necessarily swing back until state times out — RPF follows unicast, but PIM isn't in a hurry.</p>
+<h3 id="e2-ssm-without-igmpv3">E2 — SSM without IGMPv3<a class="headerlink" href="#e2-ssm-without-igmpv3" title="Permanent link">&para;</a></h3>
+<p><div class="highlight"><pre><span></span><code>! NEXUS-B
+interface Vlan10
+  ip igmp version 2
+</code></pre></div>
+Try the 232.1.1.1 stream again. <strong>Expected: dead.</strong> A v2 join can't express a source, and the SSM range refuses (*,G) state — check <code>show ip mroute vrf CISCO-CORP 232.1.1.1</code> (nothing, or no OIF). This is the "SSM requires IGMPv3" exam fact, experienced. Restore <code>ip igmp version 3</code>.</p>
+<h3 id="e3-rp-dependency-asm-vs-ssm">E3 — RP dependency (ASM vs SSM)<a class="headerlink" href="#e3-rp-dependency-asm-vs-ssm" title="Permanent link">&para;</a></h3>
+<p><div class="highlight"><pre><span></span><code>! PBR-B
+no ip pim rp-address 10.255.100.1
+</code></pre></div>
+<strong>Expected:</strong> new joins to 239.1.1.10 fail (PBR-B can't map group→RP, no shared tree), while 232.1.1.1 keeps flowing — SSM has no RP to lose. Restore the rp-address before Part F.</p>
+<h3 id="e4-static-mroute-steering-rpf-without-touching-unicast">E4 — static mroute: steering RPF without touching unicast<a class="headerlink" href="#e4-static-mroute-steering-rpf-without-touching-unicast" title="Permanent link">&para;</a></h3>
+<p>The GRE tunnel is PIM-capable but OSPF-expensive, so it never wins RPF. Force it:
+<div class="highlight"><pre><span></span><code>! PBR-B — enable PIM on the tunnel (both ends)
+interface Tunnel0
+ ip pim sparse-mode
+! (mirror on PBR-A Tunnel0)
+
+! PBR-B — RPF for the source subnet now points into the tunnel
+ip mroute 10.1.0.0 255.255.255.0 Tunnel0
+</code></pre></div>
+<strong>Expected:</strong> <code>show ip pim neighbor</code> lists a neighbor on Tunnel0 (proof GRE carries multicast — native IPsec can't, GRE-over-IPsec can, a favourite exam distinction). <code>show ip rpf 10.1.0.1</code> now says Tunnel0 via static mroute, and the (S,G) rebuilds through the tunnel while unicast still uses the physical path — RPF and unicast <strong>decoupled</strong>. Remove with <code>no ip mroute 10.1.0.0 255.255.255.0 Tunnel0</code>. Leave PIM on the tunnels; it's harmless and useful later. (Don't lower the tunnel's OSPF cost to achieve this instead — the tunnel destination is learned via the same OSPF, and you'll build a recursive-routing flap.)</p>
+<hr />
+<h2 id="part-f-msdp-anycast-rp-the-stretch-that-teaches-why-msdp-exists">Part F — MSDP anycast-RP (the stretch that teaches why MSDP exists)<a class="headerlink" href="#part-f-msdp-anycast-rp-the-stretch-that-teaches-why-msdp-exists" title="Permanent link">&para;</a></h2>
+<p>Do this in the order written — the mid-point failure is the lesson.</p>
+<h3 id="f1-create-the-anycast-condition-and-watch-asm-break">F1 — create the anycast condition (and watch ASM break)<a class="headerlink" href="#f1-create-the-anycast-condition-and-watch-asm-break" title="Permanent link">&para;</a></h3>
+<p><div class="highlight"><pre><span></span><code>! CORP-PBR-B
+interface Loopback100
+ description RP-ANYCAST
+ ip address 10.255.100.1 255.255.255.255
+ ip pim sparse-mode
+!
+router ospf 1
+ network 10.255.100.1 0.0.0.0 area 0
+</code></pre></div>
+Two routers now advertise 10.255.100.1/32; everyone uses their <strong>closest</strong> RP. Source (NEXUS-A) registers to PBR-A; receiver (NEXUS-B) joins toward PBR-B. Start the 239.1.1.10 stream: <strong>it fails or goes one-way</strong> — PBR-B is an RP that has never heard of the source. <code>show ip mroute 239.1.1.10</code> on PBR-B: (*,G) with receivers, no (S,G). That gap is precisely what MSDP fills.</p>
+<h3 id="f2-peer-the-rps">F2 — peer the RPs<a class="headerlink" href="#f2-peer-the-rps" title="Permanent link">&para;</a></h3>
+<p><div class="highlight"><pre><span></span><code>! CORP-PBR-A
+interface Loopback101
+ ip address 10.255.101.1 255.255.255.255
+router ospf 1
+ network 10.255.101.1 0.0.0.0 area 0
+ip msdp peer 10.255.101.2 connect-source Loopback101
+ip msdp originator-id Loopback101
+
+! CORP-PBR-B
+interface Loopback101
+ ip address 10.255.101.2 255.255.255.255
+router ospf 1
+ network 10.255.101.2 0.0.0.0 area 0
+ip msdp peer 10.255.101.1 connect-source Loopback101
+ip msdp originator-id Loopback101
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>show ip msdp summary        ! peer state Up (it's a TCP session, port 639)
+show ip msdp sa-cache       ! on PBR-B once the source pings: (10.1.0.1, 239.1.1.10) learned from PBR-A
+</code></pre></div>
+<strong>Expected:</strong> the moment the SA appears in PBR-B's cache, the stream completes. Register goes to one RP, MSDP tells the other, receiver-side RP joins toward the source.</p>
+<h3 id="f3-prove-the-redundancy">F3 — prove the redundancy<a class="headerlink" href="#f3-prove-the-redundancy" title="Permanent link">&para;</a></h3>
+<p><div class="highlight"><pre><span></span><code>! CORP-PBR-A
+interface Loopback100
+ shutdown
+</code></pre></div>
+Unicast reconverges, 10.255.100.1 now resolves to PBR-B everywhere, registration and joins shift there, stream survives. That's RP failover without touching a single client config. <code>no shutdown</code> after.</p>
+<p>One-liner for the exam: NX-OS also offers a protocol-native alternative (<code>ip pim anycast-rp</code>, RFC 4610) that does this without MSDP — know it exists; MSDP is the one the blueprint names.</p>
+<hr />
+<h2 id="part-g-bidir-pim-describe-level-10-minutes">Part G — BiDir PIM (describe-level, 10 minutes)<a class="headerlink" href="#part-g-bidir-pim-describe-level-10-minutes" title="Permanent link">&para;</a></h2>
+<p>Consistent mapping everywhere, scoped to its own range:</p>
+<div class="highlight"><pre><span></span><code>! Both PBRs (IOS-XE)
+ip pim bidir-enable
+ip access-list standard BIDIR-GROUPS
+ permit 239.200.1.0 0.0.0.255
+ip pim rp-address 10.255.100.1 BIDIR-GROUPS bidir
+
+! All four NX-OS boxes, under vrf context CISCO-CORP
+  ip pim rp-address 10.255.100.1 group-list 239.200.1.0/24 bidir
+</code></pre></div>
+<p>Join 239.200.1.1 on NEXUS-B Vlan10, ping it from NEXUS-A, then look:
+<div class="highlight"><pre><span></span><code>show ip pim rp mapping                        ! 239.200.1.0/24 -&gt; Bidir Mode
+show ip mroute 239.200.1.1                    ! (*,G) ONLY, B flag - even while traffic flows
+</code></pre></div>
+<strong>The takeaway:</strong> traffic forwarding with <em>no (S,G) state ever created</em> — that's BiDir's entire value proposition (many-to-many with tiny state), and seeing the mroute makes it stick. Don't sink more time here; describe-level is all ENCOR asks.</p>
+<hr />
+<h2 id="troubleshooting-quick-hits">Troubleshooting quick hits<a class="headerlink" href="#troubleshooting-quick-hits" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Counters increment but no ping replies → normal on NX-OS join-group; trust <code>show ip mroute ... detail</code> / <code>show ip mroute count</code>. Put the join back on PBR-B Gi1 if you want replies.</li>
+<li>No (S,G) anywhere → check the FHR: does NEXUS-A's Vlan10 have <code>ip pim sparse-mode</code>? No PIM on the source interface = no Register.</li>
+<li>(*,G) exists, (S,G) RPF-fails → <code>show ip rpf &lt;source&gt;</code> hop by hop; nine times out of ten it's the ECMP pin on the "wrong" core switch or a missing sparse-mode on that path.</li>
+<li>PIM neighbor missing on one link → <code>show ip pim interface</code> both ends; on NX-OS confirm <code>feature pim</code> actually enabled.</li>
+</ul>
+<h2 id="rollback-complete-removal">Rollback (complete removal)<a class="headerlink" href="#rollback-complete-removal" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>! PBR-A / PBR-B
+no ip msdp peer &lt;peer&gt;            (F)
+no interface Loopback100          (A/F)
+no interface Loopback101          (F)
+no ip pim rp-address 10.255.100.1
+no ip pim rp-address 10.255.100.1 BIDIR-GROUPS bidir
+no ip pim ssm default
+no ip pim bidir-enable
+no ip mroute 10.1.0.0 255.255.255.0 Tunnel0
+no ip multicast-routing distributed
+! plus: no ip pim sparse-mode / no ip igmp ... under Gi1-3, Tunnel0
+! and remove the two Loopback network statements under router ospf 1
+
+! All four NX-OS boxes
+no feature pim                    ! removes every pim/igmp interface + vrf command in one go
+</code></pre></div>
+<h2 id="checklist-mapping">Checklist mapping<a class="headerlink" href="#checklist-mapping" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>ENCOR line</th>
+<th>Where you did it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PIM-SM</td>
+<td>Parts A–B (Register/Register-Stop watched live)</td>
+</tr>
+<tr>
+<td>IGMPv2</td>
+<td>Parts B–C</td>
+</tr>
+<tr>
+<td>IGMPv3</td>
+<td>Part D receiver config</td>
+</tr>
+<tr>
+<td>SSM</td>
+<td>Part D + break E2</td>
+</tr>
+<tr>
+<td>Bidirectional PIM</td>
+<td>Part G</td>
+</tr>
+<tr>
+<td>MSDP</td>
+<td>Part F (anycast-RP, break-then-fix)</td>
+</tr>
+<tr>
+<td>Conditional debug (bonus)</td>
+<td>Part B step 2</td>
+</tr>
+<tr>
+<td>RPF / static mroute (bonus)</td>
+<td>E1, E4</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

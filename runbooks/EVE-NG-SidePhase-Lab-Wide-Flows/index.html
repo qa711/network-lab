@@ -1,0 +1,779 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Three sites, four Cisco operating systems, and the operations stack that runs them">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Side Phase — Lab-Wide Flow Visibility - Multi-Site Enterprise Network Lab</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="light-blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#side-phase-lab-wide-flow-visibility" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Multi-Site Enterprise Network Lab" class="md-header__button md-logo" aria-label="Multi-Site Enterprise Network Lab" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Multi-Site Enterprise Network Lab
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Side Phase — Lab-Wide Flow Visibility
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="light-blue"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Multi-Site Enterprise Network Lab" class="md-nav__button md-logo" aria-label="Multi-Site Enterprise Network Lab" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Multi-Site Enterprise Network Lab
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../verify/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Verify It Yourself
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../build-it-yourself/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build It Yourself
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#design-principles-read-once-they-explain-every-choice-below" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design principles (read once, they explain every choice below)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-a-complete-the-csrs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part A — complete the CSRs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part A — complete the CSRs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a1-corp-pbr-a-extend-to-all-routed-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A.1 CORP-PBR-A — extend to all routed interfaces
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a2-corp-pbr-b-full-stack-mirrored" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A.2 CORP-PBR-B — full stack, mirrored
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-b-q-edge-ios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part B — Q-EDGE (IOS)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-c-the-firewalls-multi-vendor-flavour" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part C — the firewalls (multi-vendor flavour)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part C — the firewalls (multi-vendor flavour)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#c1-palo-alto-pa-vm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C.1 Palo Alto (PA-VM)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c2-opnsense" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C.2 OPNsense
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c3-verify-each-firewall-the-same-way" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C.3 Verify each firewall the same way
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-d-akvorado-touch-ups-and-the-payoff" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part D — Akvorado touch-ups and the payoff
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-e-stretch-goals-expectations-set-honestly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part E — stretch goals (expectations set honestly)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part E — stretch goals (expectations set honestly)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#e1-nx-os-sflow-on-csw1-an-experiment-not-a-promise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E.1 NX-OS sFlow on CSW1 — an experiment, not a promise
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#e2-ios-xr-on-the-ces-the-sampling-lesson-completed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E.2 IOS-XR on the CEs — the sampling lesson, completed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#e3-vedge-cflowd-parked-deliberately" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E.3 vEdge cflowd — parked deliberately
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rollback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rollback
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-this-adds-to-the-story" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What this adds to the story
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="side-phase-lab-wide-flow-visibility">Side Phase — Lab-Wide Flow Visibility<a class="headerlink" href="#side-phase-lab-wide-flow-visibility" title="Permanent link">&para;</a></h1>
+<p>Goal: turn the single working exporter (CORP-PBR-A) into whole-estate visibility in Akvorado — both PBRs, Q-EDGE, and the two firewalls, with the NX-OS and IOS-XR boxes as honest stretch goals. By the end, the console's <strong>Exporter</strong> dimension becomes a map of your lab.</p>
+<p><strong>Time budget:</strong> Parts A+B one evening, Part C one evening, D is minutes, E when curious.</p>
+<hr />
+<h2 id="design-principles-read-once-they-explain-every-choice-below">Design principles (read once, they explain every choice below)<a class="headerlink" href="#design-principles-read-once-they-explain-every-choice-below" title="Permanent link">&para;</a></h2>
+<p><strong>1. Input monitors on every routed interface of an instrumented device.</strong> That gives each device a <em>complete</em> view — every packet transiting it is seen exactly once on entry. No output monitors needed.</p>
+<p><strong>2. Cross-exporter duplication is inherent — don't fight it.</strong> A single A→B flow will be observed by PBR-A <em>and</em> PBR-B (and Q-EDGE if it transits Site Q). Akvorado does not deduplicate across exporters; that's by design — each exporter is an independent observation point. In the console, filter or group by <strong>Exporter</strong> when you want truth; understand that "all exporters" sums <em>observations</em>, not unique bytes.</p>
+<p><strong>3. Every new exporter must pass Akvorado's two gates</strong> (both verified in the 2.4.0 source):
+- <strong>SNMP metadata:</strong> the outlet polls the <em>flow packets' source address</em> with the credentials in outlet.yaml (<code>REMOVED</code> under <code>::/0</code>). If the poll fails, flows are dropped with <code>flows_errors_total{error="metadata missing"}</code>. So every exporter must answer SNMP on the address it sources flows from — for the routers that's already true (LibreNMS polls them); for the firewalls it's a setup step.
+- <strong>Sampling rate:</strong> already insured — <code>default-sampling-rate: 1</code> under <code>::/0</code> covers every unsampled exporter you add. sFlow and IOS-XR advertise their own rates, which override nothing (they simply arrive non-zero).</p>
+<p><strong>4. The flow record must carry interface indexes.</strong> Flows without ifIndex are dropped (<code>input and output interfaces missing</code>). Your FNF-RECORD has <code>match interface input</code> — keep it in every copy.</p>
+<hr />
+<h2 id="part-a-complete-the-csrs">Part A — complete the CSRs<a class="headerlink" href="#part-a-complete-the-csrs" title="Permanent link">&para;</a></h2>
+<h3 id="a1-corp-pbr-a-extend-to-all-routed-interfaces">A.1 CORP-PBR-A — extend to all routed interfaces<a class="headerlink" href="#a1-corp-pbr-a-extend-to-all-routed-interfaces" title="Permanent link">&para;</a></h3>
+<p>The record/exporter/monitor already exist; just widen the application:</p>
+<div class="highlight"><pre><span></span><code>interface GigabitEthernet2
+ ip flow monitor FNF-MONITOR input
+interface GigabitEthernet3
+ ip flow monitor FNF-MONITOR input
+interface Tunnel0
+ ip flow monitor FNF-MONITOR input
+</code></pre></div>
+<p>(Add Tunnel1 too once Phase 1 Task 3 is done.) Tunnel0 input is a fun one: it sees the <em>decapsulated inner</em> flows arriving over GRE — including your multicast — where Gi2 only ever sees ESP.</p>
+<h3 id="a2-corp-pbr-b-full-stack-mirrored">A.2 CORP-PBR-B — full stack, mirrored<a class="headerlink" href="#a2-corp-pbr-b-full-stack-mirrored" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>flow record FNF-RECORD
+ match ipv4 source address
+ match ipv4 destination address
+ match transport source-port
+ match transport destination-port
+ match ip protocol
+ match interface input
+ collect ipv4 dscp
+ collect counter bytes long
+ collect counter packets long
+ collect timestamp sys-uptime first
+ collect timestamp sys-uptime last
+!
+flow exporter FNF-EXPORTER
+ destination 10.99.0.12 vrf DMZ
+ source Loopback99
+ transport udp 2055
+ export-protocol netflow-v9
+ template data timeout 30
+!
+flow monitor FNF-MONITOR
+ record FNF-RECORD
+ exporter FNF-EXPORTER
+ cache timeout active 60
+ cache timeout inactive 15
+!
+interface GigabitEthernet1
+ ip flow monitor FNF-MONITOR input
+interface GigabitEthernet2
+ ip flow monitor FNF-MONITOR input
+interface GigabitEthernet3
+ ip flow monitor FNF-MONITOR input
+interface Tunnel0
+ ip flow monitor FNF-MONITOR input
+</code></pre></div>
+<p>Loopback99 here is 10.99.250.251 — Akvorado will SNMP-poll that address, which LibreNMS already proves works. Note <code>template data timeout 30</code> is baked in from the start this time; you've earned that line.</p>
+<p><strong>Verify:</strong> run some inter-site traffic, then on the box:
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-s<span class="w"> </span>http://127.0.0.1:8081/api/v0/outlet/metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>netflow_packets_total
+</code></pre></div>
+A second <code>exporter="::ffff:10.99.250.251"</code> series appearing = PBR-B is in.</p>
+<hr />
+<h2 id="part-b-q-edge-ios">Part B — Q-EDGE (IOS)<a class="headerlink" href="#part-b-q-edge-ios" title="Permanent link">&para;</a></h2>
+<p>Same FNF stack; the only differences are the interfaces and the export path (Q-EDGE reaches the NMS via VRF DMZ):</p>
+<div class="highlight"><pre><span></span><code>flow record FNF-RECORD
+ match ipv4 source address
+ match ipv4 destination address
+ match transport source-port
+ match transport destination-port
+ match ip protocol
+ match interface input
+ collect counter bytes long
+ collect counter packets long
+ collect timestamp sys-uptime first
+ collect timestamp sys-uptime last
+!
+flow exporter FNF-EXPORTER
+ destination 10.99.0.12 vrf DMZ
+ source GigabitEthernet0/2.99
+ transport udp 2055
+ export-protocol netflow-v9
+ template data timeout 30
+!
+flow monitor FNF-MONITOR
+ record FNF-RECORD
+ exporter FNF-EXPORTER
+ cache timeout active 60
+ cache timeout inactive 15
+!
+interface GigabitEthernet0/1
+ ip flow monitor FNF-MONITOR input
+interface GigabitEthernet0/3.98
+ ip flow monitor FNF-MONITOR input
+</code></pre></div>
+<p>(Optionally add Gi0/0 and Gi0/4 for the DMZ side — then you get the pleasingly recursive sight of the SNMP polling and NetFlow export traffic showing up as flows.)</p>
+<p>Two Q-EDGE-specific notes:
+- <strong>Source address = metadata gate.</strong> Flows source from Gi0/2.99 (10.99.2.1). If Q-EDGE's flows later drop with <code>metadata missing</code>, it means Akvorado's SNMP poll to 10.99.2.1 failed — switch the exporter <code>source</code> to whichever address LibreNMS polls Q-EDGE on, and it will pass.
+- <strong>IOL caveat:</strong> FNF on IOL is software-only and usually exports fine, but some builds are flaky. If <code>show flow exporter FNF-EXPORTER statistics</code> shows packets sent but nothing reaches tcpdump on the collector, that's the image, not your config — the cache still proves classification, and the exam doesn't care which box exported.</p>
+<hr />
+<h2 id="part-c-the-firewalls-multi-vendor-flavour">Part C — the firewalls (multi-vendor flavour)<a class="headerlink" href="#part-c-the-firewalls-multi-vendor-flavour" title="Permanent link">&para;</a></h2>
+<p>This is the part that makes the estate feel real — and both devices must pass <strong>both gates</strong>: flow export <em>and</em> SNMP with <code>REMOVED</code> answering on the address they source flows from. Menu paths below drift slightly between versions; the verification loop at the end of this part is the ground truth.</p>
+<h3 id="c1-palo-alto-pa-vm">C.1 Palo Alto (PA-VM)<a class="headerlink" href="#c1-palo-alto-pa-vm" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>NetFlow profile:</strong> Device → Server Profiles → NetFlow → Add. Name <code>AKVORADO</code>, template refresh 30 sec / 20 packets, collector <code>10.99.0.12</code> port <code>2055</code>. Leave "PAN-OS Field Types" unticked — enterprise fields just add noise to a standard decoder.</li>
+<li><strong>Attach to interfaces:</strong> Network → Interfaces → each dataplane ethernet you want observed → NetFlow Profile: <code>AKVORADO</code>. Commit.</li>
+<li><strong>Export path:</strong> PAN-OS sends NetFlow via its <em>service route</em>, which defaults to the MGT interface — confirm MGT can reach 10.99.0.12, or repoint it under Device → Setup → Services → Service Route Configuration → Netflow.</li>
+<li><strong>SNMP (the metadata gate):</strong> Device → Setup → Operations → SNMP Setup → v2c, community <code>REMOVED</code>. Ensure the interface serving SNMP permits it (MGT does by default).</li>
+</ol>
+<h3 id="c2-opnsense">C.2 OPNsense<a class="headerlink" href="#c2-opnsense" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Export:</strong> Reporting → NetFlow. Listening interfaces: LAN + WAN (whatever you want observed), version <strong>v9</strong>, Destinations: <code>10.99.0.12:2055</code>. Apply.</li>
+<li><strong>SNMP (the metadata gate):</strong> System → Firmware → Plugins → install <code>os-net-snmp</code>; then Services → Net-SNMP → community <code>REMOVED</code>, enable.</li>
+</ol>
+<h3 id="c3-verify-each-firewall-the-same-way">C.3 Verify each firewall the same way<a class="headerlink" href="#c3-verify-each-firewall-the-same-way" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>tcpdump<span class="w"> </span>-ni<span class="w"> </span>ens4<span class="w"> </span>udp<span class="w"> </span>port<span class="w"> </span><span class="m">2055</span><span class="w"> </span>and<span class="w"> </span>host<span class="w"> </span>&lt;firewall-flow-source-ip&gt;<span class="w"> </span>-c<span class="w"> </span><span class="m">3</span>
+curl<span class="w"> </span>-s<span class="w"> </span>http://127.0.0.1:8081/api/v0/outlet/metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">'netflow_packets_total|flows_errors_total'</span>
+</code></pre></div>
+<p>Reading the errors counter is the whole diagnostic: <code>metadata missing</code> climbing for that exporter = fix SNMP / source address; <code>sampling rate missing</code> = shouldn't happen (the <code>::/0</code> default covers it) but would mean the default got lost from outlet.yaml; nothing climbing at all = the export never left (service route / listening interface).</p>
+<hr />
+<h2 id="part-d-akvorado-touch-ups-and-the-payoff">Part D — Akvorado touch-ups and the payoff<a class="headerlink" href="#part-d-akvorado-touch-ups-and-the-payoff" title="Permanent link">&para;</a></h2>
+<p><strong>1. Name the remaining prefixes</strong> — add to <code>clickhouse: networks:</code> in <code>~/akvorado/config/akvorado.yaml</code>:
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="nt">192.168.0.0/16</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lab-p2p</span>
+<span class="w">      </span><span class="nt">role</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">transit</span>
+<span class="w">    </span><span class="nt">172.16.0.0/12</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gre-tunnels</span>
+<span class="w">      </span><span class="nt">role</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">transit</span>
+</code></pre></div>
+Apply: <code>docker compose restart akvorado-orchestrator akvorado-outlet akvorado-console</code></p>
+<p><strong>2. The verification cheat sheet</strong> (works for every part above):
+<div class="highlight"><pre><span></span><code><span class="c1"># who is exporting, and how much has landed:</span>
+docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>clickhouse<span class="w"> </span>clickhouse-client<span class="w"> </span>-q<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s2">"SELECT ExporterName, ExporterAddress, count(*) AS flows FROM flows GROUP BY ExporterName, ExporterAddress"</span>
+
+<span class="c1"># who is being dropped, and why:</span>
+curl<span class="w"> </span>-s<span class="w"> </span>http://127.0.0.1:8081/api/v0/outlet/metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>flows_errors_total<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s1">'^#'</span>
+</code></pre></div></p>
+<p><strong>3. In the console:</strong> Visualize → set the dimension to <strong>Exporter</strong> → your whole estate in one sankey. Then dimension <strong>SrcNetName/DstNetName</strong> and watch gret-a-vlan20 talk to belv-b-vlan20 by name. That view — per-site, per-network, per-exporter — is exactly what an MSP NOC dashboard looks like, running on flow data you built end to end.</p>
+<hr />
+<h2 id="part-e-stretch-goals-expectations-set-honestly">Part E — stretch goals (expectations set honestly)<a class="headerlink" href="#part-e-stretch-goals-expectations-set-honestly" title="Permanent link">&para;</a></h2>
+<h3 id="e1-nx-os-sflow-on-csw1-an-experiment-not-a-promise">E.1 NX-OS sFlow on CSW1 — an experiment, not a promise<a class="headerlink" href="#e1-nx-os-sflow-on-csw1-an-experiment-not-a-promise" title="Permanent link">&para;</a></h3>
+<p>Real Nexus 9000s do sFlow well; the <strong>9000v's virtual data plane may accept this config and sample nothing</strong> — and discovering that is the lesson (same family as your TCAM/PBR finding). Akvorado's inlet already listens on 6343, and sFlow advertises its own sampling rate, so no collector changes needed:
+<div class="highlight"><pre><span></span><code>feature sflow
+sflow agent-ip &lt;CSW1 DMZ-reachable IP&gt;
+sflow collector-ip 10.99.0.12 vrf DMZ
+sflow sampling-rate 128
+sflow data-source interface ethernet 1/5
+sflow data-source interface ethernet 1/6
+</code></pre></div>
+Verify with <code>show sflow statistics</code> on the switch and tcpdump <code>udp port 6343</code> on the collector. Datagrams = delightful surprise; zero = write "sFlow unsupported on 9000v data plane" in your notes and move on.</p>
+<h3 id="e2-ios-xr-on-the-ces-the-sampling-lesson-completed">E.2 IOS-XR on the CEs — the sampling lesson, completed<a class="headerlink" href="#e2-ios-xr-on-the-ces-the-sampling-lesson-completed" title="Permanent link">&para;</a></h3>
+<p>XR <em>requires</em> a sampler-map — and advertises the rate via v9 <strong>options sampler-table</strong>, which Akvorado's decoder reads natively. So where IOS-XE forced you to configure a default on the collector, XR does it properly on the wire. Worth doing just to see both halves:
+<div class="highlight"><pre><span></span><code>sampler-map SM-ALL
+ random 1 out-of 1
+!
+flow exporter-map FEM-AKVORADO
+ version v9
+  options interface-table timeout 60
+  options sampler-table timeout 60
+  template data timeout 30
+ !
+ transport udp 2055
+ source &lt;interface that reaches 10.99.0.12&gt;
+ destination 10.99.0.12
+!
+flow monitor-map FMM-ALL
+ record ipv4
+ exporter FEM-AKVORADO
+ cache timeout active 60
+ cache timeout inactive 15
+!
+interface GigabitEthernet0/0/0/0
+ flow ipv4 monitor FMM-ALL sampler SM-ALL ingress
+</code></pre></div>
+Commit, then check <code>show flow exporter-map FEM-AKVORADO</code> and the collector. Caveats: pick the source/destination path off <code>show route 10.99.0.12</code> (add <code>vrf &lt;name&gt;</code> on the destination line if the CE's management path is VRF'd), and XRv's software forwarding may or may not actually emit — treat like E.1.</p>
+<h3 id="e3-vedge-cflowd-parked-deliberately">E.3 vEdge cflowd — parked deliberately<a class="headerlink" href="#e3-vedge-cflowd-parked-deliberately" title="Permanent link">&para;</a></h3>
+<p>SD-WAN flow export needs a centralised policy pushed from vSmart — a proper exercise in its own right, and conveniently v1.2-relevant. Save it for an SD-WAN policy session rather than bolting it on here.</p>
+<hr />
+<h2 id="rollback">Rollback<a class="headerlink" href="#rollback" title="Permanent link">&para;</a></h2>
+<p>Per router: <code>no ip flow monitor FNF-MONITOR input</code> on each interface, then <code>no flow monitor / exporter / record</code> (PBR-A: keep, it's your Phase 3 build). PA: remove the NetFlow profile from interfaces, commit. OPNsense: clear the destination. sFlow: <code>no feature sflow</code>. XR: <code>no flow ipv4 monitor …</code> per interface, then remove the maps, commit.</p>
+<h2 id="what-this-adds-to-the-story">What this adds to the story<a class="headerlink" href="#what-this-adds-to-the-story" title="Permanent link">&para;</a></h2>
+<p>One collector, five-plus exporters, three operating systems and two firewall vendors, with per-site named networks — plus you can now explain sampled vs unsampled export, v9 templates, options tables, and exactly which two gates a collector applies before trusting a flow, because you hit every one of them and read the counters that proved it.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
