@@ -1,0 +1,308 @@
+---
+# Phase 1, Task 4: Loopback0 on every router (plus R31's three fake-internet loopbacks),
+# IPv4 on every link from the workbook's link table, a description naming the far end,
+# and every other Ethernet port shut. Ethernet0/0 (management) is never touched.
+#
+# Dry run first. It changes nothing and shows the commands it would send:
+#   ansible-playbook phase1-task4-ipv4.yaml -e target=<group holding R11-R51> --check --diff
+# Then for real, the same without --check:
+#   ansible-playbook phase1-task4-ipv4.yaml -e target=<group holding R11-R51> --diff
+# LAB_USER and LAB_PASS must be set in your shell, as for your other playbooks.
+# Routers are matched by their configured hostname (R11 ... R51), not the inventory name.
+
+- name: Phase 1 Task 4 - loopbacks and IPv4 on every link
+  hosts: "{{ target }}"
+  gather_facts: false
+  connection: ansible.netcommon.network_cli
+  vars:
+    ansible_network_os: cisco.ios.ios
+    ansible_user: "{{ lookup('env', 'LAB_USER') }}"
+    ansible_password: "{{ lookup('env', 'LAB_PASS') }}"
+    ansible_become: true
+    ansible_become_method: enable
+    mgmt_if: Ethernet0/0
+    # Generated from the workbook's link table. Host part = router number, except BR1's LAN (R51 is .1).
+    phase1:
+      R11:
+        interfaces:            # cisco.ios.ios_interfaces
+          - { name: Loopback0, description: "Router ID", enabled: true }
+          - { name: Ethernet0/1, description: "R12 e0/1", enabled: true }
+          - { name: Ethernet0/2, description: "R13 e0/1", enabled: true }
+          - { name: Ethernet0/3, description: "R31 e0/1", enabled: true }
+          - { name: Ethernet1/0, description: "R21 e1/0", enabled: true }
+        ipv4:                  # cisco.ios.ios_l3_interfaces
+          - { name: Loopback0, ipv4: [ { address: 11.11.11.11/32 } ] }
+          - { name: Ethernet0/1, ipv4: [ { address: 100.11.12.11/24 } ] }
+          - { name: Ethernet0/2, ipv4: [ { address: 100.11.13.11/24 } ] }
+          - { name: Ethernet0/3, ipv4: [ { address: 150.11.31.11/24 } ] }
+          - { name: Ethernet1/0, ipv4: [ { address: 100.11.21.11/24 } ] }
+        reserved: []
+        ping: [ 100.11.12.12, 100.11.13.13, 100.11.21.21, 150.11.31.31 ]
+      R12:
+        interfaces:            # cisco.ios.ios_interfaces
+          - { name: Loopback0, description: "Router ID", enabled: true }
+          - { name: Ethernet0/1, description: "R11 e0/1", enabled: true }
+          - { name: Ethernet0/2, description: "R13 e0/2", enabled: true }
+          - { name: Ethernet0/3, description: "R14 e0/1", enabled: true }
+        ipv4:                  # cisco.ios.ios_l3_interfaces
+          - { name: Loopback0, ipv4: [ { address: 12.12.12.12/32 } ] }
+          - { name: Ethernet0/1, ipv4: [ { address: 100.11.12.12/24 } ] }
+          - { name: Ethernet0/2, ipv4: [ { address: 100.12.13.12/24 } ] }
+          - { name: Ethernet0/3, ipv4: [ { address: 100.12.14.12/24 } ] }
+        reserved:
+          - { name: Ethernet1/0, description: "RESERVED Phase 5: Gret A edge" }
+        ping: [ 100.11.12.11, 100.12.13.13, 100.12.14.14 ]
+      R13:
+        interfaces:            # cisco.ios.ios_interfaces
+          - { name: Loopback0, description: "Router ID", enabled: true }
+          - { name: Ethernet0/1, description: "R11 e0/2", enabled: true }
+          - { name: Ethernet0/2, description: "R12 e0/2", enabled: true }
+          - { name: Ethernet0/3, description: "R14 e0/2", enabled: true }
+        ipv4:                  # cisco.ios.ios_l3_interfaces
+          - { name: Loopback0, ipv4: [ { address: 13.13.13.13/32 } ] }
+          - { name: Ethernet0/1, ipv4: [ { address: 100.11.13.13/24 } ] }
+          - { name: Ethernet0/2, ipv4: [ { address: 100.12.13.13/24 } ] }
+          - { name: Ethernet0/3, ipv4: [ { address: 100.13.14.13/24 } ] }
+        reserved:
+          - { name: Ethernet1/0, description: "RESERVED Phase 5: Belv B edge" }
+        ping: [ 100.11.13.11, 100.12.13.12, 100.13.14.14 ]
+      R14:
+        interfaces:            # cisco.ios.ios_interfaces
+          - { name: Loopback0, description: "Router ID", enabled: true }
+          - { name: Ethernet0/1, description: "R12 e0/3", enabled: true }
+          - { name: Ethernet0/2, description: "R13 e0/3", enabled: true }
+          - { name: Ethernet0/3, description: "R51 e0/1", enabled: true }
+        ipv4:                  # cisco.ios.ios_l3_interfaces
+          - { name: Loopback0, ipv4: [ { address: 14.14.14.14/32 } ] }
+          - { name: Ethernet0/1, ipv4: [ { address: 100.12.14.14/24 } ] }
+          - { name: Ethernet0/2, ipv4: [ { address: 100.13.14.14/24 } ] }
+          - { name: Ethernet0/3, ipv4: [ { address: 100.14.51.14/24 } ] }
+        reserved:
+          - { name: Ethernet1/0, description: "RESERVED Phase 5: Site Q edge" }
+        ping: [ 100.12.14.12, 100.13.14.13, 100.14.51.51 ]
+      R21:
+        interfaces:            # cisco.ios.ios_interfaces
+          - { name: Loopback0, description: "Router ID", enabled: true }
+          - { name: Ethernet0/1, description: "B-LAN: R22 e0/1, R23 e0/1", enabled: true }
+          - { name: Ethernet0/2, description: "R31 e0/2", enabled: true }
+          - { name: Ethernet1/0, description: "R11 e1/0", enabled: true }
+        ipv4:                  # cisco.ios.ios_l3_interfaces
+          - { name: Loopback0, ipv4: [ { address: 21.21.21.21/32 } ] }
+          - { name: Ethernet0/1, ipv4: [ { address: 200.200.0.21/24 } ] }
+          - { name: Ethernet0/2, ipv4: [ { address: 150.21.31.21/24 } ] }
+          - { name: Ethernet1/0, ipv4: [ { address: 100.11.21.21/24 } ] }
+        reserved: []
+        ping: [ 100.11.21.11, 150.21.31.31, 200.200.0.22, 200.200.0.23 ]
+      R22:
+        interfaces:            # cisco.ios.ios_interfaces
+          - { name: Loopback0, description: "Router ID", enabled: true }
+          - { name: Ethernet0/1, description: "B-LAN: R21 e0/1, R23 e0/1", enabled: true }
+          - { name: Ethernet0/2, description: "R24 e0/1", enabled: true }
+        ipv4:                  # cisco.ios.ios_l3_interfaces
+          - { name: Loopback0, ipv4: [ { address: 22.22.22.22/32 } ] }
+          - { name: Ethernet0/1, ipv4: [ { address: 200.200.0.22/24 } ] }
+          - { name: Ethernet0/2, ipv4: [ { address: 200.22.24.22/24 } ] }
+        reserved:
+          - { name: Ethernet1/0, description: "RESERVED Phase 5: Gret A edge" }
+          - { name: Ethernet1/1, description: "RESERVED Phase 5: Belv B edge" }
+        ping: [ 200.200.0.21, 200.200.0.23, 200.22.24.24 ]
+      R23:
+        interfaces:            # cisco.ios.ios_interfaces
+          - { name: Loopback0, description: "Router ID", enabled: true }
+          - { name: Ethernet0/1, description: "B-LAN: R21 e0/1, R22 e0/1", enabled: true }
+          - { name: Ethernet0/2, description: "R24 e0/2", enabled: true }
+          - { name: Ethernet0/3, description: "R44 e0/3", enabled: true }
+        ipv4:                  # cisco.ios.ios_l3_interfaces
+          - { name: Loopback0, ipv4: [ { address: 23.23.23.23/32 } ] }
+          - { name: Ethernet0/1, ipv4: [ { address: 200.200.0.23/24 } ] }
+          - { name: Ethernet0/2, ipv4: [ { address: 200.23.24.23/24 } ] }
+          - { name: Ethernet0/3, ipv4: [ { address: 200.23.44.23/24 } ] }
+        reserved:
+          - { name: Ethernet1/0, description: "RESERVED Phase 5: Site Q edge" }
+        ping: [ 200.200.0.21, 200.200.0.22, 200.23.24.24, 200.23.44.44 ]
+      R24:
+        interfaces:            # cisco.ios.ios_interfaces
+          - { name: Loopback0, description: "Router ID", enabled: true }
+          - { name: Ethernet0/1, description: "R22 e0/2", enabled: true }
+          - { name: Ethernet0/2, description: "R23 e0/2", enabled: true }
+        ipv4:                  # cisco.ios.ios_l3_interfaces
+          - { name: Loopback0, ipv4: [ { address: 24.24.24.24/32 } ] }
+          - { name: Ethernet0/1, ipv4: [ { address: 200.22.24.24/24 } ] }
+          - { name: Ethernet0/2, ipv4: [ { address: 200.23.24.24/24 } ] }
+        reserved: []
+        ping: [ 200.22.24.22, 200.23.24.23 ]
+      R31:
+        interfaces:            # cisco.ios.ios_interfaces
+          - { name: Loopback0, description: "Router ID", enabled: true }
+          - { name: Loopback1, description: "Fake internet 150.150.1.0/24", enabled: true }
+          - { name: Loopback2, description: "Fake internet 150.150.2.0/24", enabled: true }
+          - { name: Loopback3, description: "Fake internet 150.150.3.0/24", enabled: true }
+          - { name: Ethernet0/1, description: "R11 e0/3", enabled: true }
+          - { name: Ethernet0/2, description: "R21 e0/2", enabled: true }
+        ipv4:                  # cisco.ios.ios_l3_interfaces
+          - { name: Loopback0, ipv4: [ { address: 31.31.31.31/32 } ] }
+          - { name: Loopback1, ipv4: [ { address: 150.150.1.1/24 } ] }
+          - { name: Loopback2, ipv4: [ { address: 150.150.2.1/24 } ] }
+          - { name: Loopback3, ipv4: [ { address: 150.150.3.1/24 } ] }
+          - { name: Ethernet0/1, ipv4: [ { address: 150.11.31.31/24 } ] }
+          - { name: Ethernet0/2, ipv4: [ { address: 150.21.31.31/24 } ] }
+        reserved: []
+        ping: [ 150.11.31.11, 150.21.31.21 ]
+      R41:
+        interfaces:            # cisco.ios.ios_interfaces
+          - { name: Loopback0, description: "Router ID", enabled: true }
+          - { name: Ethernet0/1, description: "R42 e0/1", enabled: true }
+          - { name: Ethernet0/2, description: "R43 e0/1", enabled: true }
+        ipv4:                  # cisco.ios.ios_l3_interfaces
+          - { name: Loopback0, ipv4: [ { address: 41.41.41.41/32 } ] }
+          - { name: Ethernet0/1, ipv4: [ { address: 10.41.42.41/24 } ] }
+          - { name: Ethernet0/2, ipv4: [ { address: 10.41.43.41/24 } ] }
+        reserved: []
+        ping: [ 10.41.42.42, 10.41.43.43 ]
+      R42:
+        interfaces:            # cisco.ios.ios_interfaces
+          - { name: Loopback0, description: "Router ID", enabled: true }
+          - { name: Ethernet0/1, description: "R41 e0/1", enabled: true }
+          - { name: Ethernet0/2, description: "R44 e0/1", enabled: true }
+        ipv4:                  # cisco.ios.ios_l3_interfaces
+          - { name: Loopback0, ipv4: [ { address: 42.42.42.42/32 } ] }
+          - { name: Ethernet0/1, ipv4: [ { address: 10.41.42.42/24 } ] }
+          - { name: Ethernet0/2, ipv4: [ { address: 10.42.44.42/24 } ] }
+        reserved: []
+        ping: [ 10.41.42.41, 10.42.44.44 ]
+      R43:
+        interfaces:            # cisco.ios.ios_interfaces
+          - { name: Loopback0, description: "Router ID", enabled: true }
+          - { name: Ethernet0/1, description: "R41 e0/2", enabled: true }
+          - { name: Ethernet0/2, description: "R44 e0/2", enabled: true }
+        ipv4:                  # cisco.ios.ios_l3_interfaces
+          - { name: Loopback0, ipv4: [ { address: 43.43.43.43/32 } ] }
+          - { name: Ethernet0/1, ipv4: [ { address: 10.41.43.43/24 } ] }
+          - { name: Ethernet0/2, ipv4: [ { address: 10.43.44.43/24 } ] }
+        reserved: []
+        ping: [ 10.41.43.41, 10.43.44.44 ]
+      R44:
+        interfaces:            # cisco.ios.ios_interfaces
+          - { name: Loopback0, description: "Router ID", enabled: true }
+          - { name: Ethernet0/1, description: "R42 e0/2", enabled: true }
+          - { name: Ethernet0/2, description: "R43 e0/2", enabled: true }
+          - { name: Ethernet0/3, description: "R23 e0/3", enabled: true }
+        ipv4:                  # cisco.ios.ios_l3_interfaces
+          - { name: Loopback0, ipv4: [ { address: 44.44.44.44/32 } ] }
+          - { name: Ethernet0/1, ipv4: [ { address: 10.42.44.44/24 } ] }
+          - { name: Ethernet0/2, ipv4: [ { address: 10.43.44.44/24 } ] }
+          - { name: Ethernet0/3, ipv4: [ { address: 200.23.44.44/24 } ] }
+        reserved: []
+        ping: [ 200.23.44.23, 10.42.44.42, 10.43.44.43 ]
+      R51:
+        interfaces:            # cisco.ios.ios_interfaces
+          - { name: Loopback0, description: "Router ID", enabled: true }
+          - { name: Ethernet0/1, description: "R14 e0/3", enabled: true }
+          - { name: Ethernet0/2, description: "BR1-PC e0/0", enabled: true }
+        ipv4:                  # cisco.ios.ios_l3_interfaces
+          - { name: Loopback0, ipv4: [ { address: 51.51.51.51/32 } ] }
+          - { name: Ethernet0/1, ipv4: [ { address: 100.14.51.51/24 } ] }
+          - { name: Ethernet0/2, ipv4: [ { address: 10.51.1.1/24 } ] }
+        reserved: []
+        ping: [ 100.14.51.14 ]
+
+  tasks:
+    - name: Read the hostname and the interface list
+      cisco.ios.ios_facts:
+        gather_subset: [min, interfaces]
+
+    - name: Find this router in the link table
+      ansible.builtin.set_fact:
+        plan: "{{ phase1[ansible_net_hostname | upper] | default({}) }}"
+
+    - name: Stop if the router isn't in the table or lacks a port the table needs
+      ansible.builtin.assert:
+        that:
+          - plan | length > 0
+          - missing | length == 0
+        fail_msg: >-
+          {{ ansible_net_hostname }}: {{ 'not in the link table' if plan | length == 0
+          else 'no ' ~ (missing | join(', ')) ~ ' - add a port group to this node in EVE-NG' }}
+        quiet: true
+      vars:
+        missing: >-
+          {{ plan.interfaces | default([]) | map(attribute='name') | select('match', '^Ethernet')
+             | difference(ansible_net_interfaces.keys() | list) }}
+
+    - name: Loopbacks and links - description, no shutdown
+      cisco.ios.ios_interfaces:
+        config: "{{ plan.interfaces }}"
+        state: merged
+
+    - name: Loopbacks and links - IPv4 address
+      cisco.ios.ios_l3_interfaces:
+        config: "{{ plan.ipv4 }}"
+        state: merged
+
+    - name: Ports kept free for Phase 5 - description, shut
+      cisco.ios.ios_config:
+        parents: "interface {{ item.name }}"
+        lines:
+          - "description {{ item.description }}"
+          - shutdown
+      loop: "{{ plan.reserved }}"
+      loop_control:
+        label: "{{ item.name }}"
+      when: item.name in ansible_net_interfaces
+
+    - name: Every other Ethernet port - shut (Ethernet0/0 left alone)
+      cisco.ios.ios_config:
+        parents: "interface {{ item }}"
+        lines:
+          - shutdown
+      loop: "{{ unused }}"
+      vars:
+        unused: >-
+          {{ ansible_net_interfaces.keys() | select('match', '^Ethernet') | reject('equalto', mgmt_if)
+             | difference(plan.interfaces | map(attribute='name'))
+             | difference(plan.reserved | map(attribute='name')) | sort }}
+
+    - name: Save if anything changed
+      cisco.ios.ios_config:
+        save_when: modified
+
+    # ---- verify: the workbook's "good looks like" ----
+    - name: Read the interfaces again
+      cisco.ios.ios_facts:
+        gather_subset: [min, interfaces]
+      when: not ansible_check_mode
+
+    - name: Every table interface is up/up with the table's address
+      ansible.builtin.assert:
+        that:
+          - nif.operstatus | default('') == 'up'
+          - nif.lineprotocol | default('') == 'up'
+          - want in (nif.ipv4 | default([]) | map(attribute='address') | list)
+        fail_msg: >-
+          {{ item.name }} is {{ nif.operstatus | default('missing') }}/{{ nif.lineprotocol | default('-') }}
+          with {{ nif.ipv4 | default([]) | map(attribute='address') | join(', ') or 'no address' }}, want {{ want }}
+        quiet: true
+      loop: "{{ plan.ipv4 }}"
+      loop_control:
+        label: "{{ item.name }}"
+      vars:
+        nif: "{{ ansible_net_interfaces[item.name] | default({}) }}"
+        want: "{{ item.ipv4[0].address.split('/')[0] }}"
+      when: not ansible_check_mode
+
+    - name: Every neighbour answers a ping (runs after all routers are configured)
+      cisco.ios.ios_command:
+        commands: "{{ plan.ping | map('regex_replace', '^(.*)$', 'ping \\1 repeat 5 timeout 1') | list }}"
+      register: pings
+      when: not ansible_check_mode and plan.ping | length > 0
+
+    - name: Report any neighbour that didn't answer
+      ansible.builtin.assert:
+        that: no_reply | length == 0
+        fail_msg: "no reply from {{ no_reply | join(', ') }}"
+        success_msg: "{{ ansible_net_hostname }}: all {{ plan.ping | length }} neighbours answer"
+      vars:
+        no_reply: >-
+          {{ plan.ping | zip(pings.stdout) | selectattr(1, 'search', 'Success rate is 0 percent')
+             | map(attribute=0) | list }}
+      when: not ansible_check_mode and plan.ping | length > 0
