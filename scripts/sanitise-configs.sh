@@ -58,7 +58,8 @@ scrub() {   # stdin -> stdout
   sed -E \
     `# ---------- shared secrets: TACACS+ / RADIUS ----------` \
     -e 's/^([[:space:]]*key[[:space:]]+)[0-9][[:space:]]+"?[^"[:space:]]+"?/\1<REDACTED-KEY>/' \
-    -e 's/^([[:space:]]*key[[:space:]]+)(chars[[:space:]]+)?[^0-9[:space:]][^[:space:]]*/\1<REDACTED-KEY>/' \
+    `# (skip "key chain NAME" headers: that word is a name, not a TACACS/RADIUS key)` \
+    -e '/^[[:space:]]*key chain /!s/^([[:space:]]*key[[:space:]]+)(chars[[:space:]]+)?[^0-9[:space:]][^[:space:]]*/\1<REDACTED-KEY>/' \
     -e 's/(tacacs-server[[:space:]]+host[[:space:]]+[0-9.]+[[:space:]]+key[[:space:]]+)[0-9]?[[:space:]]*"?[^"[:space:]]+"?/\1<TACACS-KEY>/' \
     -e 's/(radius-server[[:space:]]+host[[:space:]]+[0-9.]+.*[[:space:]]key[[:space:]]+)[^[:space:]]+/\1<RADIUS-KEY>/' \
     -e 's/(tacacs-server[[:space:]]+key[[:space:]]+)[0-9]?[[:space:]]*"?[^"[:space:]]+"?/\1<TACACS-KEY>/' \
@@ -150,7 +151,8 @@ if [[ "$AUDIT" -eq 1 ]]; then
       echo "  [ ok ] $1"
     fi
   }
-  check "TACACS/RADIUS keys"      '^[[:space:]]*key [0-9A-Za-z]'
+  # "key <type> <secret>" or "key <secret>"; a key chain's bare "key 1" ID line is not a secret
+  check "TACACS/RADIUS keys"      '^[[:space:]]*key ([0-9] +[^<[:space:]]|[A-Za-z])'
   check "local passwords/secrets" '(password|secret) [0-9]? *[A-Za-z0-9]'
   check "SNMP communities"        'snmp-server community [A-Za-z0-9]'
   check "IKE pre-shared keys"     '(isakmp key|pre-shared-key) +[A-Za-z0-9]'
