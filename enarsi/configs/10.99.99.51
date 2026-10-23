@@ -12,8 +12,6 @@
 ! VTP: show vtp status
 ! 
 !
-! Last configuration change at 19:17:47 UTC Thu Oct 15 2026 by automate
-!
 version 17.12
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -71,13 +69,26 @@ aaa session-id common
 !
 !
 !
+ip dhcp excluded-address 10.51.1.1 10.51.1.20
+!
+ip dhcp pool BR-POOL
+ network 10.51.1.0 255.255.255.0
+ default-router 10.51.1.1 
+ dns-server 150.150.1.1 
+ domain-name enarsi.lab
 !
 !
 !
 ip domain name lab.external
 ip cef
 login on-success log
-no ipv6 cef
+ipv6 unicast-routing
+ipv6 dhcp pool BR1-V6
+ address prefix 2001:DB8:645:5101::/64
+ dns-server 2001:DB8:150:1::1
+ domain-name enarsi.lab
+!
+ipv6 cef
 !
 !
 !
@@ -142,10 +153,18 @@ interface Ethernet0/0
 interface Ethernet0/1
  description R14 e0/3
  ip address 100.14.51.51 255.255.255.0
+ ipv6 address FE80::51 link-local
+ ipv6 address 2001:DB8:100:1451::51/64
 !
 interface Ethernet0/2
  description BR1-PC e0/0
  ip address 10.51.1.1 255.255.255.0
+ ipv6 address FE80::51 link-local
+ ipv6 address 2001:DB8:645:5101::1/64
+ ipv6 nd prefix default 2592000 604800 no-autoconfig
+ ipv6 nd managed-config-flag
+ ipv6 nd other-config-flag
+ ipv6 dhcp server BR1-V6
 !
 interface Ethernet0/3
  no ip address
@@ -157,10 +176,12 @@ ip forward-protocol nd
 ip http server
 ip http secure-server
 ip http client source-interface Ethernet0/0
+ip route 0.0.0.0 0.0.0.0 100.14.51.14
 ip route vrf DMZ 0.0.0.0 0.0.0.0 Ethernet0/0 10.99.99.138
 ip ssh bulk-mode 131072
 ip ssh source-interface Ethernet0/0
 !
+ipv6 route ::/0 Ethernet0/1 FE80::14
 !
 !
 snmp-server group nms v3 priv 

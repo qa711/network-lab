@@ -22,6 +22,7 @@
 ! 
 ! 
 !
+! Last configuration change at 19:38:19 UTC Fri Oct 23 2026 by automate
 !
 version 17.3
 service timestamps debug datetime msec
@@ -470,6 +471,7 @@ call-home
  profile "CiscoTAC-1"
   active
   destination transport-method http
+ntp server 10.99.0.12
 netconf ssh acl 50
 !
 !

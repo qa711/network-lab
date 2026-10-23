@@ -12,8 +12,6 @@
 ! VTP: show vtp status
 ! 
 !
-! Last configuration change at 19:11:26 UTC Thu Oct 15 2026 by automate
-!
 version 17.12
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -77,7 +75,8 @@ aaa session-id common
 ip domain name lab.external
 ip cef
 login on-success log
-no ipv6 cef
+ipv6 unicast-routing
+ipv6 cef
 !
 !
 !
@@ -132,18 +131,26 @@ username admin privilege 15 secret <REDACTED>
 interface Loopback0
  description Router ID
  ip address 31.31.31.31 255.255.255.255
+ ipv6 address FE80::31 link-local
+ ipv6 address 2001:DB8:150::31/128
 !
 interface Loopback1
  description Fake internet 150.150.1.0/24
  ip address 150.150.1.1 255.255.255.0
+ ipv6 address FE80::31 link-local
+ ipv6 address 2001:DB8:150:1::1/64
 !
 interface Loopback2
  description Fake internet 150.150.2.0/24
  ip address 150.150.2.1 255.255.255.0
+ ipv6 address FE80::31 link-local
+ ipv6 address 2001:DB8:150:2::1/64
 !
 interface Loopback3
  description Fake internet 150.150.3.0/24
  ip address 150.150.3.1 255.255.255.0
+ ipv6 address FE80::31 link-local
+ ipv6 address 2001:DB8:150:3::1/64
 !
 interface Ethernet0/0
  description MGMT
@@ -154,10 +161,14 @@ interface Ethernet0/0
 interface Ethernet0/1
  description R11 e0/3
  ip address 150.11.31.31 255.255.255.0
+ ipv6 address FE80::31 link-local
+ ipv6 address 2001:DB8:150:1131::31/64
 !
 interface Ethernet0/2
  description R21 e0/2
  ip address 150.21.31.31 255.255.255.0
+ ipv6 address FE80::31 link-local
+ ipv6 address 2001:DB8:150:2131::31/64
 !
 interface Ethernet0/3
  no ip address

@@ -1,0 +1,245 @@
+---
+# ntp-all.yaml - point every Cisco box in the lab at the NMS for time.
+#
+# How each box's settings are worked out (nothing is mapped by hand):
+#   1. Take the address Ansible logs in on (normally the one LibreNMS polls).
+#   2. Find which interface holds that address, and which VRF it's in.
+#   3. Send NTP from that interface, in that VRF, so the NMS's reply comes
+#      back the same way your SSH and SNMP traffic already does.
+#
+# Dry run first - shows what each box would get, changes nothing:
+#   ansible-playbook ntp-all.yaml --check -v
+# One box only:
+#   ansible-playbook ntp-all.yaml --limit dsw-a1
+# About 10 minutes after a real run, see what every box has locked onto:
+#   ansible-playbook ntp-all.yaml --tags verify
+#
+# Needs LAB_USER / LAB_PASS exported (~/.lab-creds).
+# Covers the XE, Nexus and XR inventory groups. Not the firewalls (set NTP
+# in their GUIs) or the SD-WAN edges (vManage owns their config).
+
+- name: NTP | IOS and IOS-XE
+  hosts: XE
+  gather_facts: false
+  connection: ansible.netcommon.network_cli
+  vars:
+    ansible_network_os: cisco.ios.ios
+    ansible_user: "{{ lookup('env', 'LAB_USER') }}"
+    ansible_password: "{{ lookup('env', 'LAB_PASS') }}"
+    ansible_become: true
+    ansible_become_method: enable
+
+    # Time servers. Listed once here (&ntp_servers) and reused by the NX-OS
+    # and XR plays below (*ntp_servers). Add a line and every box gets it.
+    # Not the Palo (10.255.250.14): PAN-OS can only receive time, not serve it.
+    ntp_servers: &ntp_servers
+      - 10.99.0.12    # NMS (chrony)
+
+    # The address Ansible logs in on. If the inventory gives a name rather
+    # than an IP, look the name up on this box, the same way SSH does.
+    mgmt_name: &mgmt_name "{{ ansible_host | default(inventory_hostname) }}"
+    mgmt_ip: &mgmt_ip >-
+      {{ mgmt_name if mgmt_name is match('^[0-9.]+$')
+         else lookup('ansible.builtin.pipe',
+                     'getent ahostsv4 ' ~ mgmt_name ~ " | awk 'NR==1{print $1}'") }}
+
+    # What an interface or VRF name looks like: letters, digits and / . : - _
+    name_re: &name_re '[A-Za-z0-9_./:-]+'
+
+  tasks:
+    - name: List interface addresses
+      cisco.ios.ios_command:
+        commands: show ip interface brief
+      register: brief
+
+    - name: Find the interface that holds the management address
+      ansible.builtin.set_fact:
+        mgmt_if: >-
+          {{ brief.stdout[0]
+             | regex_findall('^(' ~ name_re ~ ') +' ~ (mgmt_ip | regex_escape) ~ '(?: |$)', multiline=True)
+             | first | default('') }}
+
+    - name: Stop on this box if it wasn't found
+      ansible.builtin.assert:
+        that: mgmt_if | length > 0
+        fail_msg: "{{ mgmt_ip }} isn't on any interface here - set this box up by hand"
+        quiet: true
+
+    - name: Read that interface's config
+      cisco.ios.ios_command:
+        commands: "show running-config interface {{ mgmt_if }}"
+      register: if_cfg
+
+    - name: Note its VRF (blank means the normal routing table)
+      ansible.builtin.set_fact:
+        mgmt_vrf: >-
+          {{ if_cfg.stdout[0]
+             | regex_findall('vrf forwarding (' ~ name_re ~ ')')
+             | first | default('') }}
+
+    - name: Show what was found
+      ansible.builtin.debug:
+        msg: "{{ mgmt_ip }} is on {{ mgmt_if }}, VRF {{ mgmt_vrf or 'none (normal routing table)' }}"
+
+    - name: Set NTP servers and source
+      cisco.ios.ios_config:
+        lines: "{{ server_lines + ['ntp source ' ~ mgmt_if] }}"
+        save_when: modified
+      vars:
+        vrf_part: "{{ 'vrf ' ~ mgmt_vrf ~ ' ' if mgmt_vrf else '' }}"
+        server_lines: "{{ ntp_servers | map('regex_replace', '^', 'ntp server ' ~ vrf_part) | list }}"
+
+    - name: Check sync
+      cisco.ios.ios_command:
+        commands: show ntp status
+      register: ntp_status
+      tags: [never, verify]
+
+    - name: Show sync state
+      ansible.builtin.debug:
+        msg: "{{ ntp_status.stdout[0] | regex_search('Clock is .*') | default('no status line', true) }}"
+      tags: [never, verify]
+
+
+- name: NTP | NX-OS
+  hosts: Nexus
+  gather_facts: false
+  connection: ansible.netcommon.network_cli
+  vars:
+    ansible_network_os: cisco.nxos.nxos
+    ansible_user: "{{ lookup('env', 'LAB_USER') }}"
+    ansible_password: "{{ lookup('env', 'LAB_PASS') }}"
+    ntp_servers: *ntp_servers
+    mgmt_name: *mgmt_name
+    mgmt_ip: *mgmt_ip
+    name_re: *name_re
+
+  tasks:
+    - name: List interface addresses in every VRF, and check the NTP feature
+      cisco.nxos.nxos_command:
+        commands:
+          - show ip interface brief vrf all
+          - show feature | include ntp
+      register: brief
+
+    - name: Find the interface that holds the management address
+      ansible.builtin.set_fact:
+        mgmt_if: >-
+          {{ brief.stdout[0]
+             | regex_findall('^(' ~ name_re ~ ') +' ~ (mgmt_ip | regex_escape) ~ '(?: |$)', multiline=True)
+             | first | default('') }}
+        ntp_feature_off: "{{ 'disabled' in brief.stdout[1] }}"
+
+    - name: Stop on this box if it wasn't found
+      ansible.builtin.assert:
+        that: mgmt_if | length > 0
+        fail_msg: "{{ mgmt_ip }} isn't on any interface here - set this box up by hand"
+        quiet: true
+
+    - name: Read that interface's config
+      cisco.nxos.nxos_command:
+        commands: "show running-config interface {{ mgmt_if }}"
+      register: if_cfg
+
+    - name: Note its VRF
+      ansible.builtin.set_fact:
+        mgmt_vrf: >-
+          {{ if_cfg.stdout[0]
+             | regex_findall('vrf member (' ~ name_re ~ ')')
+             | first | default('default') }}
+
+    - name: Show what was found
+      ansible.builtin.debug:
+        msg: "{{ mgmt_ip }} is on {{ mgmt_if }}, VRF {{ mgmt_vrf }}"
+
+    # NX-OS shortens interface names in some output (Lo99 vs loopback99), so
+    # the source is set by address here - same effect, no name mismatch.
+    - name: Set NTP servers and source
+      cisco.nxos.nxos_config:
+        lines: "{{ feature_line + server_lines + ['ntp source ' ~ mgmt_ip] }}"
+        save_when: modified
+      vars:
+        feature_line: "{{ ['feature ntp'] if ntp_feature_off | bool else [] }}"
+        server_lines: >-
+          {{ ntp_servers | map('regex_replace', '^', 'ntp server ')
+             | map('regex_replace', '$', ' use-vrf ' ~ mgmt_vrf) | list }}
+
+    - name: Check sync
+      cisco.nxos.nxos_command:
+        commands: show ntp peer-status
+      register: ntp_status
+      tags: [never, verify]
+
+    - name: Show sync state - a * marks the server it's locked onto
+      ansible.builtin.debug:
+        var: ntp_status.stdout_lines[0]
+      tags: [never, verify]
+
+
+- name: NTP | IOS-XR
+  hosts: XR
+  gather_facts: false
+  connection: ansible.netcommon.network_cli
+  vars:
+    ansible_network_os: cisco.iosxr.iosxr
+    ansible_user: "{{ lookup('env', 'LAB_USER') }}"
+    ansible_password: "{{ lookup('env', 'LAB_PASS') }}"
+    ntp_servers: *ntp_servers
+    mgmt_name: *mgmt_name
+    mgmt_ip: *mgmt_ip
+    name_re: *name_re
+
+  tasks:
+    - name: List interface addresses in every VRF
+      cisco.iosxr.iosxr_command:
+        commands: show ipv4 vrf all interface brief
+      register: brief
+
+    - name: Find the interface that holds the management address
+      ansible.builtin.set_fact:
+        mgmt_if: >-
+          {{ brief.stdout[0]
+             | regex_findall('^(' ~ name_re ~ ') +' ~ (mgmt_ip | regex_escape) ~ '(?: |$)', multiline=True)
+             | first | default('') }}
+
+    - name: Stop on this box if it wasn't found
+      ansible.builtin.assert:
+        that: mgmt_if | length > 0
+        fail_msg: "{{ mgmt_ip }} isn't on any interface here - set this box up by hand"
+        quiet: true
+
+    - name: Read that interface's config
+      cisco.iosxr.iosxr_command:
+        commands: "show running-config interface {{ mgmt_if }}"
+      register: if_cfg
+
+    - name: Note its VRF (blank means the default VRF)
+      ansible.builtin.set_fact:
+        mgmt_vrf: >-
+          {{ if_cfg.stdout[0]
+             | regex_findall('^ *vrf (' ~ name_re ~ ')', multiline=True)
+             | first | default('') }}
+
+    - name: Show what was found
+      ansible.builtin.debug:
+        msg: "{{ mgmt_ip }} is on {{ mgmt_if }}, VRF {{ mgmt_vrf or 'default' }}"
+
+    # XR commits straight into its saved config, so there's no save step.
+    - name: Set NTP servers and source
+      cisco.iosxr.iosxr_config:
+        parents: [ntp]
+        lines: "{{ server_lines + ['source ' ~ vrf_part ~ mgmt_if] }}"
+      vars:
+        vrf_part: "{{ 'vrf ' ~ mgmt_vrf ~ ' ' if mgmt_vrf else '' }}"
+        server_lines: "{{ ntp_servers | map('regex_replace', '^', 'server ' ~ vrf_part) | list }}"
+
+    - name: Check sync
+      cisco.iosxr.iosxr_command:
+        commands: show ntp status
+      register: ntp_status
+      tags: [never, verify]
+
+    - name: Show sync state
+      ansible.builtin.debug:
+        msg: "{{ ntp_status.stdout[0] | regex_search('Clock is .*') | default('no status line', true) }}"
+      tags: [never, verify]

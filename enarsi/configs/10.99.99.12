@@ -12,8 +12,6 @@
 ! VTP: show vtp status
 ! 
 !
-! Last configuration change at 19:11:22 UTC Thu Oct 15 2026 by automate
-!
 version 17.12
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -77,7 +75,8 @@ aaa session-id common
 ip domain name lab.external
 ip cef
 login on-success log
-no ipv6 cef
+ipv6 unicast-routing
+ipv6 cef
 !
 !
 !
@@ -132,6 +131,8 @@ username admin privilege 15 secret <REDACTED>
 interface Loopback0
  description Router ID
  ip address 12.12.12.12 255.255.255.255
+ ipv6 address FE80::12 link-local
+ ipv6 address 2001:DB8:100::12/128
 !
 interface Ethernet0/0
  description MGMT
@@ -142,14 +143,20 @@ interface Ethernet0/0
 interface Ethernet0/1
  description R11 e0/1
  ip address 100.11.12.12 255.255.255.0
+ ipv6 address FE80::12 link-local
+ ipv6 address 2001:DB8:100:1112::12/64
 !
 interface Ethernet0/2
  description R13 e0/2
  ip address 100.12.13.12 255.255.255.0
+ ipv6 address FE80::12 link-local
+ ipv6 address 2001:DB8:100:1213::12/64
 !
 interface Ethernet0/3
  description R14 e0/1
  ip address 100.12.14.12 255.255.255.0
+ ipv6 address FE80::12 link-local
+ ipv6 address 2001:DB8:100:1214::12/64
 !
 interface Ethernet1/0
  description RESERVED Phase 5: Gret A edge
@@ -206,6 +213,8 @@ ip forward-protocol nd
 ip http server
 ip http secure-server
 ip http client source-interface Ethernet0/0
+ip route 14.14.14.14 255.255.255.255 Ethernet0/3 100.12.14.14
+ip route 14.14.14.14 255.255.255.255 Ethernet0/2 100.12.13.13 2
 ip route vrf DMZ 0.0.0.0 0.0.0.0 Ethernet0/0 10.99.99.138
 ip ssh bulk-mode 131072
 ip ssh source-interface Ethernet0/0

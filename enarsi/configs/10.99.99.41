@@ -12,8 +12,6 @@
 ! VTP: show vtp status
 ! 
 !
-! Last configuration change at 19:11:48 UTC Thu Oct 15 2026 by automate
-!
 version 17.12
 service timestamps debug datetime msec
 service timestamps log datetime msec
