@@ -22,7 +22,8 @@
 ! 
 ! 
 !
-! Last configuration change at 15:01:12 UTC Sat Oct 24 2026 by automate
+! Last configuration change at 15:44:57 UTC Sat Oct 24 2026 by automate
+! NVRAM config last updated at 15:45:07 UTC Sat Oct 24 2026 by automate
 !
 version 17.3
 service timestamps debug datetime msec
@@ -289,6 +290,8 @@ ip access-list standard SNMP-NMS
  10 permit 10.99.0.12
 !
 !
+logging source-interface Loopback99 vrf DMZ
+logging host 10.99.0.12 vrf DMZ
 !
 !
 snmp-server view NMSVIEW iso included

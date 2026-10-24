@@ -22,6 +22,7 @@
 ! 
 ! 
 !
+! NVRAM config last updated at 15:41:54 UTC Sat Oct 24 2026 by automate
 !
 version 17.3
 service timestamps debug datetime msec
@@ -454,6 +455,7 @@ call-home
   active
   destination transport-method http
 ntp source Loopback99
+ntp server vrf DMZ 192.168.4.2
 ntp server vrf DMZ 10.99.0.12
 !
 !

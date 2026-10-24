@@ -12,7 +12,7 @@
 ! VTP: show vtp status
 ! 
 !
-! Last configuration change at 15:02:14 UTC Sat Oct 24 2026 by automate
+! Last configuration change at 17:32:47 UTC Sat Oct 24 2026 by automate
 !
 version 17.12
 service timestamps debug datetime msec
@@ -183,6 +183,8 @@ ip route vrf DMZ 0.0.0.0 0.0.0.0 Ethernet0/0 10.99.99.138
 ip ssh bulk-mode 131072
 ip ssh source-interface Ethernet0/0
 !
+logging source-interface Ethernet0/0 vrf DMZ
+logging host 10.99.0.12 vrf DMZ
 ipv6 route ::/0 Ethernet0/1 FE80::14
 !
 !

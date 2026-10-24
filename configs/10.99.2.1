@@ -19,6 +19,7 @@
 ! 
 ! 
 !
+!
 version 15.9
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -408,6 +409,7 @@ line vty 5 15
 !
 no scheduler allocate
 ntp source GigabitEthernet0/2.99
+ntp server vrf DMZ 192.168.4.2
 ntp server vrf DMZ 10.99.0.12
 !
 end

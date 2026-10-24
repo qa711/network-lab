@@ -96,6 +96,7 @@ snmp-server enable traps system Clock-change-notification
 snmp-server enable traps syslog message-generated
 snmp-server community <SNMP-COMMUNITY> group network-operator
 ntp server 10.99.0.12 use-vrf DMZ
+ntp server 192.168.4.2 use-vrf DMZ
 ntp source 10.99.1.252
 aaa authentication login default group ISE-GROUP local 
 aaa authentication login console local 

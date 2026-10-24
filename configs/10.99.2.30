@@ -302,6 +302,7 @@ line vty 0 4
  transport input ssh
 !
 ntp source Vlan99
+ntp server 192.168.4.2
 ntp server 10.99.0.12
 !
 end

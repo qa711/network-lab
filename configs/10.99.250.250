@@ -22,8 +22,8 @@
 ! 
 ! 
 !
-! Last configuration change at 14:00:37 UTC Sat Oct 24 2026 by automate
-! NVRAM config last updated at 14:01:00 UTC Sat Oct 24 2026 by automate
+! Last configuration change at 15:44:55 UTC Sat Oct 24 2026 by automate
+! NVRAM config last updated at 15:45:16 UTC Sat Oct 24 2026 by automate
 !
 version 17.3
 service timestamps debug datetime msec
@@ -384,6 +384,8 @@ ip sla 20
  icmp-echo 10.10.60.1 source-interface GigabitEthernet3
   frequency 5
 ip sla schedule 20 life forever start-time now
+logging source-interface Loopback99 vrf DMZ
+logging host 10.99.0.12 vrf DMZ
 ip access-list standard 50
  10 permit 10.99.0.12 log
 !

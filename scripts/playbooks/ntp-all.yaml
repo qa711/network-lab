@@ -1,10 +1,10 @@
 ---
-# ntp-all.yaml - point every Cisco box in the lab at the NMS for time.
+# ntp-all.yaml - point every Cisco box in the lab at the NMS for time and syslog.
 #
 # How each box's settings are worked out (nothing is mapped by hand):
 #   1. Take the address Ansible logs in on (normally the one LibreNMS polls).
 #   2. Find which interface holds that address, and which VRF it's in.
-#   3. Send NTP from that interface, in that VRF, so the NMS's reply comes
+#   3. Send NTP and syslog from that interface, in that VRF, so the NMS's reply comes
 #      back the same way your SSH and SNMP traffic already does.
 #
 # Dry run first - shows what each box would get, changes nothing:
@@ -35,6 +35,9 @@
     ntp_servers: &ntp_servers
       - 10.99.0.12    # NMS (chrony)
       - 192.168.4.2   # OPNsense NTPd
+    # Syslog servers, shared the same way (&syslog_servers / *syslog_servers).
+    syslog_servers: &syslog_servers
+      - 10.99.0.12    # NMS (rsyslog -> LibreNMS)
     # The address Ansible logs in on. If the inventory gives a name rather
     # than an IP, look the name up on this box, the same way SSH does.
     mgmt_name: &mgmt_name "{{ ansible_host | default(inventory_hostname) }}"
@@ -89,6 +92,16 @@
         vrf_part: "{{ 'vrf ' ~ mgmt_vrf ~ ' ' if mgmt_vrf else '' }}"
         server_lines: "{{ ntp_servers | map('regex_replace', '^', 'ntp server ' ~ vrf_part) | list }}"
 
+    - name: Set syslog servers and source
+      cisco.ios.ios_config:
+        lines: "{{ host_lines + ['logging source-interface ' ~ mgmt_if ~ vrf_suffix] }}"
+        save_when: modified
+      vars:
+        vrf_suffix: "{{ ' vrf ' ~ mgmt_vrf if mgmt_vrf else '' }}"
+        host_lines: >-
+          {{ syslog_servers | map('regex_replace', '^', 'logging host ')
+             | map('regex_replace', '$', vrf_suffix) | list }}
+
     - name: Check sync
       cisco.ios.ios_command:
         commands: show ntp status
@@ -110,6 +123,7 @@
     ansible_user: "{{ lookup('env', 'LAB_USER') }}"
     ansible_password: "{{ lookup('env', 'LAB_PASS') }}"
     ntp_servers: *ntp_servers
+    syslog_servers: *syslog_servers
     mgmt_name: *mgmt_name
     mgmt_ip: *mgmt_ip
     name_re: *name_re
@@ -164,6 +178,21 @@
           {{ ntp_servers | map('regex_replace', '^', 'ntp server ')
              | map('regex_replace', '$', ' use-vrf ' ~ mgmt_vrf) | list }}
 
+    # logging needs the interface name, so turn Lo99 back into loopback99
+    # (the full name is what the running config shows).
+    - name: Set syslog servers and source
+      cisco.nxos.nxos_config:
+        lines: "{{ server_lines + ['logging source-interface ' ~ long_if] }}"
+        save_when: modified
+      vars:
+        long_if: >-
+          {{ 'loopback' ~ mgmt_if[2:] if mgmt_if is match('Lo[0-9]')
+             else 'Ethernet' ~ mgmt_if[3:] if mgmt_if is match('Eth[0-9]')
+             else mgmt_if }}
+        server_lines: >-
+          {{ syslog_servers | map('regex_replace', '^', 'logging server ')
+             | map('regex_replace', '$', ' 6 use-vrf ' ~ mgmt_vrf) | list }}
+
     - name: Check sync
       cisco.nxos.nxos_command:
         commands: show ntp peer-status
@@ -185,6 +214,7 @@
     ansible_user: "{{ lookup('env', 'LAB_USER') }}"
     ansible_password: "{{ lookup('env', 'LAB_PASS') }}"
     ntp_servers: *ntp_servers
+    syslog_servers: *syslog_servers
     mgmt_name: *mgmt_name
     mgmt_ip: *mgmt_ip
     name_re: *name_re
@@ -232,6 +262,15 @@
       vars:
         vrf_part: "{{ 'vrf ' ~ mgmt_vrf ~ ' ' if mgmt_vrf else '' }}"
         server_lines: "{{ ntp_servers | map('regex_replace', '^', 'server ' ~ vrf_part) | list }}"
+
+    - name: Set syslog servers and source
+      cisco.iosxr.iosxr_config:
+        lines: "{{ server_lines + ['logging source-interface ' ~ mgmt_if ~ vrf_suffix] }}"
+      vars:
+        vrf_suffix: "{{ ' vrf ' ~ mgmt_vrf if mgmt_vrf else '' }}"
+        server_lines: >-
+          {{ syslog_servers | map('regex_replace', '^', 'logging ')
+             | map('regex_replace', '$', ' vrf ' ~ (mgmt_vrf or 'default') ~ ' severity info') | list }}
 
     - name: Check sync
       cisco.iosxr.iosxr_command:
