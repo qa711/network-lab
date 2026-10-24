@@ -12,6 +12,8 @@
 ! VTP: show vtp status
 ! 
 !
+! Last configuration change at 11:24:01 UTC Sat Oct 24 2026 by automate
+!
 version 17.12
 service timestamps debug datetime msec
 service timestamps log datetime msec
@@ -258,6 +260,8 @@ line vty 0 4
  login authentication VTY-ISE
  transport input ssh
 !
+ntp source Ethernet0/0
+ntp server vrf DMZ 10.99.0.12
 !
 !
 !

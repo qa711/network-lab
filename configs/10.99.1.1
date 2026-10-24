@@ -36,7 +36,7 @@
 ! 
 
 !Command: show running-config
-!No configuration change since last restart
+!Running configuration last done at: Sat Oct 24 10:30:51 2026
 
 version 9.3(4) Bios:version  
 hostname NEXUS-B
@@ -59,8 +59,6 @@ feature tunnel
 no password strength-check
 username admin password <REDACTED>  role network-admin
 username admin role priv-15
-username automate password <REDACTED>  role network-admin
-username automate passphrase  lifetime 99999 warntime 14 gracetime 3
 ip domain-lookup
 ip domain-name lab.internal
 ip name-server 10.99.0.12 use-vrf DMZ
@@ -83,7 +81,6 @@ snmp-server source-interface traps Vlan99
 snmp-server source-interface informs Vlan99
 snmp-server user admin priv-15 auth sha <SNMP-V3-KEY> priv aes-128 <SNMP-V3-PASS> localizedkey
 snmp-server user admin network-admin
-snmp-server user automate network-admin auth sha <SNMP-V3-KEY> priv aes-128 <SNMP-V3-PASS> localizedkey
 snmp-server host 10.99.0.12 informs version 2c <SNMP-COMMUNITY> udp-port 161
 rmon event 1 description FATAL(1) owner PMON@FATAL
 rmon event 2 description CRITICAL(2) owner PMON@CRITICAL
@@ -96,6 +93,8 @@ snmp-server enable traps link cisco-xcvr-mon-status-chg
 snmp-server enable traps system Clock-change-notification
 snmp-server enable traps syslog message-generated
 snmp-server community <SNMP-COMMUNITY> group network-operator
+ntp server 10.99.0.12 use-vrf DMZ
+ntp source 10.99.1.1
 aaa authentication login default group ISE-GROUP local 
 aaa authentication login console local 
 aaa accounting default group ISE-GROUP 

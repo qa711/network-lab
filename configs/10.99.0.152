@@ -25,7 +25,6 @@
 ! VTP:                                     0xC6 0xB5 0x6F 0x0C 0x84 0x7C 0x0D 0xFE 
 ! 
 !
-! Last configuration change at 19:37:45 UTC Fri Oct 23 2026 by automate
 !
 version 17.12
 service timestamps debug datetime msec localtime show-timezone

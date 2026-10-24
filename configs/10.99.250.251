@@ -22,6 +22,7 @@
 ! 
 ! 
 !
+! Last configuration change at 11:23:36 UTC Sat Oct 24 2026 by automate
 !
 version 17.3
 service timestamps debug datetime msec
@@ -453,6 +454,8 @@ call-home
  profile "CiscoTAC-1"
   active
   destination transport-method http
+ntp source Loopback99
+ntp server vrf DMZ 10.99.0.12
 !
 !
 !

@@ -25,6 +25,7 @@
 ! VTP:                                     0xC6 0xB5 0x6F 0x0C 0x84 0x7C 0x0D 0xFE 
 ! 
 !
+! Last configuration change at 09:27:15 UTC Sat Oct 24 2026 by admin
 !
 version 17.12
 service timestamps debug datetime msec
@@ -115,6 +116,7 @@ spanning-tree extend system-id
 !
 !
 username admin privilege 15 password <REDACTED>
+username automate privilege 15 secret <REDACTED>
 !
 vlan internal allocation policy ascending
 !
