@@ -301,6 +301,8 @@ line vty 0 4
  login authentication VTY-ISE
  transport input ssh
 !
+ntp source Vlan99
+ntp server 10.99.0.12
 !
 end
 

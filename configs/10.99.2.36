@@ -25,6 +25,7 @@
 ! VTP:                                     0xC6 0xB5 0x6F 0x0C 0x84 0x7C 0x0D 0xFE 
 ! 
 !
+! Last configuration change at 14:59:08 UTC Sat Oct 24 2026 by automate
 !
 version 17.12
 service timestamps debug datetime msec
@@ -297,6 +298,9 @@ line vty 0 4
  login authentication VTY-ISE
  transport input ssh
 !
+ntp source Vlan99
+ntp server 192.168.4.2
+ntp server 10.99.0.12
 !
 end
 

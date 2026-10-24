@@ -407,6 +407,8 @@ line vty 5 15
  transport input ssh
 !
 no scheduler allocate
+ntp source GigabitEthernet0/2.99
+ntp server vrf DMZ 10.99.0.12
 !
 end
 
