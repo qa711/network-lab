@@ -34,7 +34,7 @@
     # Not the Palo (10.255.250.14): PAN-OS can only receive time, not serve it.
     ntp_servers: &ntp_servers
       - 10.99.0.12    # NMS (chrony)
-
+      - 192.168.4.2   # OPNsense NTPd
     # The address Ansible logs in on. If the inventory gives a name rather
     # than an IP, look the name up on this box, the same way SSH does.
     mgmt_name: &mgmt_name "{{ ansible_host | default(inventory_hostname) }}"
