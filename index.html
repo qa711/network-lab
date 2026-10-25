@@ -1,0 +1,1615 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Three sites, four Cisco operating systems, and the operations stack that runs them">
+      
+      
+      
+      
+      
+        <link rel="next" href="verify/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>Multi-Site Enterprise Network Lab</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="light-blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#multi-site-enterprise-network-lab" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="Multi-Site Enterprise Network Lab" class="md-header__button md-logo" aria-label="Multi-Site Enterprise Network Lab" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Multi-Site Enterprise Network Lab
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Overview
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="light-blue"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="Multi-Site Enterprise Network Lab" class="md-nav__button md-logo" aria-label="Multi-Site Enterprise Network Lab" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Multi-Site Enterprise Network Lab
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#at-a-glance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        At a glance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="At a glance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plain-language-translation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plain-language translation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#addressing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Addressing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-runs-on-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What runs on it
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What runs on it">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#routing-and-separation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Routing and separation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mpls-l3vpn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MPLS L3VPN
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#path-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path control
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wan-and-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WAN and encryption
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multicast" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multicast
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quality-of-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quality of service
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-and-access-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security and access control
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remote-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remote access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#automation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-operations-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The operations stack
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The operations stack">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#librenms-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LibreNMS: monitoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oxidized-configuration-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Oxidized: configuration backup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#akvorado-traffic-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Akvorado: traffic analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#freeradius-and-tac_plus-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FreeRADIUS and tac_plus: authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lab-healthsh-custom-health-checking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        lab-health.sh: custom health checking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-the-ops-stack-taught-me" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the ops stack taught me
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-i-learned-the-hard-way" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What I learned the hard way
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-wrong-with-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's wrong with it
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-year-behind-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The year behind it
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Roadmap
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#repository-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Repository contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="verify/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Verify It Yourself
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="build-it-yourself/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build It Yourself
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#at-a-glance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        At a glance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="At a glance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plain-language-translation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plain-language translation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#addressing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Addressing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-runs-on-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What runs on it
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What runs on it">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#routing-and-separation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Routing and separation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mpls-l3vpn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MPLS L3VPN
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#path-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path control
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wan-and-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WAN and encryption
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multicast" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multicast
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quality-of-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quality of service
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-and-access-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security and access control
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remote-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remote access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#automation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-operations-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The operations stack
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The operations stack">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#librenms-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LibreNMS: monitoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oxidized-configuration-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Oxidized: configuration backup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#akvorado-traffic-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Akvorado: traffic analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#freeradius-and-tac_plus-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FreeRADIUS and tac_plus: authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lab-healthsh-custom-health-checking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        lab-health.sh: custom health checking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-the-ops-stack-taught-me" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the ops stack taught me
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-i-learned-the-hard-way" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What I learned the hard way
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-wrong-with-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's wrong with it
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-year-behind-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The year behind it
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Roadmap
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#repository-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Repository contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="multi-site-enterprise-network-lab">Multi-Site Enterprise Network Lab<a class="headerlink" href="#multi-site-enterprise-network-lab" title="Permanent link">&para;</a></h1>
+<p>A home lab built in EVE-NG over the past year, while studying for CCNP ENCOR. Three sites, a shared core, an MPLS provider network, four Cisco operating systems, and an operations stack that monitors it, backs it up and controls who can log in, the way a real network would be run.</p>
+<p>It was built around a full-time NOC support job, starting from no CCNA twelve months ago. There's a bit more on that <a href="#the-year-behind-it">further down</a>, in case it's useful to anyone in the same position.</p>
+<p>I'm publishing it for two reasons: to keep an open, checkable record of what I've built and what it taught me, and because most labs I found online stop at "configure the feature, screenshot it working, tear it down." This one stayed up, which meant living with the consequences of my own design decisions, including the bad ones. Several of those are documented below.</p>
+<p><strong>Don't take any of it on trust.</strong> The configs in this repo are the lab's real running configs with the secrets stripped out, and <a href="verify/">Verify it yourself</a> gives the commands to check each claim. If something doesn't match, I'd like to know.</p>
+<p><strong>Want to build it yourself?</strong> <a href="build-it-yourself/">Build it yourself</a> walks through setting up EVE-NG on a Windows PC, adding the images, rebuilding the topology and loading the configs, and says which parts have no published config yet.</p>
+<p><img alt="The lab in EVE-NG" src="evidence/EVE-NG-Topology.png" /></p>
+<p><em>The lab in EVE-NG, October 2026. Both firewalls now sit inside Gret A, and the green block at the top is the MPLS provider network.</em></p>
+<hr />
+<h2 id="at-a-glance">At a glance<a class="headerlink" href="#at-a-glance" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Scale</strong></td>
+<td>About 45 EVE-NG nodes, 32 of them network devices under configuration backup, plus 14 routers being added for the <a href="#roadmap">next build</a></td>
+</tr>
+<tr>
+<td><strong>Operating systems</strong></td>
+<td>Cisco NX-OS, IOS-XE, IOS-XR, IOS</td>
+</tr>
+<tr>
+<td><strong>Sites</strong></td>
+<td>Gret A and Belv B (campuses), Site Q (branch), a shared core, and an MPLS provider network</td>
+</tr>
+<tr>
+<td><strong>Separation</strong></td>
+<td>4 VRFs: CISCO-CORP, SCADA, PLc, DMZ</td>
+</tr>
+<tr>
+<td><strong>Routing</strong></td>
+<td>OSPF (multiple processes and areas, VRF-aware), MPLS L3VPN with BGP between the provider edge routers</td>
+</tr>
+<tr>
+<td><strong>WAN</strong></td>
+<td>Cisco Catalyst SD-WAN overlay, GRE-over-IPsec tunnels, MPLS L3VPN</td>
+</tr>
+<tr>
+<td><strong>Multicast</strong></td>
+<td>PIM sparse-mode, SSM, anycast rendezvous point with MSDP</td>
+</tr>
+<tr>
+<td><strong>Security</strong></td>
+<td>Palo Alto with GlobalProtect remote access, OPNsense with IPsec and WireGuard remote access, Cisco ISE, TACACS+, RADIUS with phone-based MFA</td>
+</tr>
+<tr>
+<td><strong>Operations</strong></td>
+<td>LibreNMS, Oxidized, Akvorado, FreeRADIUS, tac_plus, Ansible, custom health checks</td>
+</tr>
+</tbody>
+</table>
+<h3 id="plain-language-translation">Plain-language translation<a class="headerlink" href="#plain-language-translation" title="Permanent link">&para;</a></h3>
+<p>Networking carries a lot of jargon. Here's what the terms on this page mean without it, and where each one shows up in the lab.</p>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>In plain language</th>
+<th>Where it's used here</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>VRF</strong></td>
+<td>One physical box behaving as several separate routers. Traffic in one VRF can't reach another unless you deliberately join them.</td>
+<td>How the office, industrial and DMZ networks share hardware without sharing risk</td>
+</tr>
+<tr>
+<td><strong>OSPF</strong></td>
+<td>How routers tell each other which networks they can reach. "Areas" divide that up, so a change in one place doesn't make every router everywhere recalculate.</td>
+<td>Every site and the core</td>
+</tr>
+<tr>
+<td><strong>BGP</strong></td>
+<td>The routing protocol used <em>between</em> networks run by different people. It carries routes across organisations, with rules about which paths to prefer.</td>
+<td>Between the MPLS provider's edge routers, with much more of it in the <a href="#roadmap">next build</a></td>
+</tr>
+<tr>
+<td><strong>MPLS L3VPN</strong></td>
+<td>A provider network that carries several customers' traffic over the same routers while keeping each one private. <strong>PE</strong> routers sit at the provider's edge, <strong>P</strong> routers in its middle, and <strong>CE</strong> routers on the customer's side.</td>
+<td>The EIR-MPLS block</td>
+</tr>
+<tr>
+<td><strong>SD-WAN</strong></td>
+<td>Joining sites over any internet connection, with central controllers deciding how traffic should travel instead of each router being configured by hand.</td>
+<td>vManage, vSmart, vBond and an edge router at each site</td>
+</tr>
+<tr>
+<td><strong>GRE over IPsec</strong></td>
+<td>A tunnel that wraps traffic inside other traffic (GRE), then encrypts it (IPsec), so private networks can cross ones you don't trust.</td>
+<td>Between CORP-PBR-A and CORP-PBR-B</td>
+</tr>
+<tr>
+<td><strong>Policy-based routing and IP SLA</strong></td>
+<td>Sending traffic down a chosen path based on where it comes from, rather than whatever the routing table prefers. A probe (IP SLA) checks the path is alive and moves the traffic if it isn't.</td>
+<td>CORP-PBR-A and CORP-PBR-B</td>
+</tr>
+<tr>
+<td><strong>QoS and shaping</strong></td>
+<td>Deciding which traffic goes first when a link is busy. A shaper slows a link down on purpose, so the queuing has something to do and you can see it working.</td>
+<td>CORP-PBR-A</td>
+</tr>
+<tr>
+<td><strong>Multicast</strong></td>
+<td>Sending one copy of a stream that the network duplicates only where it's needed, rather than one copy per receiver. Used for video, market data and industrial telemetry. The <strong>rendezvous point</strong> is where senders and receivers find each other; <strong>anycast</strong> gives two routers the same address so either can do that job.</td>
+<td>All three sites</td>
+</tr>
+<tr>
+<td><strong>TACACS+ and RADIUS</strong></td>
+<td>Two ways of checking who may log into network equipment, and what they're allowed to type once they're in.</td>
+<td>Device logins, through Cisco ISE</td>
+</tr>
+<tr>
+<td><strong>MFA with a one-time code</strong></td>
+<td>Logging in takes the password <em>and</em> a six-digit code from a phone app, which changes every 30 seconds and can only be used once.</td>
+<td>Device logins</td>
+</tr>
+<tr>
+<td><strong>SNMP</strong></td>
+<td>How a monitoring system asks devices for their counters and health: traffic, errors, CPU, uptime.</td>
+<td>LibreNMS</td>
+</tr>
+<tr>
+<td><strong>NetFlow</strong></td>
+<td>Devices report a summary of every conversation crossing them (who talked to whom, and how much) to a collector. Metadata, not packet capture.</td>
+<td>Akvorado</td>
+</tr>
+<tr>
+<td><strong>Configuration backup</strong></td>
+<td>A system that logs into every device on a schedule, saves its configuration and keeps every version, so any change shows up as a before-and-after comparison.</td>
+<td>Oxidized, which is also where the configs in this repo come from</td>
+</tr>
+<tr>
+<td><strong>RESTCONF and NETCONF</strong></td>
+<td>Reading and changing a device's settings through an API, as structured data over HTTPS or SSH, instead of typing commands.</td>
+<td>CORP-PBR-A</td>
+</tr>
+<tr>
+<td><strong>Control-plane policing</strong></td>
+<td>Rate-limiting the traffic aimed <em>at</em> a device itself, such as logins and routing updates, so a flood can't overwhelm its processor.</td>
+<td>See <a href="verify/">Verify it yourself</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    INET((Internet))
+    TRANSIT((SD-WAN&lt;br/&gt;transport))
+
+    subgraph CTRL["SD-WAN controllers"]
+        SDC[vManage · vSmart · vBond]
+    end
+
+    subgraph MPLS["EIR-MPLS provider"]
+        PE1[PE1 · IOS-XR]
+        PCORE[6 × P routers · IOS]
+        PE2[PE2 · IOS-XR]
+    end
+
+    subgraph CORE["Shared core"]
+        CE1[CE1 · IOS-XR]
+        CE2[CE2 · IOS-XR]
+        CSW1[CSW1 · NX-OS]
+        CSW2[CSW2 · NX-OS]
+    end
+
+    subgraph GRETA["Site: Gret A"]
+        NA[NEXUS-A]
+        PBRA[CORP-PBR-A · IOS-XE]
+        GE[Gret-Edge · SD-WAN]
+        FW[Firewalls&lt;br/&gt;Palo Alto · OPNsense]
+        DA[DSW-A1 · DSW-A2]
+        AA[ASW-A1 · A2 · A3]
+        SVC[Cisco ISE · WLC&lt;br/&gt;ops server]
+    end
+
+    subgraph BELVB["Site: Belv B"]
+        NB[NEXUS-B]
+        PBRB[CORP-PBR-B · IOS-XE]
+        BE[Belv-Edge · SD-WAN]
+        DB[DSW-B1 · DSW-B2]
+        AB[ASW-B1 · B2 · B3]
+    end
+
+    subgraph SITEQ["Site: Q"]
+        QE[Q-EDGE]
+        QSD[Q-SDWAN-Edge]
+        QSW[Q-SW30 … Q-SW39]
+    end
+
+    PE1 --- PCORE --- PE2
+    PE1 --- CE1
+    PE2 --- CE2
+    CE1 --- CSW1
+    CE2 --- CSW2
+    CSW1 --- CSW2
+    CSW1 &amp; CSW2 --- NA &amp; NB &amp; PBRA &amp; PBRB
+    CSW2 --- QE
+    PBRA === PBRB
+    NA --- PBRA
+    NB --- PBRB
+    NA --- FW --- INET
+    NA --- DA --- AA
+    DA --- SVC
+    NB --- DB --- AB
+    QE --- QSW
+    QE --- QSD
+    NA --- GE
+    NB --- BE
+    SDC -.- TRANSIT
+    GE &amp; BE &amp; QSD -.- TRANSIT</code></pre>
+<p><code>===</code> GRE-over-IPsec tunnel pair · dotted lines are the SD-WAN overlay · solid lines are routed links. This is simplified; the screenshot above shows every link.</p>
+<p>Each campus has a Nexus switch at the boundary between site and core, holding the default gateways for the user networks. The two CORP-PBR routers exist because the virtual Nexus platform can't do policy-based routing or IPsec. They're a workaround, not a design choice.</p>
+<p>Both firewalls now sit inside Gret A, behind NEXUS-A, so remote-access users arrive in a site rather than at the core. Cisco ISE and the operations server live there too. CE1 and CE2 connect the shared core to the MPLS provider network.</p>
+<hr />
+<h2 id="addressing">Addressing<a class="headerlink" href="#addressing" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Range</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>10.1.0.0/24</code>, <code>10.2.0.0/24</code>, <code>10.4.0.0/24</code></td>
+<td>Gret A user networks</td>
+</tr>
+<tr>
+<td><code>10.1.1.0/24</code>, <code>10.2.1.0/24</code>, <code>10.4.1.0/24</code></td>
+<td>Belv B user networks</td>
+</tr>
+<tr>
+<td><code>10.98.0.0/24</code>, <code>10.98.2.0/24</code></td>
+<td>Site services</td>
+</tr>
+<tr>
+<td><code>10.99.0.0/24</code> · <code>10.99.1.0/24</code> · <code>10.99.2.0/24</code></td>
+<td>Management for Gret A · Belv B · Site Q</td>
+</tr>
+<tr>
+<td><code>10.99.99.0/24</code></td>
+<td>Management for the routers in the <a href="#roadmap">next build</a></td>
+</tr>
+<tr>
+<td><code>10.99.250.0/24</code></td>
+<td>Device loopbacks (stable identity for monitoring)</td>
+</tr>
+<tr>
+<td><code>10.10.x.0/30</code>, <code>10.20.x.0/30</code></td>
+<td>Point-to-point links between core devices</td>
+</tr>
+<tr>
+<td><code>172.16.12.0/30</code>, <code>172.16.12.4/30</code></td>
+<td>GRE tunnel endpoints</td>
+</tr>
+<tr>
+<td><code>10.255.100.1/32</code></td>
+<td>Anycast rendezvous point (same address on two routers)</td>
+</tr>
+</tbody>
+</table>
+<p>Management is a separate network per site with its own gateway. Every device sends SNMP, syslog, authentication and NetFlow from that network, keeping management traffic separable from user traffic.</p>
+<hr />
+<h2 id="what-runs-on-it">What runs on it<a class="headerlink" href="#what-runs-on-it" title="Permanent link">&para;</a></h2>
+<h3 id="routing-and-separation">Routing and separation<a class="headerlink" href="#routing-and-separation" title="Permanent link">&para;</a></h3>
+<p>Four VRFs are carried consistently from core to branch: <code>CISCO-CORP</code> for users, <code>SCADA</code> and <code>PLc</code> for isolated industrial networks, and <code>DMZ</code> for management and services. Each has its own OSPF process, so the four routing domains are genuinely independent rather than filtered versions of one.</p>
+<p>The campus Nexus switches are area border routers: user networks in area 10 (Gret A) and area 20 (Belv B), core in area 0, with route summarisation and filtering at the boundary.</p>
+<h3 id="mpls-l3vpn">MPLS L3VPN<a class="headerlink" href="#mpls-l3vpn" title="Permanent link">&para;</a></h3>
+<p>A provider network built the way a real one is: six IOS routers in the middle (P routers) and two IOS-XR provider edge routers, PE1 and PE2, running OSPF and LDP between them, with BGP carrying the VPN routes from one edge to the other. Three of the four VRFs (SCADA, PLc and CISCO-CORP) cross it, each kept separate by its own route distinguisher. CE1 and CE2 connect the shared core to it.</p>
+<p>It works, and it carries no traffic.</p>
+<pre class="mermaid"><code>flowchart LR
+    CE1[CE1] ---|"OSPF, per VRF"| PE1[PE1]
+    PE1 ===|"MPLS labels + BGP VPN routes"| PE2[PE2]
+    PE2 ---|"OSPF, per VRF"| CE2[CE2]
+    CE1 -.-|"backdoor: the core's own OSPF links, preferred today"| CE2</code></pre>
+<p>The sites can already reach each other through the core's own OSPF links, and OSPF prefers a route it learns directly inside an area over the same route passed across a provider. That's the classic "backdoor" problem. The fix is either a sham-link or taking the backdoor away, and the <a href="#roadmap">next build</a> does the second.</p>
+<h3 id="path-control">Path control<a class="headerlink" href="#path-control" title="Permanent link">&para;</a></h3>
+<p>Policy-based routing on both CORP-PBR routers is designed to split traffic from two user networks across different core switches. On CORP-PBR-B that split isn't working yet (<a href="#whats-wrong-with-it">see below</a>). Each path is watched by an IP SLA probe with a tracked object, so if a core switch stops responding the traffic moves. If <em>every</em> tracked path fails, the policy stands aside and lets normal routing take over rather than dropping traffic. That's worth knowing, because the alternative is a silent blackhole.</p>
+<h3 id="wan-and-encryption">WAN and encryption<a class="headerlink" href="#wan-and-encryption" title="Permanent link">&para;</a></h3>
+<p>A Catalyst SD-WAN overlay (vManage, vSmart, vBond and three edge routers), plus two GRE-over-IPsec tunnels between the CORP-PBR routers taking different physical paths through the two core switches. Both run OSPF inside the tunnel and have their MTU clamped, which avoids a well-known failure where small packets pass and large ones vanish.</p>
+<p align="center">
+  <a href="evidence/SDWAN-Dashboard.png"><img src="evidence/SDWAN-Dashboard.png" width="49%" alt="SD-WAN dashboard in vManage"></a>
+  <a href="evidence/SDWAN-Device-List.png"><img src="evidence/SDWAN-Device-List.png" width="49%" alt="SD-WAN device list in vManage"></a>
+</p>
+
+<p><em>vManage: the overlay's dashboard, and the controllers and edge routers it manages. Click any screenshot for the full-size version.</em></p>
+<h3 id="multicast">Multicast<a class="headerlink" href="#multicast" title="Permanent link">&para;</a></h3>
+<p>PIM sparse-mode across all three sites, inside a VRF. Two routers share one rendezvous-point address (anycast), with MSDP peering between them so a source registering with one is visible to the other. Failover was tested by shutting the loopback on one and watching traffic continue. SSM and IGMPv3 are also configured.</p>
+<h3 id="quality-of-service">Quality of service<a class="headerlink" href="#quality-of-service" title="Permanent link">&para;</a></h3>
+<p>Traffic is marked as it enters CORP-PBR-A. The queuing policy, and the shaper that creates artificial congestion so the queuing can actually be observed, are switched on for tests rather than left running. Without the shaper none of it does anything visible, which is the part most tutorials skip. The one time the shaper was left on, it throttled all inter-site traffic to 1 Mbps (<a href="#whats-wrong-with-it">more below</a>).</p>
+<h3 id="security-and-access-control">Security and access control<a class="headerlink" href="#security-and-access-control" title="Permanent link">&para;</a></h3>
+<p>Palo Alto and OPNsense, as two different firewall platforms, deliberately. Cisco ISE is the policy engine for device logins across 26 devices, including per-command authorisation: a read-only account logs in successfully and is still refused <code>configure terminal</code>.</p>
+<p>On top of that, multi-factor authentication: ISE passes the login to FreeRADIUS, which checks a rotating six-digit code from a phone authenticator app before allowing it.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    actor Eng as Engineer
+    participant Dev as Switch or router
+    participant ISE as Cisco ISE
+    participant FR as FreeRADIUS
+    Eng-&gt;&gt;Dev: Log in: password + code from phone app
+    Dev-&gt;&gt;ISE: TACACS+ request: is this login allowed?
+    ISE-&gt;&gt;FR: RADIUS request: check password and code
+    FR--&gt;&gt;ISE: Accept, and record the code as used
+    ISE--&gt;&gt;Dev: Accept, with this user's privilege level
+    Eng-&gt;&gt;Dev: configure terminal
+    Dev-&gt;&gt;ISE: TACACS+ request: may this user run this command?
+    ISE--&gt;&gt;Dev: Permit or deny, per user</code></pre>
+<p align="center">
+  <a href="evidence/ISE-TACACS-Live-Logs.png"><img src="evidence/ISE-TACACS-Live-Logs.png" width="100%" alt="ISE TACACS+ live logs"></a>
+</p>
+
+<p><em>ISE's TACACS+ live log: every login and command authorisation, per device and per user.</em></p>
+<p align="center">
+  <a href="evidence/PaloAlto-Dashboard.png"><img src="evidence/PaloAlto-Dashboard.png" width="49%" alt="Palo Alto PA-VM dashboard"></a>
+  <a href="evidence/OPNsense-Dashboard.png"><img src="evidence/OPNsense-Dashboard.png" width="49%" alt="OPNsense dashboard"></a>
+</p>
+
+<p><em>The two firewalls: Palo Alto PA-VM and OPNsense.</em></p>
+<h3 id="remote-access">Remote access<a class="headerlink" href="#remote-access" title="Permanent link">&para;</a></h3>
+<p>Both firewalls terminate remote-access VPNs from outside the lab. Palo Alto runs GlobalProtect. It was lost in the April rebuild and has been working again since October, reachable from the internet. OPNsense runs IKEv2 IPsec and WireGuard, used from a phone, giving access to the management networks.</p>
+<p align="center">
+  <a href="evidence/PaloAlto-GP-Logs.png"><img src="evidence/PaloAlto-GP-Logs.png" width="57%" alt="GlobalProtect connected, with traffic in both directions"></a>
+  <a href="evidence/PaloAlto-GP-Logs-blurred.png"><img src="evidence/PaloAlto-GP-Logs-blurred.png" width="41%" alt="GlobalProtect logs on the Palo Alto"></a>
+</p>
+
+<p><em>Left: GlobalProtect connected, with traffic in both directions and an SSH session to NEXUS-A open. Right: the matching portal and gateway logs on the firewall. Public addresses are blurred.</em></p>
+<p align="center">
+  <a href="evidence/OPNsense-IPsec-Status.png"><img src="evidence/OPNsense-IPsec-Status.png" width="64%" alt="OPNsense IPsec status"></a>
+  <a href="evidence/strongSwan-Status-blurred.png"><img src="evidence/strongSwan-Status-blurred.png" width="16%" alt="strongSwan IPsec client on a phone"></a>
+  <a href="evidence/WireGuard-Peer-blurred.png"><img src="evidence/WireGuard-Peer-blurred.png" width="16%" alt="WireGuard client on a phone"></a>
+</p>
+
+<p><em>OPNsense with an IKEv2 session up, and the phone end of both VPNs.</em></p>
+<h3 id="automation">Automation<a class="headerlink" href="#automation" title="Permanent link">&para;</a></h3>
+<p>RESTCONF and NETCONF are enabled on IOS-XE and used to read the configuration <em>and</em> change it, such as setting interface descriptions over HTTPS rather than typing them at a CLI. YangSuite (in Docker) is there for exploring the data models. Ansible now pushes baseline settings to the IOS-XE devices from an inventory grouped by site and by platform, with first playbooks written for NX-OS and IOS-XR.</p>
+<hr />
+<h2 id="the-operations-stack">The operations stack<a class="headerlink" href="#the-operations-stack" title="Permanent link">&para;</a></h2>
+<p>The part that turns a topology into something that has to be <em>run</em>. All of it lives on one Ubuntu 24.04 server on the management network.</p>
+<pre class="mermaid"><code>flowchart LR
+    DEV[Network devices]
+    ISE[Cisco ISE]
+    GH[(This repo)]
+    subgraph OPS["Ops server · Ubuntu 24.04 · checked every 15 minutes by lab-health.sh"]
+        LNMS[LibreNMS&lt;br/&gt;monitoring]
+        AKV[Akvorado&lt;br/&gt;traffic analysis]
+        OXI[Oxidized&lt;br/&gt;config backup]
+        TAC[tac_plus&lt;br/&gt;fallback TACACS+]
+        FR[FreeRADIUS&lt;br/&gt;phone codes]
+    end
+    DEV -- SNMP --&gt; LNMS
+    DEV -- NetFlow --&gt; AKV
+    DEV -- "configs, over SSH" --&gt; OXI
+    DEV -. "fallback" .-&gt; TAC
+    DEV -- TACACS+ --&gt; ISE
+    ISE -- RADIUS --&gt; FR
+    OXI -- "strip secrets, audit, push" --&gt; GH</code></pre>
+<h3 id="librenms-monitoring">LibreNMS: monitoring<a class="headerlink" href="#librenms-monitoring" title="Permanent link">&para;</a></h3>
+<p>SNMP polling across the estate: interface throughput and errors, device health, availability alerting. Setting it up properly meant working through polling-interval tuning, RRD step conversion, <code>rrdcached</code>, PHP timezone problems and SNMPv3 credentials. None of it is interesting until it's wrong, and all of it is part of running a monitoring platform.</p>
+<p align="center">
+  <a href="evidence/LibreNMS-Dashboard.png"><img src="evidence/LibreNMS-Dashboard.png" width="49%" alt="LibreNMS dashboard"></a>
+  <a href="evidence/LibreNMS-Device-List.png"><img src="evidence/LibreNMS-Device-List.png" width="49%" alt="LibreNMS device list"></a>
+</p>
+
+<p><em>LibreNMS: the overview dashboard and the device list.</em></p>
+<h3 id="oxidized-configuration-backup">Oxidized: configuration backup<a class="headerlink" href="#oxidized-configuration-backup" title="Permanent link">&para;</a></h3>
+<p>Every device's config pulled into a git repository on a schedule, so any change is a diff. That history is how I found several of the problems described on this page, and it's what keeps the published configs in this repo current. It's also the closest thing the lab has to a rollback mechanism.</p>
+<p>It's here because I learned the hard way: when I moved the lab to a new machine in April, backups weren't fully working yet and most of it had to be rebuilt by hand (<a href="#the-year-behind-it">more below</a>).</p>
+<p align="center">
+  <a href="evidence/Oxidized-Config-Diff.png"><img src="evidence/Oxidized-Config-Diff.png" width="49%" alt="Oxidized configuration diff"></a>
+  <a href="evidence/Oxidized-Version-History.png"><img src="evidence/Oxidized-Version-History.png" width="49%" alt="Oxidized version history"></a>
+</p>
+
+<p><em>A config change shown as a diff, and the version history behind it.</em></p>
+<h3 id="akvorado-traffic-analysis">Akvorado: traffic analysis<a class="headerlink" href="#akvorado-traffic-analysis" title="Permanent link">&para;</a></h3>
+<p>NetFlow collection with a ClickHouse and Kafka pipeline behind it, fed by three exporters (both CORP-PBR routers and the branch edge). Networks are named per site, so flows read as <code>gret-a-vlan20 → belv-b-vlan20</code> rather than raw addresses.</p>
+<p>Getting flows to land took real debugging. First, NetFlow v9 templates expired while the collector restarted. Then a subtler one: every flow decoded perfectly and was then discarded, because the collector requires a sampling rate that unsampled IOS export never advertises. Found by reading the collector's own metrics, spotting an exact 1:1 ratio between decoded flows and <code>sampling rate missing</code> errors, and confirming it in the source.</p>
+<p><img alt="Akvorado dashboard" src="evidence/Akvorado-Home.png" /></p>
+<h3 id="freeradius-and-tac_plus-authentication">FreeRADIUS and tac_plus: authentication<a class="headerlink" href="#freeradius-and-tac_plus-authentication" title="Permanent link">&para;</a></h3>
+<p>FreeRADIUS provides RADIUS and the one-time-code engine (PAM plus Google Authenticator). <code>tac_plus</code> is a standalone TACACS+ server built from source, kept as a fallback and as a plain reference implementation next to ISE's much larger one.</p>
+<h3 id="lab-healthsh-custom-health-checking"><code>lab-health.sh</code>: custom health checking<a class="headerlink" href="#lab-healthsh-custom-health-checking" title="Permanent link">&para;</a></h3>
+<p>A Bash script on a systemd timer, every fifteen minutes. Every check in it corresponds to something that actually went wrong:</p>
+<ul>
+<li>Host basics: filesystem writable, disk space, <strong>clock synchronised</strong> (out-of-sync clocks silently break time-based one-time codes), resolver and Docker alive</li>
+<li><strong>Who owns the ports</strong> (2055, 49, 1812, 1813), because a leftover process squatting on the NetFlow port put the collector into a crash loop more than once</li>
+<li>Container health, including a specific check for a container-DNS failure with the same effect</li>
+<li><strong>Functional tests, not just "is it running":</strong> a deliberately wrong RADIUS login that must be rejected; SNMP polls to each NetFlow exporter (which double as the collector's own prerequisite); a database freshness query broken down per exporter</li>
+<li>Two specific settings that let logins keep working <strong>while quietly switching off the rule that stops a phone code being used twice</strong>. That's the dangerous kind of failure, because nothing looks wrong</li>
+</ul>
+<p>It reports pass/fail, exits non-zero when something's broken, and with <code>--fix</code> repairs what's safe to repair automatically.</p>
+<p align="center">
+  <a href="evidence/lab-health.sh-output.png"><img src="evidence/lab-health.sh-output.png" width="70%" alt="lab-health.sh output"></a>
+</p>
+
+<h3 id="what-the-ops-stack-taught-me">What the ops stack taught me<a class="headerlink" href="#what-the-ops-stack-taught-me" title="Permanent link">&para;</a></h3>
+<p>More than the network config did. Integrating five independent systems that were never tested together on one host is a large part of what infrastructure work involves. The failures were rarely exotic: port conflicts, systemd sandboxing making a directory read-only inside a service but not outside it, a PAM module trying to drop privileges to a user that didn't exist, and a monitoring script that gave different answers on identical runs because of a shell race between <code>pipefail</code> and <code>grep -q</code>.</p>
+<hr />
+<h2 id="what-i-learned-the-hard-way">What I learned the hard way<a class="headerlink" href="#what-i-learned-the-hard-way" title="Permanent link">&para;</a></h2>
+<p><strong>Virtual platforms will lie to you.</strong> A switch port passed CDP (the neighbour appeared correctly) but forwarded no actual traffic. The switch even had an ARP entry for the far end, which turned out to have been learned from the far end's own broadcasts rather than from any reply. Moving the same virtual machine to a different switch fixed it instantly. When the control plane says yes and the data plane says nothing, bisect the path instead of re-reading the config.</p>
+<p><strong>Configuration can be valid and completely inert.</strong> Route summarisation configured for an area containing no interfaces. <code>default-information originate</code> in VRFs with no default route to originate. Both passed review. Neither did anything.</p>
+<p><strong>Filtering routes on a transit router can create a blackhole.</strong> Removing a route from one router's own table doesn't stop it advertising that path to everyone else, so neighbours keep sending traffic to a router that can no longer forward it. Reproduced deliberately and traced hop by hop, which taught me more than reading about it would have.</p>
+<p><strong>Overlapping addresses fail in confusing ways.</strong> Monitoring for both core switches kept failing. Two things were wrong at once: their management loopbacks overlapped the DMZ subnet, so ARP answers came from the wrong place, and one switch also had an SNMPv3 security-level mismatch. An address plan only protects you if something checks it for overlaps.</p>
+<p><strong>A network can work perfectly and carry nothing.</strong> Once the MPLS VPN was rebuilt on the right routers, the BGP session came up and 30 routes were exchanged, yet no traffic used it, because OSPF preferred the core's own links. "Working" and "in use" are different questions; check the path traffic actually takes, not just the routing table.</p>
+<p><strong>Old software and new tools don't always share a language.</strong> Older IOS images only offer SSH key-exchange methods that modern clients refuse. It broke Ansible on three routers and file transfers from vManage to an SD-WAN edge. When a connection fails before the password prompt, read the error before resetting any passwords.</p>
+<p><strong>Anything you expose gets found.</strong> Once the GlobalProtect portal was reachable from the internet, its logs filled with login attempts from scanners in several countries. They all failed at the client-certificate check, but "it's only a lab" stopped being true the moment it had a public address.</p>
+<p><img alt="GlobalProtect portal logs showing scanner attempts" src="evidence/PaloAlto-GP-Scanner-Attempts.png" /></p>
+<p><strong>A security feature can switch itself off without anything looking wrong.</strong> A one-time code only works if the server records that it's been used, so nobody can use it again. Twice during the build that recording step silently failed: once because the software tried to switch to a user account that didn't exist, and once because the file it needed sat in a folder the service wasn't allowed to write to.</p>
+<p>Both times, logins carried on working perfectly, with no error and nothing in the logs I was watching; codes had simply become reusable, which is the entire point of the feature. It's the failure I think about most, and the health checker now tests for both cases every fifteen minutes.</p>
+<hr />
+<h2 id="whats-wrong-with-it">What's wrong with it<a class="headerlink" href="#whats-wrong-with-it" title="Permanent link">&para;</a></h2>
+<p>The section I'd want to read if someone showed me this. The first version of this page listed eight problems; this is where each one stands now.</p>
+<table>
+<thead>
+<tr>
+<th>Problem in the first version</th>
+<th>Where it stands (October 2026)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Over-engineered for its size</td>
+<td>Still true, and deliberate (see below)</td>
+</tr>
+<tr>
+<td>MPLS and BGP configured on the wrong routers</td>
+<td><strong>Fixed.</strong> Rebuilt on the provider edge routers. It now works but carries no traffic (<a href="#mpls-l3vpn">backdoor</a>)</td>
+</tr>
+<tr>
+<td>Policy-based routing configured but never checked</td>
+<td><strong>Half fixed.</strong> CORP-PBR-A now splits the two user networks; CORP-PBR-B still sends both down the same path</td>
+</tr>
+<tr>
+<td>A test shaper left throttling inter-site traffic to 1 Mbps</td>
+<td><strong>Fixed.</strong> The shaper is no longer applied, but the habit behind it is still there (see below)</td>
+</tr>
+<tr>
+<td>Lab-grade credential handling</td>
+<td>Still true</td>
+</tr>
+<tr>
+<td>Everything runs on one server</td>
+<td>Still true</td>
+</tr>
+<tr>
+<td>Not reproducible</td>
+<td><strong>Partly addressed.</strong> Ansible now pushes baseline settings, and a <a href="build-it-yourself/">build guide</a> covers rebuilding the lab by hand; most configuration is still typed by hand</td>
+</tr>
+<tr>
+<td>Backups have never been restored</td>
+<td>Still true</td>
+</tr>
+</tbody>
+</table>
+<p><strong>It's over-engineered for its size.</strong> Four VRFs, eight OSPF processes and three sites for around 30 devices is a feature-density decision, not an engineering one. A real network this size would be far simpler, and anyone proposing this design for 30 real devices should be challenged on it. It's a study environment, so the complexity is the point, but nobody should mistake it for good design at this scale.</p>
+<p><strong>Things still get configured and not verified.</strong> Policy-based routing was meant to split two user networks across different core switches. A config review found the primary and backup next-hops in the wrong order on both routers, so everything had quietly been using one path. CORP-PBR-A is fixed; the latest config from CORP-PBR-B still has both networks preferring the same next hop. Same lesson as the first time: I checked the configuration, not the behaviour.</p>
+<p><strong>Change discipline is thin.</strong> The 1 Mbps shaper went in for a test and was still there through three separate config reviews. It's gone now, but changes still go in with no record beyond Oxidized diffs, no pre-change checks and no test plan. In production that pattern causes outages.</p>
+<p><strong>Credential handling is lab-grade and would fail an audit.</strong> Several devices still keep a local account as a reversible type-7 password, and shared secrets are reused across services. Fine for a lab; genuinely bad if it were real. It's also why nothing here is published without going through a sanitiser first.</p>
+<p><strong>Everything runs on one server.</strong> LibreNMS, Oxidized, the NetFlow collector, RADIUS and TACACS+ all sit on a single Ubuntu box with no redundancy. If it dies I lose monitoring, backups, flow data <em>and</em> authentication at once. Losing authentication would lock me out of the devices too, if the local fallback accounts weren't there.</p>
+<p><strong>It's only partly reproducible.</strong> An Ansible inventory and baseline playbooks now push common settings, but most configuration is still typed or pasted by hand, with no single source of truth to rebuild from. April showed what that costs. The <a href="build-it-yourself/">build guide</a> lets someone rebuild most of the lab by hand, but it takes weeks of evenings, there's no lab export file, and the firewalls, ISE, the SD-WAN controllers and the MPLS provider routers have no published config. That's the biggest gap between this and how a modern network team works.</p>
+<p><strong>Backups have never been restored.</strong> Oxidized has been collecting configs for months. I have never once tested putting one back.</p>
+<hr />
+<h2 id="the-year-behind-it">The year behind it<a class="headerlink" href="#the-year-behind-it" title="Permanent link">&para;</a></h2>
+<p>Twelve months ago I didn't have a CCNA. I'm now preparing to sit CCNP ENCOR, and everything in this repository was built in the gaps around a full-time NOC support role.</p>
+<p>There was no trick to it, but there was a lot of time. An hour or two on a normal weekday, before shifts or after them. And then the stretches that weren't normal: four, five, six hours a day across a whole weekend, disappearing into firewall configuration or standing OPNsense up from nothing. Some features went in over an evening. Some ate an entire weekend and were still broken on Sunday night.</p>
+<p><strong>In April I lost the lab.</strong> I moved from a 32GB laptop to a 128GB one, and because my configuration backups weren't fully working yet, most of it didn't come with me. I rebuilt it by hand. A working Palo Alto GlobalProtect VPN setup, which had taken a long fight to get going, didn't come back until October.</p>
+<p>That's the honest origin of the operations stack on this page. Oxidized isn't here because a course told me to install it; it's here because I've already paid for not having it, and rebuilding thirty devices from memory is a lesson you only need once. The same goes for the health checker: it exists because things kept breaking silently, and I got tired of finding out days later.</p>
+<p>Most of the time wasn't glamorous. A fair share went on things that turned out to be my own mistake, a virtual platform quietly not doing what it claimed, or a Linux service failing for reasons that had nothing to do with networking. The lessons and criticism sections above are mostly a record of that. I've left them in because the polished version would be less useful to anyone reading this, and less true.</p>
+<p><strong>If you're roughly where I was a year ago,</strong> four things helped more than anything else:</p>
+<ul>
+<li><strong>Keep one lab running instead of rebuilding it per topic.</strong> Consequences accumulate. Half of what I learned came from something I'd configured weeks earlier breaking when I touched something unrelated, and that's the part that actually resembles the job.</li>
+<li><strong>Break things deliberately, then predict the symptom before you look.</strong> Being able to <em>recognise</em> a failure is worth more than being able to configure the feature, and it's the harder half to pick up from a book.</li>
+<li><strong>Write it down as you go, and back it up sooner than you think you need to.</strong> The runbooks in this repo exist because I needed them, not because I planned to publish them. The backups exist because I learned the alternative in April.</li>
+<li><strong>Steady days get you there; the long ones move you forward.</strong> Most progress came from ordinary weekday hours. But the things I understand best are the ones I lost a weekend to, sitting with something broken long enough to actually work it out rather than reading the answer.</li>
+</ul>
+<p>None of this required expensive kit or a lot of money: EVE-NG on a decent machine, free tooling, and time. It did require a genuine amount of that last one, and I'd rather say so than pretend it was effortless. If you're working in a NOC and wondering whether the jump to engineering-level work is realistic alongside shift work: it is. It's slow, it's occasionally demoralising, and it is absolutely possible.</p>
+<hr />
+<h2 id="roadmap">Roadmap<a class="headerlink" href="#roadmap" title="Permanent link">&para;</a></h2>
+<p>The next build follows my CCNP ENARSI study. The plan is to replace the shared core with separate provider networks, each running a different routing protocol, and connect every site's edge router to all of them. The two ISPs also peer with each other directly.</p>
+<pre class="mermaid"><code>flowchart TB
+    UP[Upstream provider&lt;br/&gt;AS 65550]
+    MPLS[EIR-MPLS · AS 65000&lt;br/&gt;MPLS L3VPN]
+    ISPA[ISP-A · AS 100&lt;br/&gt;EIGRP inside]
+    ISPB[ISP-B · AS 200&lt;br/&gt;OSPF inside]
+    BR[Branch&lt;br/&gt;ISP-A only]
+    SITES[Every site edge · AS 64500&lt;br/&gt;Gret A · Belv B · Site Q&lt;br/&gt;DMVPN hub at Gret A]
+    ACQ[Acquired company · AS 65300&lt;br/&gt;EIGRP + OSPF, redistributed]
+    UP ~~~ MPLS
+    UP --- ISPA &amp; ISPB
+    MPLS &amp; ISPA &amp; ISPB --- SITES
+    ISPA --- BR
+    ISPB --- ACQ</code></pre>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>What</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Done</strong></td>
+<td>MPLS L3VPN rebuilt on the provider edge routers</td>
+</tr>
+<tr>
+<td><strong>Done</strong></td>
+<td>GlobalProtect remote access rebuilt, reachable from the internet</td>
+</tr>
+<tr>
+<td><strong>Done</strong></td>
+<td>Both firewalls moved into Gret A</td>
+</tr>
+<tr>
+<td><strong>Done</strong></td>
+<td>Ansible inventory and baseline playbooks</td>
+</tr>
+<tr>
+<td><strong>Underway</strong></td>
+<td>The ENARSI build above. Fourteen new routers are in, with their own management network, monitoring and backups. Routing phases follow: EIGRP, OSPF, BGP policy, redistribution, the MPLS cutover, then DMVPN</td>
+</tr>
+<tr>
+<td><strong>Next</strong></td>
+<td>Fix policy-based routing on CORP-PBR-B</td>
+</tr>
+<tr>
+<td><strong>Next</strong></td>
+<td>Restore a config from Oxidized onto a live device, end to end</td>
+</tr>
+<tr>
+<td><strong>Next</strong></td>
+<td>Hashed secrets everywhere: type 9 for accounts, type 6 for keys</td>
+</tr>
+<tr>
+<td><strong>Next</strong></td>
+<td>Realistic traffic from a TRex traffic generator</td>
+</tr>
+<tr>
+<td><strong>Later</strong></td>
+<td>802.1X network access control with ISE · SD-WAN centralised policy and application-aware routing · a jump server for admin access</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="repository-contents">Repository contents<a class="headerlink" href="#repository-contents" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>├── configs/           # sanitised device configs, one file per management address
+├── enarsi/configs/    # sanitised configs for the next build's routers
+├── docs/              # this page, Verify it yourself, the build guide, phase runbooks
+│   └── evidence/      # the screenshots on this page
+├── diagrams/          # EVE-NG topology exports
+└── scripts/           # publish script, sanitiser, health check, RESTCONF tools, Ansible playbooks, YangSuite
+</code></pre></div>
+<p>See <a href="verify/">Verify it yourself</a> for commands you can run to check these claims rather than take them on trust, <a href="build-it-yourself/">Build it yourself</a> to set the lab up on your own PC, and the <a href="https://github.com/qa711/network-lab/tree/main/docs/runbooks">runbooks</a> for the build notes behind each study phase.</p>
+<p>Configurations are collected by Oxidized and published by a script that strips secrets and refuses to push if any survive. What's here reflects how the lab ran at the last sync, including whatever was broken at the time.</p>
+<p><strong>About AI help:</strong> I've used Claude, an AI assistant, throughout: as a study partner, for config reviews and for lab workbooks. Some of the scripts in <code>scripts/</code> were written with its help. The lab was built and is run by me, and its configs are published here so the claims on this page can be checked.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.sections", "navigation.top", "content.code.copy", "search.suggest"], "search": "assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>

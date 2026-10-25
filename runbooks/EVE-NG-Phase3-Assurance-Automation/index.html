@@ -1,0 +1,698 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Three sites, four Cisco operating systems, and the operations stack that runs them">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>Phase 3 — Assurance & Automation: QoS, NetFlow, RESTCONF, AAA, CoPP - Multi-Site Enterprise Network Lab</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="light-blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#phase-3-assurance-automation-qos-netflow-restconf-aaa-copp" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Multi-Site Enterprise Network Lab" class="md-header__button md-logo" aria-label="Multi-Site Enterprise Network Lab" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Multi-Site Enterprise Network Lab
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Phase 3 — Assurance &amp; Automation: QoS, NetFlow, RESTCONF, AAA, CoPP
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="light-blue"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Multi-Site Enterprise Network Lab" class="md-nav__button md-logo" aria-label="Multi-Site Enterprise Network Lab" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Multi-Site Enterprise Network Lab
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../verify/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Verify It Yourself
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../build-it-yourself/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build It Yourself
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="phase-3-assurance-automation-qos-netflow-restconf-aaa-copp">Phase 3 — Assurance &amp; Automation: QoS, NetFlow, RESTCONF, AAA, CoPP<a class="headerlink" href="#phase-3-assurance-automation-qos-netflow-restconf-aaa-copp" title="Permanent link">&para;</a></h1>
+<p>Five checklist lines, mostly on the PBR-A / LibreNMS pair plus Q-EDGE and one canary switch. Grounded in your current export: PBR-A already runs <code>ip http secure-server</code> + <code>ip http authentication local</code>, Gi4 is unused (our safe API-write target), Q-SW39 has no <code>aaa new-model</code> yet, and LibreNMS's existing SNMP polling will exercise the CoPP counters for free.</p>
+<p><strong>Time budget:</strong> A+B one evening (they share test traffic), C one evening, D+E one evening.</p>
+<p><strong>One hygiene observation before starting:</strong> the fleet runs <code>username admin privilege 15 password 0 REMOVED</code> — plaintext type-0. Parts C and D introduce properly-secured accounts; a fleet-wide <code>secret</code> conversion is worth a later pass, but don't change the admin password mid-phase (Oxidized and your own SSH ride on it).</p>
+<hr />
+<h1 id="part-a-qos-the-full-classify-mark-queue-shape-chain">Part A — QoS: the full classify → mark → queue → shape chain<a class="headerlink" href="#part-a-qos-the-full-classify-mark-queue-shape-chain" title="Permanent link">&para;</a></h1>
+<p>The guide's policy, but with the piece most labs skip: an <strong>ingress marking policy</strong>, so the egress queuing has something real to act on, and a <strong>parent shaper</strong> to manufacture congestion — without congestion, LLQ and bandwidth guarantees are dormant and the counters prove nothing.</p>
+<p>Traffic simulation: ICMP plays "voice" (marked EF), SSH plays "business" (marked AF31).</p>
+<h3 id="a1-ingress-marking-corp-pbr-a">A.1 Ingress marking — CORP-PBR-A<a class="headerlink" href="#a1-ingress-marking-corp-pbr-a" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>ip access-list extended QOS-VOICE-SIM
+ permit icmp any any
+ip access-list extended QOS-BUSINESS-SIM
+ permit tcp any any eq 22
+ permit tcp any eq 22 any
+!
+class-map match-any MARK-VOICE
+ match access-group name QOS-VOICE-SIM
+class-map match-any MARK-BUSINESS
+ match access-group name QOS-BUSINESS-SIM
+!
+policy-map MARK-IN
+ class MARK-VOICE
+  set dscp ef
+ class MARK-BUSINESS
+  set dscp af31
+!
+interface GigabitEthernet1
+ service-policy input MARK-IN
+</code></pre></div>
+<h3 id="a2-egress-queuing-under-a-shaper-corp-pbr-a">A.2 Egress queuing under a shaper — CORP-PBR-A<a class="headerlink" href="#a2-egress-queuing-under-a-shaper-corp-pbr-a" title="Permanent link">&para;</a></h3>
+<p>Both Gi2 and Gi3 get it, because your PBR splits VLAN20 traffic to CSW1 and VLAN40 to CSW2:</p>
+<div class="highlight"><pre><span></span><code>class-map match-any VOICE
+ match dscp ef
+class-map match-any BUSINESS
+ match dscp af31
+!
+policy-map WAN-OUT
+ class VOICE
+  priority percent 20
+ class BUSINESS
+  bandwidth percent 30
+ class class-default
+  fair-queue
+!
+policy-map WAN-SHAPE
+ class class-default
+  shape average 1000000
+  service-policy WAN-OUT
+!
+interface GigabitEthernet2
+ service-policy output WAN-SHAPE
+interface GigabitEthernet3
+ service-policy output WAN-SHAPE
+</code></pre></div>
+<p>The parent shapes everything to 1 Mbps; the child divides that 1 Mbps. So <code>priority percent 20</code> = a <strong>200 kbps LLQ policer</strong> — small enough to hit with pings.</p>
+<p><strong>Heads-up:</strong> while WAN-SHAPE is applied, <em>all</em> inter-site CORP traffic (tunnels included) is capped at 1 Mbps. Management via the DMZ path (Gi1.99) is unaffected. Remove the shaper when done.</p>
+<h3 id="a3-drive-traffic-and-read-the-counters">A.3 Drive traffic and read the counters<a class="headerlink" href="#a3-drive-traffic-and-read-the-counters" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>! NEXUS-A — "voice" flood (EF):
+ping 10.2.1.1 vrf CISCO-CORP source 10.2.0.1 count 500 packet-size 1400
+
+! NEXUS-A — "business" (AF31): the TCP handshake is the traffic; login not required
+ssh admin@10.1.1.1 vrf CISCO-CORP
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>! CORP-PBR-A
+show policy-map interface GigabitEthernet1 input     ! MARK-VOICE / MARK-BUSINESS packet counts
+show policy-map interface GigabitEthernet2 output    ! parent shaper stats + child classes
+</code></pre></div>
+<p><strong>What to look for on the egress side:</strong> the parent class shows target/average rate 1000000 and — during the flood — a non-zero queue depth. Under the child, VOICE shows offered packets <em>and drops</em>: 1400-byte pings at speed exceed 200 kbps, and the LLQ policer discards the excess. That's the guide's line "strict priority capped to prevent starvation" as a live counter — priority traffic gets absolute preference <em>up to its cap</em>, then drops rather than starving BUSINESS and class-default.</p>
+<h3 id="a4-break-remove-the-trust">A.4 Break — remove the trust<a class="headerlink" href="#a4-break-remove-the-trust" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>interface GigabitEthernet1
+ no service-policy input MARK-IN
+</code></pre></div>
+<p>Re-run the flood: VOICE class counters on Gi2 freeze; everything lands in class-default. Downstream queuing is only as good as upstream marking — that's the trust-boundary concept in one move. Re-apply MARK-IN.</p>
+<h3 id="a5-steady-state">A.5 Steady state<a class="headerlink" href="#a5-steady-state" title="Permanent link">&para;</a></h3>
+<p>Remove the shaper after the exercise (<code>no service-policy output WAN-SHAPE</code> on Gi2/Gi3). Keep or remove the class-maps/policies as you like — reading them back is Week-3 revision material. Leave <strong>MARK-IN applied</strong> if you're doing Part B next; NetFlow will report the DSCP values it sets.</p>
+<hr />
+<h1 id="part-b-flexible-netflow-your-existing-akvorado">Part B — Flexible NetFlow → your existing Akvorado<a class="headerlink" href="#part-b-flexible-netflow-your-existing-akvorado" title="Permanent link">&para;</a></h1>
+<p>You already run a collector: Akvorado's inlet listens on UDP 2055 by default (confirm the port mapping in its docker-compose on the LibreNMS box). Export goes out the DMZ management path — same route SNMP already proves works.</p>
+<h3 id="b1-configure-corp-pbr-a">B.1 Configure — CORP-PBR-A<a class="headerlink" href="#b1-configure-corp-pbr-a" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>flow record FNF-RECORD
+ match ipv4 source address
+ match ipv4 destination address
+ match transport source-port
+ match transport destination-port
+ match ip protocol
+ match interface input
+ collect ipv4 dscp
+ collect counter bytes long
+ collect counter packets long
+ collect timestamp sys-uptime first
+ collect timestamp sys-uptime last
+!
+flow exporter FNF-EXPORTER
+ destination 10.99.0.12 vrf DMZ
+ source Loopback99
+ transport udp 2055
+ export-protocol netflow-v9
+!
+flow monitor FNF-MONITOR
+ record FNF-RECORD
+ exporter FNF-EXPORTER
+ cache timeout active 60
+ cache timeout inactive 15
+!
+interface GigabitEthernet1
+ ip flow monitor FNF-MONITOR input
+</code></pre></div>
+<p>(<code>collect ipv4 dscp</code> is the Part A tie-in — flows arrive pre-marking on Gi1 input, so you'll see the original DSCP; move the monitor to Gi2 output later if you want to see EF/AF31 post-marking. If your release rejects the <code>vrf DMZ</code> keyword on the destination, drop the exporter lines and run cache-only — the checklist line is still fully covered.)</p>
+<h3 id="b2-generate-and-verify">B.2 Generate and verify<a class="headerlink" href="#b2-generate-and-verify" title="Permanent link">&para;</a></h3>
+<p>Re-run the Part A traffic, then:</p>
+<div class="highlight"><pre><span></span><code>show flow monitor FNF-MONITOR cache format table   ! flows: src/dst, ports, proto, counters
+show flow exporter FNF-EXPORTER statistics         ! export packets sent, no errors
+show running-config | section flow                 ! the guide's own verification
+</code></pre></div>
+<p><strong>Expected in the cache:</strong> your ICMP flood as proto 1 flows, the SSH attempt as proto 6 dst-port 22, byte/packet counters climbing. On the collector side, check Akvorado's UI for a new exporter at 10.99.250.250; fallback if Akvorado isn't listening:</p>
+<div class="highlight"><pre><span></span><code># LibreNMS box
+sudo apt install nfdump
+sudo nfcapd -D -p 2055 -l /tmp/nfcap        # only if 2055 is free
+nfdump -R /tmp/nfcap -o extended | head
+</code></pre></div>
+<p>Flow accounting vs packet capture, the exam distinction: the cache shows <em>who talked to whom, how much</em> — never payload.</p>
+<hr />
+<h1 id="part-c-restconf-and-netconf-on-ios-xe">Part C — RESTCONF and NETCONF on IOS-XE<a class="headerlink" href="#part-c-restconf-and-netconf-on-ios-xe" title="Permanent link">&para;</a></h1>
+<p>PBR-A is one command from RESTCONF-ready. Create a dedicated API account rather than reusing admin:</p>
+<h3 id="c1-enable-corp-pbr-a">C.1 Enable — CORP-PBR-A<a class="headerlink" href="#c1-enable-corp-pbr-a" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>username api privilege 15 secret REMOVED
+restconf
+netconf-yang
+</code></pre></div>
+<p>Optional hygiene while here: <code>no ip http server</code> (plain HTTP is on fleet-wide; RESTCONF only needs the secure server).</p>
+<div class="highlight"><pre><span></span><code>show netconf-yang status                  ! netconf-yang: enabled, ssh port 830
+show ip http server secure status
+</code></pre></div>
+<h3 id="c2-read-via-restconf-from-the-librenms-box">C.2 Read via RESTCONF — from the LibreNMS box<a class="headerlink" href="#c2-read-via-restconf-from-the-librenms-box" title="Permanent link">&para;</a></h3>
+<p>Target the DMZ management loopback (10.99.250.250) — the path your NMS already uses:</p>
+<div class="highlight"><pre><span></span><code>curl -k -u api:REMOVED -H "Accept: application/yang-data+json" \
+  https://10.99.250.250/restconf/data/ietf-interfaces:interfaces
+
+curl -k -u api:REMOVED -H "Accept: application/yang-data+json" \
+  https://10.99.250.250/restconf/data/ietf-interfaces:interfaces/interface=GigabitEthernet1
+</code></pre></div>
+<p><strong>Expected:</strong> JSON — name, description, type, enabled — for every interface. Put it next to <code>show ip interface brief</code> on the router (the guide's task): same truth, machine-readable.</p>
+<h3 id="c3-write-via-restconf-the-part-that-makes-it-click">C.3 Write via RESTCONF — the part that makes it click<a class="headerlink" href="#c3-write-via-restconf-the-part-that-makes-it-click" title="Permanent link">&para;</a></h3>
+<p>Gi4 is unused, so it's a safe target:</p>
+<div class="highlight"><pre><span></span><code>curl -k -u api:REMOVED -X PATCH -H "Content-Type: application/yang-data+json" \
+  https://10.99.250.250/restconf/data/ietf-interfaces:interfaces/interface=GigabitEthernet4 \
+  -d '{"ietf-interfaces:interface":{"name":"GigabitEthernet4","description":"SET-BY-RESTCONF"}}'
+</code></pre></div>
+<p>Expect <code>204 No Content</code> (silent success), then on the router: <code>show running-config interface GigabitEthernet4</code> — the description is there. You've configured IOS-XE without touching the CLI. Clean up by PATCHing a new description or <code>no description</code> conventionally.</p>
+<h3 id="c4-netconf-see-the-other-protocols-shape">C.4 NETCONF — see the other protocol's shape<a class="headerlink" href="#c4-netconf-see-the-other-protocols-shape" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code># LibreNMS box
+ssh -p 830 api@10.99.250.250 -s netconf
+</code></pre></div>
+<p><strong>Expected:</strong> a wall of XML — the <code>&lt;hello&gt;</code> with capability list. That contrast <em>is</em> the exam table: RESTCONF = HTTPS/JSON/REST-style, NETCONF = SSH-830/XML/RPC, same YANG models underneath. Ctrl-C out. If the port times out on the DMZ path while RESTCONF works, you've met a real IOS-XE quirk — NETCONF listening only in the global VRF on some releases. Note it and move on; RESTCONF covers the configure-and-verify line.</p>
+<h3 id="c5-breaks-two-minutes">C.5 Breaks (two minutes)<a class="headerlink" href="#c5-breaks-two-minutes" title="Permanent link">&para;</a></h3>
+<p>Wrong password → HTTP 401. <code>no restconf</code> → connection refused, <code>restconf</code> to restore. The REST-API-security checklist line maps here: HTTPS transport, least-privilege accounts, no <code>-k</code> in production (validate certs), no hard-coded secrets.</p>
+<hr />
+<h1 id="part-d-aaa-tacacs-device-administration">Part D — AAA: TACACS+ device administration<a class="headerlink" href="#part-d-aaa-tacacs-device-administration" title="Permanent link">&para;</a></h1>
+<p>Server is <code>tac_plus</code> on the LibreNMS Ubuntu (10.99.0.12). Canary device is Q-SW39 — its mgmt SVI reaches 10.99.0.12 over the same DMZ path SNMP already uses. If your ISE VM boots, everything below is identical except the server address and key.</p>
+<p><strong>Safety rule for this part: keep a working SSH session AND the console open on Q-SW39 until the break test passes.</strong> Console authentication is untouched throughout.</p>
+<h3 id="d1-server-librenms-box">D.1 Server — LibreNMS box<a class="headerlink" href="#d1-server-librenms-box" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>sudo apt update &amp;&amp; sudo apt install tacacs+
+sudo nano /etc/tacacs+/tac_plus.conf
+</code></pre></div>
+<p>Minimal config (replace the file's example content):</p>
+<div class="highlight"><pre><span></span><code>key = REMOVED
+
+user = quser {
+    login = cleartext REMOVED
+    service = exec {
+        priv-lvl = 15
+    }
+}
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>sudo systemctl restart tacacs_plus
+sudo systemctl status tacacs_plus
+ss -ltn | grep :49          ! listening on tcp/49
+</code></pre></div>
+<h3 id="d2-canary-q-sw39">D.2 Canary — Q-SW39<a class="headerlink" href="#d2-canary-q-sw39" title="Permanent link">&para;</a></h3>
+<p>Order matters: pin the local safety net <em>before</em> anything else.</p>
+<div class="highlight"><pre><span></span><code>aaa new-model
+aaa authentication login default local
+!
+tacacs server LNMS-TAC
+ address ipv4 10.99.0.12
+ key REMOVED
+!
+aaa group server tacacs+ TAC-GROUP
+ server name LNMS-TAC
+!
+aaa authentication login VTY-AUTH group TAC-GROUP local
+aaa authorization exec VTY-AUTHZ group TAC-GROUP local
+aaa accounting exec VTY-ACCT start-stop group TAC-GROUP
+!
+ip tacacs source-interface Vlan99
+!
+line vty 0 4
+ login authentication VTY-AUTH
+ authorization exec VTY-AUTHZ
+ accounting exec VTY-ACCT
+</code></pre></div>
+<p>(Named method lists on the vty only — console and default stay local. That's the lockout-proof pattern. Adjust the source-interface if your mgmt SVI is named differently.)</p>
+<h3 id="d3-verify">D.3 Verify<a class="headerlink" href="#d3-verify" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>test aaa group TAC-GROUP quser REMOVED legacy    ! "User successfully authenticated"
+show tacacs                                          ! socket opens, request/response counters
+</code></pre></div>
+<p>Fresh SSH to Q-SW39 as <strong>quser</strong> → straight to <code>#</code> (priv 15 from the server's exec authorization — no enable password needed: that's authorization doing its job, distinct from authentication). On the server, watch accounting arrive:</p>
+<div class="highlight"><pre><span></span><code>sudo tail -f /var/log/tac_plus.acct     # or: sudo journalctl -u tacacs_plus -f
+</code></pre></div>
+<p>Start/stop records with username, line, and source — the third A, live.</p>
+<h3 id="d4-the-break-that-earns-your-trust-fallback-proof">D.4 The break that earns your trust — fallback proof<a class="headerlink" href="#d4-the-break-that-earns-your-trust-fallback-proof" title="Permanent link">&para;</a></h3>
+<p>Before rolling TACACS to more devices, prove the <code>local</code> at the end of the method lists actually catches you:</p>
+<div class="highlight"><pre><span></span><code># LibreNMS box
+sudo systemctl stop tacacs_plus
+</code></pre></div>
+<p>New SSH to Q-SW39: <code>quser</code> now <strong>fails</strong> (server dead, no local quser), but <code>admin</code> <strong>succeeds</strong> after a short server-timeout pause — the method list walked <code>group TAC-GROUP</code> → dead → <code>local</code> → matched. That pause-then-local-login signature is what a TACACS outage looks like in production. <code>sudo systemctl start tacacs_plus</code>, confirm quser works again.</p>
+<p>Once trusted, replicating to the fleet is a paste of D.2 per device.</p>
+<hr />
+<h1 id="part-e-copp-build-one-inspect-one">Part E — CoPP: build one, inspect one<a class="headerlink" href="#part-e-copp-build-one-inspect-one" title="Permanent link">&para;</a></h1>
+<h3 id="e1-build-q-edge-ios">E.1 Build — Q-EDGE (IOS)<a class="headerlink" href="#e1-build-q-edge-ios" title="Permanent link">&para;</a></h3>
+<p>Q-EDGE's control plane now sees OSPF (two VRFs), PIM and IGMP (your Site Q multicast extension), SSH, SNMP from LibreNMS, and ICMP. Three classes: routing protected absolutely, management policed, everything else measured:</p>
+<div class="highlight"><pre><span></span><code>ip access-list extended COPP-MGMT
+ permit tcp 10.99.0.0 0.0.255.255 any eq 22
+ permit udp 10.99.0.0 0.0.255.255 any eq 161
+ permit icmp 10.99.0.0 0.0.255.255 any
+ip access-list extended COPP-ROUTING
+ permit ospf any any
+ permit pim any any
+ permit igmp any any
+!
+class-map match-any COPP-ROUTING-CLASS
+ match access-group name COPP-ROUTING
+class-map match-any COPP-MGMT-CLASS
+ match access-group name COPP-MGMT
+!
+policy-map COPP-POLICY
+ class COPP-ROUTING-CLASS
+ class COPP-MGMT-CLASS
+  police 64000 conform-action transmit exceed-action drop
+ class class-default
+  police 256000 conform-action transmit exceed-action transmit
+!
+control-plane
+ service-policy input COPP-POLICY
+</code></pre></div>
+<p>Design notes worth internalising: the ROUTING class carries <strong>no police statement</strong> — classify-and-transmit, because a mis-sized policer here drops hellos and takes down adjacencies (the guide's production warning, engineered out). class-default polices with <em>transmit/transmit</em> — monitor mode: counts what would exceed, drops nothing, exactly how you'd stage CoPP in production before enforcing.</p>
+<h3 id="e2-verify">E.2 Verify<a class="headerlink" href="#e2-verify" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>show policy-map control-plane
+</code></pre></div>
+<p><strong>Expected within a minute, no effort:</strong> COPP-MGMT-CLASS conform counters climbing (LibreNMS SNMP polls), COPP-ROUTING-CLASS counting OSPF/PIM hellos steadily. SSH in from the NMS box and watch your own session tick the counter.</p>
+<h3 id="e3-break-feel-the-policer">E.3 Break — feel the policer<a class="headerlink" href="#e3-break-feel-the-policer" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>policy-map COPP-POLICY
+ class COPP-MGMT-CLASS
+  police 8000 conform-action transmit exceed-action drop
+</code></pre></div>
+<p>From the LibreNMS box: <code>ping 10.99.2.1 -i 0.01 -s 1000</code> (fast, big). <strong>Expected:</strong> heavy loss on the ping, <code>exceeded ... drop</code> counters climbing in <code>show policy-map control-plane</code> — and note your SSH session getting sluggish, because it shares the class. CoPP protects the CPU from management traffic <em>including yours</em> — the double edge the guide warns about. Restore <code>police 64000</code>.</p>
+<p>Recovery note: if you ever wedge management entirely, the EVE-NG console is unaffected — <code>control-plane</code> → <code>no service-policy input COPP-POLICY</code>.</p>
+<h3 id="e4-inspect-the-n9kv-contrast">E.4 Inspect — the N9Kv contrast<a class="headerlink" href="#e4-inspect-the-n9kv-contrast" title="Permanent link">&para;</a></h3>
+<p>NX-OS refuses to run without CoPP; it shipped attached before you configured anything:</p>
+<div class="highlight"><pre><span></span><code>! CSW1
+show copp status                                        ! copp-system-p-policy-strict attached
+show policy-map interface control-plane | i class-map|violate
+</code></pre></div>
+<p>Scroll the class list — management, IGMP, routing protocols, ARP, all pre-classified with per-class policers, and <code>violated</code> counters showing anything already being dropped. IOS makes you build CoPP; NX-OS makes you <em>tune</em> it — a tidy exam contrast, and the reason a default N9K survives abuse a default ISR wouldn't.</p>
+<hr />
+<h2 id="rollback">Rollback<a class="headerlink" href="#rollback" title="Permanent link">&para;</a></h2>
+<p><strong>A:</strong> <code>no service-policy</code> (input Gi1, output Gi2/Gi3), then <code>no policy-map MARK-IN / WAN-OUT / WAN-SHAPE</code>, <code>no class-map ...</code>, <code>no ip access-list extended QOS-*</code>.
+<strong>B:</strong> <code>no ip flow monitor FNF-MONITOR input</code> on Gi1, then <code>no flow monitor / exporter / record</code>.
+<strong>C:</strong> <code>no restconf</code>, <code>no netconf-yang</code>, <code>no username api</code>.
+<strong>D:</strong> on Q-SW39 remove the three list applications under vty, then the lists, group, server, and (last) <code>no aaa new-model</code>; <code>sudo apt remove tacacs+</code> on the box.
+<strong>E:</strong> <code>control-plane</code> → <code>no service-policy input COPP-POLICY</code>, then remove policy/classes/ACLs. (Don't touch the N9Kv's system policy.)</p>
+<h2 id="checklist-mapping">Checklist mapping<a class="headerlink" href="#checklist-mapping" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>ENCOR line</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>QoS config interpretation</td>
+<td>Part A (marking, LLQ cap drops, shaping vs policing, trust boundary)</td>
+</tr>
+<tr>
+<td>Flexible NetFlow</td>
+<td>Part B (record/exporter/monitor, cache + collector, DSCP visibility)</td>
+</tr>
+<tr>
+<td>NETCONF and RESTCONF</td>
+<td>Part C (read, write via PATCH, both protocol shapes)</td>
+</tr>
+<tr>
+<td>REST API security</td>
+<td>C.5 (transport, least privilege, cert validation, secrets)</td>
+</tr>
+<tr>
+<td>AAA authentication &amp; authorisation</td>
+<td>Part D (named lists, priv-15 authz, accounting, fallback proven)</td>
+</tr>
+<tr>
+<td>ACLs / CoPP</td>
+<td>Part E (build + break on IOS, inspect defaults on NX-OS)</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "search.suggest"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>

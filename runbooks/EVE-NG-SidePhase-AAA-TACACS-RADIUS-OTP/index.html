@@ -1,0 +1,1207 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Three sites, four Cisco operating systems, and the operations stack that runs them">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>Side Phase — TACACS+, RADIUS and Authenticator-App OTP - Multi-Site Enterprise Network Lab</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="light-blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#side-phase-tacacs-radius-and-authenticator-app-otp" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Multi-Site Enterprise Network Lab" class="md-header__button md-logo" aria-label="Multi-Site Enterprise Network Lab" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Multi-Site Enterprise Network Lab
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Side Phase — TACACS+, RADIUS and Authenticator-App OTP
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="light-blue"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Multi-Site Enterprise Network Lab" class="md-nav__button md-logo" aria-label="Multi-Site Enterprise Network Lab" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Multi-Site Enterprise Network Lab
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../verify/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Verify It Yourself
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../build-it-yourself/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build It Yourself
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#two-facts-to-internalise-before-touching-anything" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two facts to internalise before touching anything
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-0-finish-tac_plus-10-minutes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part 0 — finish tac_plus (10 minutes)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-a-freeradius-google-authenticator-the-otp-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part A — FreeRADIUS + Google Authenticator (the OTP engine)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part A — FreeRADIUS + Google Authenticator (the OTP engine)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a1-time-sync-do-this-first-not-last" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A.1 Time sync — do this first, not last
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a2-install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A.2 Install
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a3-create-the-otp-user-and-enrol-your-phone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A.3 Create the OTP user and enrol your phone
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a4-wire-pam" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A.4 Wire PAM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a5-enable-the-pam-module-in-freeradius" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A.5 Enable the PAM module in FreeRADIUS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a6-user-and-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A.6 User and client
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a7-test-locally-before-any-switch-is-involved" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A.7 Test locally — before any switch is involved
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-b-canary-otp-login-on-q-sw39" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part B — Canary: OTP login on Q-SW39
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part B — Canary: OTP login on Q-SW39">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#b1-switch-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B.1 Switch config
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b2-the-login" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B.2 The login
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b3-upgrade-to-real-two-factor-password-otp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B.3 Upgrade to real two-factor (password + OTP)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b4-breaks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B.4 Breaks
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-c-ise-the-policy-engine-per-command-authorization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part C — ISE: the policy engine (per-command authorization)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part C — ISE: the policy engine (per-command authorization)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#c1-enable-device-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C.1 Enable Device Admin
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c2-add-q-sw39-as-a-network-device" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C.2 Add Q-SW39 as a network device
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c3-two-users-two-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C.3 Two users, two roles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c4-the-results-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C.4 The results objects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c5-the-policy-set" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C.5 The policy set
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c6-point-q-sw39-at-ise-with-command-authorization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C.6 Point Q-SW39 at ISE — with command authorization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c7-the-demo-this-is-the-moment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C.7 The demo — this is the moment
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-d-the-crown-otp-through-ise-with-command-authorization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part D — the crown: OTP through ISE, with command authorization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part D — the crown: OTP through ISE, with command authorization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#d1-freeradius-trust-ise-as-a-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D.1 FreeRADIUS: trust ISE as a client
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d2-ise-define-the-token-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D.2 ISE: define the token server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d3-sequence-it-then-use-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D.3 Sequence it, then use it
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d4-verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D.4 Verify
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-e-fleet-rollout-the-safe-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part E — fleet rollout (the safe pattern)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-f-stretch-8021x-radius-network-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part F — stretch: 802.1X (RADIUS network access)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rollback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rollback
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checklist-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Checklist mapping
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-this-adds-to-the-story" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What this adds to the story
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="side-phase-tacacs-radius-and-authenticator-app-otp">Side Phase — TACACS+, RADIUS and Authenticator-App OTP<a class="headerlink" href="#side-phase-tacacs-radius-and-authenticator-app-otp" title="Permanent link">&para;</a></h1>
+<p>Three engines, each doing the job it's actually good at:</p>
+<table>
+<thead>
+<tr>
+<th>Engine</th>
+<th>Where</th>
+<th>Job</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>tac_plus</strong> (built from source)</td>
+<td>Ubuntu 10.99.0.12</td>
+<td>Simple TACACS+ — the protocol, bare. Your fallback and reference.</td>
+</tr>
+<tr>
+<td><strong>FreeRADIUS + Google Authenticator PAM</strong></td>
+<td>Ubuntu 10.99.0.12</td>
+<td>The <strong>OTP engine</strong>. This is what your phone talks to.</td>
+</tr>
+<tr>
+<td><strong>Cisco ISE</strong></td>
+<td>Gret A, mgmt segment</td>
+<td>The <strong>policy engine</strong> — per-command authorization, and a front-end that can proxy to the OTP engine.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The headline flow you're building:</strong></p>
+<div class="highlight"><pre><span></span><code>You ──SSH──► Q-SW39 ──TACACS+──► ISE ──proxy──► FreeRADIUS ──PAM──► Google Authenticator (TOTP)
+                                   │
+                                   └──► shell profile (priv 15) + command set (what you may type)
+</code></pre></div>
+<p>Login with a 6-digit code from your phone <strong>and</strong> get per-command authorization. That's genuinely enterprise-grade, and it's four parts away.</p>
+<p><strong>Time budget:</strong> Part 0 = 10 min. Part A+B = one evening (this is the OTP payoff). Part C = one evening. Part D = one evening. Parts E/F when curious.</p>
+<hr />
+<h2 id="two-facts-to-internalise-before-touching-anything">Two facts to internalise before touching anything<a class="headerlink" href="#two-facts-to-internalise-before-touching-anything" title="Permanent link">&para;</a></h2>
+<p><strong>1. TOTP only works over PAP.</strong> The OTP is validated by PAM, which needs the plaintext token. VTY login over RADIUS sends PAP — fine. <strong>EAP-based 802.1X cannot do TOTP this way</strong> (EAP methods derive keys from a stored credential; there's nothing for PAM to check). So: OTP for <em>device admin login</em>, certificates/PEAP for <em>network access</em>. That's not a lab limitation, that's how the protocols work — and it's a great exam-level distinction.</p>
+<p><strong>2. Method lists fall through on NO RESPONSE, not on REJECT.</strong> <code>aaa authentication login VTY-AUTH group RAD-GROUP local</code> tries RADIUS; if RADIUS says <em>reject</em>, that's authoritative and you're <strong>done</strong> — it does not try <code>local</code>. Only a dead/unreachable server advances to the next method. This is why you never mix two live auth servers in one list hoping for "try both".</p>
+<p><strong>Safety rule for the entire phase:</strong> keep a console session open on Q-SW39 at all times. By default IOS exempts the console from <code>aaa authorization</code>, so the console is your escape hatch even if you break command authorization completely. Never remove <code>local</code> from the end of a method list.</p>
+<hr />
+<h2 id="part-0-finish-tac_plus-10-minutes">Part 0 — finish tac_plus (10 minutes)<a class="headerlink" href="#part-0-finish-tac_plus-10-minutes" title="Permanent link">&para;</a></h2>
+<p>Your daemon builds and starts, then systemd kills it: tac_plus forks to background, systemd sees the parent exit, sends SIGTERM to the child. Keep it in the foreground.</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>tac_plus
+sudo<span class="w"> </span>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">'s|tac_plus -C|tac_plus -G -C|'</span><span class="w"> </span>/etc/systemd/system/tac_plus.service
+sudo<span class="w"> </span>systemctl<span class="w"> </span>daemon-reload
+sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>tac_plus
+sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>tac_plus<span class="w">        </span><span class="c1"># want: active (running), NOT "inactive (dead)"</span>
+ss<span class="w"> </span>-ltnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>:49
+</code></pre></div>
+<blockquote>
+<p>If <code>tac_plus -G</code> errors with an illegal option, your build doesn't have the foreground flag — use <code>Type=forking</code> instead: add <code>Type=forking</code> under <code>[Service]</code>, leave ExecStart without <code>-G</code>, <code>daemon-reload</code>, restart.</p>
+</blockquote>
+<p>Validate the config file any time with: <code>tac_plus -P -C /etc/tacacs+/tac_plus.conf</code></p>
+<p><strong>Firewall</strong> — the box now needs three ports open. Check and allow:
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>ufw<span class="w"> </span>status
+<span class="c1"># if active:</span>
+sudo<span class="w"> </span>ufw<span class="w"> </span>allow<span class="w"> </span><span class="m">49</span>/tcp<span class="w"> </span>comment<span class="w"> </span><span class="s1">'TACACS+'</span>
+sudo<span class="w"> </span>ufw<span class="w"> </span>allow<span class="w"> </span><span class="m">1812</span>/udp<span class="w"> </span>comment<span class="w"> </span><span class="s1">'RADIUS auth'</span>
+sudo<span class="w"> </span>ufw<span class="w"> </span>allow<span class="w"> </span><span class="m">1813</span>/udp<span class="w"> </span>comment<span class="w"> </span><span class="s1">'RADIUS acct'</span>
+</code></pre></div></p>
+<p><strong>Then re-test from Q-SW39:</strong>
+<div class="highlight"><pre><span></span><code>ping 10.99.0.12 source vlan99
+test aaa group TAC-GROUP quser REMOVED legacy      ! want: User successfully authenticated
+show tacacs                                            ! socket opens / requests / responses
+</code></pre></div></p>
+<p>If the ping works but the test still fails, check <code>show run | inc tacacs</code> — key must be exactly <code>REMOVED</code>, and <code>ip tacacs source-interface Vlan99</code> must be set so the switch sources from an address the server can reply to.</p>
+<hr />
+<h2 id="part-a-freeradius-google-authenticator-the-otp-engine">Part A — FreeRADIUS + Google Authenticator (the OTP engine)<a class="headerlink" href="#part-a-freeradius-google-authenticator-the-otp-engine" title="Permanent link">&para;</a></h2>
+<h3 id="a1-time-sync-do-this-first-not-last">A.1 Time sync — do this first, not last<a class="headerlink" href="#a1-time-sync-do-this-first-not-last" title="Permanent link">&para;</a></h3>
+<p>TOTP is a function of the clock. <strong>Skew is the number-one cause of "wrong code" failures</strong>, and it fails in a way that looks like a config error.</p>
+<div class="highlight"><pre><span></span><code>timedatectl<span class="w">                      </span><span class="c1"># want: "System clock synchronized: yes"</span>
+sudo<span class="w"> </span>timedatectl<span class="w"> </span>set-ntp<span class="w"> </span><span class="nb">true</span>
+</code></pre></div>
+<p>Your phone must also be on network time (Settings → Date &amp; Time → Automatic). A window of ±90s is what we'll configure, which is forgiving but not infinite.</p>
+<h3 id="a2-install">A.2 Install<a class="headerlink" href="#a2-install" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apt<span class="w"> </span>update
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>freeradius<span class="w"> </span>freeradius-utils<span class="w"> </span>libpam-google-authenticator
+</code></pre></div>
+<p>(FreeRADIUS on Ubuntu 24.04 is 3.2.x, but the config directory is still called <code>3.0</code> — that's normal, not a mistake.)</p>
+<h3 id="a3-create-the-otp-user-and-enrol-your-phone">A.3 Create the OTP user and enrol your phone<a class="headerlink" href="#a3-create-the-otp-user-and-enrol-your-phone" title="Permanent link">&para;</a></h3>
+<p>The FreeRADIUS daemon runs as user <code>freerad</code>, so the secret must live somewhere <code>freerad</code> can read. Central directory, not a home dir:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/etc/freeradius/3.0/googleauth
+sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>/etc/freeradius/3.0/googleauth
+
+sudo<span class="w"> </span>google-authenticator<span class="w"> </span>-t<span class="w"> </span>-d<span class="w"> </span>-f<span class="w"> </span>-r<span class="w"> </span><span class="m">3</span><span class="w"> </span>-R<span class="w"> </span><span class="m">30</span><span class="w"> </span>-w<span class="w"> </span><span class="m">3</span><span class="w"> </span>-e<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="se">\</span>
+<span class="w">     </span>-s<span class="w"> </span>/etc/freeradius/3.0/googleauth/netadmin
+</code></pre></div>
+<p>Flags: <code>-t</code> time-based, <code>-d</code> disallow code reuse, <code>-f</code> write without prompting, <code>-r 3 -R 30</code> rate-limit 3 attempts per 30s, <code>-w 3</code> allow ±1 window (~90s skew), <code>-e 5</code> emergency scratch codes.</p>
+<p><strong>A QR code prints in the terminal.</strong> Scan it with Google Authenticator / Authy / Microsoft Authenticator / 1Password — any TOTP app. <strong>Copy the emergency scratch codes somewhere safe</strong> — they're single-use logins if you lose the phone.</p>
+<p>Now hand the file to the daemon:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>chown<span class="w"> </span>-R<span class="w"> </span>freerad:freerad<span class="w"> </span>/etc/freeradius/3.0/googleauth
+sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>/etc/freeradius/3.0/googleauth/netadmin
+</code></pre></div>
+<h3 id="a4-wire-pam">A.4 Wire PAM<a class="headerlink" href="#a4-wire-pam" title="Permanent link">&para;</a></h3>
+<p>Replace <code>/etc/pam.d/radiusd</code> entirely — <strong>OTP-only to start</strong> (you type just the 6 digits as your password). We add the static password in A.7 once the mechanism is proven.</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/pam.d/radiusd<span class="w"> </span><span class="s">&lt;&lt; 'EOF'</span>
+<span class="s">auth       required     pam_google_authenticator.so secret=/etc/freeradius/3.0/googleauth/${USER} allowed_perm=0600</span>
+<span class="s">account    required     pam_permit.so</span>
+<span class="s">session    required     pam_permit.so</span>
+<span class="s">EOF</span>
+</code></pre></div>
+<p><code>${USER}</code> is expanded by the PAM module, so one line serves every user you enrol later.</p>
+<h3 id="a5-enable-the-pam-module-in-freeradius">A.5 Enable the PAM module in FreeRADIUS<a class="headerlink" href="#a5-enable-the-pam-module-in-freeradius" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>ln<span class="w"> </span>-s<span class="w"> </span>/etc/freeradius/3.0/mods-available/pam<span class="w"> </span>/etc/freeradius/3.0/mods-enabled/pam
+</code></pre></div>
+<p>Then uncomment <code>pam</code> in the <code>authenticate {}</code> section of <code>/etc/freeradius/3.0/sites-available/default</code>:</p>
+<p><div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/freeradius/3.0/sites-available/default
+</code></pre></div>
+Find the <code>authenticate {</code> block and remove the <code>#</code> from the line that is just <code>pam</code>.</p>
+<h3 id="a6-user-and-client">A.6 User and client<a class="headerlink" href="#a6-user-and-client" title="Permanent link">&para;</a></h3>
+<p>Add the user at the <strong>top</strong> of <code>/etc/freeradius/3.0/mods-config/files/authorize</code> (above the <code>DEFAULT</code> entries — first match wins):</p>
+<div class="highlight"><pre><span></span><code>netadmin  Auth-Type := PAM
+          Service-Type = NAS-Prompt-User,
+          Cisco-AVPair = "shell:priv-lvl=15"
+</code></pre></div>
+<p><code>Auth-Type := PAM</code> sends this user down the PAM stack you just built. The reply attributes are what drop you straight to <code>#</code> — RADIUS's equivalent of a TACACS+ shell profile.</p>
+<p>Add your lab as a client in <code>/etc/freeradius/3.0/clients.conf</code>:</p>
+<div class="highlight"><pre><span></span><code>client lab-mgmt {
+        ipaddr = 10.99.0.0/16
+        secret = REMOVED
+        nas_type = cisco
+        shortname = lab
+}
+</code></pre></div>
+<p>(One subnet entry covers every device that sources from the mgmt/DMZ range — adjust the prefix if your devices source elsewhere. Leave the shipped <code>client localhost</code> alone; the next step uses it.)</p>
+<h3 id="a7-test-locally-before-any-switch-is-involved">A.7 Test locally — before any switch is involved<a class="headerlink" href="#a7-test-locally-before-any-switch-is-involved" title="Permanent link">&para;</a></h3>
+<p>Run FreeRADIUS in the foreground so you can <em>watch</em> the auth happen. This is the single most useful FreeRADIUS skill there is:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>freeradius
+sudo<span class="w"> </span>freeradius<span class="w"> </span>-X
+</code></pre></div>
+<p>In a second SSH session, with a fresh code from your phone:</p>
+<div class="highlight"><pre><span></span><code>radtest<span class="w"> </span>netadmin<span class="w"> </span><span class="m">123456</span><span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span><span class="m">0</span><span class="w"> </span>testing123
+</code></pre></div>
+<p><strong>Expected:</strong> <code>Received Access-Accept</code>, carrying <code>Service-Type</code> and <code>Cisco-AVPair</code>. In the <code>-X</code> window you'll see the PAM module called and <code>pam_authenticate: Success</code>. Try again with the <em>same</em> code — it should now <strong>fail</strong> (that's <code>-d</code>, replay protection, working).</p>
+<p>Common <code>-X</code> failures and what they mean:
+- <code>PAM: Cannot open ... Permission denied</code> → the chown/chmod in A.3 didn't take
+- <code>Invalid verification code</code> → clock skew (recheck <code>timedatectl</code>), or you fat-fingered it
+- <code>Auth-Type PAM not found</code> → the symlink in A.5 or the <code>pam</code> line in <code>sites-available/default</code></p>
+<p>Once it works: <code>Ctrl-C</code>, then <code>sudo systemctl start freeradius</code>.</p>
+<hr />
+<h2 id="part-b-canary-otp-login-on-q-sw39">Part B — Canary: OTP login on Q-SW39<a class="headerlink" href="#part-b-canary-otp-login-on-q-sw39" title="Permanent link">&para;</a></h2>
+<h3 id="b1-switch-config">B.1 Switch config<a class="headerlink" href="#b1-switch-config" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>radius server LNMS-RAD
+ address ipv4 10.99.0.12 auth-port 1812 acct-port 1813
+ key REMOVED
+!
+aaa group server radius RAD-GROUP
+ server name LNMS-RAD
+!
+ip radius source-interface Vlan99
+!
+aaa authentication login VTY-OTP group RAD-GROUP local
+aaa authorization exec VTY-OTP-AUTHZ group RAD-GROUP local
+!
+line vty 0 4
+ login authentication VTY-OTP
+ authorization exec VTY-OTP-AUTHZ
+</code></pre></div>
+<p><strong>Note the explicit ports.</strong> Cisco's historic default is 1645/1646; FreeRADIUS listens on 1812/1813. Omit <code>auth-port 1812 acct-port 1813</code> and you get silent timeouts — a classic.</p>
+<p>Test without risking your session:
+<div class="highlight"><pre><span></span><code>test aaa group RAD-GROUP netadmin &lt;6-digit-code&gt; new-code
+</code></pre></div></p>
+<h3 id="b2-the-login">B.2 The login<a class="headerlink" href="#b2-the-login" title="Permanent link">&para;</a></h3>
+<p>SSH to Q-SW39 as <code>netadmin</code>. At the password prompt, type the <strong>6-digit code from your phone</strong>. You should land straight at <code>#</code> (priv 15, courtesy of the Cisco-AVPair).</p>
+<p>Stop and appreciate what just happened: the switch never knew about TOTP. It sent PAP to RADIUS; RADIUS asked PAM; PAM checked the shared secret against the clock. Zero changes to the AAA protocol — this is why token-based auth bolted onto RADIUS so easily in the 90s and still does.</p>
+<h3 id="b3-upgrade-to-real-two-factor-password-otp">B.3 Upgrade to real two-factor (password + OTP)<a class="headerlink" href="#b3-upgrade-to-real-two-factor-password-otp" title="Permanent link">&para;</a></h3>
+<p>Right now the phone is the <em>only</em> factor. True MFA = something you know + something you have. The RADIUS <code>User-Password</code> field carries one string, so the convention is <strong>password immediately followed by the code</strong>, with PAM splitting them:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Give netadmin a system password to check against:</span>
+sudo<span class="w"> </span>useradd<span class="w"> </span>-M<span class="w"> </span>-s<span class="w"> </span>/usr/sbin/nologin<span class="w"> </span>netadmin<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+sudo<span class="w"> </span>passwd<span class="w"> </span>netadmin
+
+<span class="c1"># freerad must be able to read /etc/shadow to verify it:</span>
+sudo<span class="w"> </span>usermod<span class="w"> </span>-a<span class="w"> </span>-G<span class="w"> </span>shadow<span class="w"> </span>freerad
+
+sudo<span class="w"> </span>tee<span class="w"> </span>/etc/pam.d/radiusd<span class="w"> </span><span class="s">&lt;&lt; 'EOF'</span>
+<span class="s">auth       requisite    pam_google_authenticator.so forward_pass secret=/etc/freeradius/3.0/googleauth/${USER} allowed_perm=0600</span>
+<span class="s">auth       required     pam_unix.so use_first_pass</span>
+<span class="s">account    required     pam_permit.so</span>
+<span class="s">session    required     pam_permit.so</span>
+<span class="s">EOF</span>
+
+sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>freeradius
+</code></pre></div>
+<p><code>forward_pass</code> tells the OTP module to strip the trailing 6 digits, validate them, and hand the <em>remainder</em> to <code>pam_unix</code> as the password. So at the switch's password prompt you now type <code>REMOVED</code> — password then code, no space.</p>
+<p>Test: <code>radtest netadmin 'REMOVED' 127.0.0.1 0 testing123</code></p>
+<blockquote>
+<p><strong>Security note, stated honestly:</strong> adding <code>freerad</code> to the <code>shadow</code> group lets the RADIUS daemon read every password hash on the box. Acceptable in a lab; in production you'd point PAM at a dedicated credential store (LDAP/SSSD) instead. Know the tradeoff you're making — that's the REST-API-security mindset applied to AAA.</p>
+</blockquote>
+<h3 id="b4-breaks">B.4 Breaks<a class="headerlink" href="#b4-breaks" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Break</th>
+<th>Do it</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Replay</strong></td>
+<td>Log in with a code, immediately log in again with the same code</td>
+<td>Rejected — <code>-d</code> blocks reuse. This is why TOTP resists shoulder-surfing.</td>
+</tr>
+<tr>
+<td><strong>Clock skew</strong></td>
+<td><code>sudo timedatectl set-ntp false &amp;&amp; sudo date -s "+5 minutes"</code></td>
+<td>Every code fails. Restore with <code>set-ntp true</code>. Now you'll <em>recognise</em> this failure instead of debugging config for an hour.</td>
+</tr>
+<tr>
+<td><strong>Server down</strong></td>
+<td><code>sudo systemctl stop freeradius</code></td>
+<td><code>netadmin</code> fails; <strong><code>admin</code> still works via <code>local</code></strong> after a timeout pause. The fallback is real. Restart after.</td>
+</tr>
+<tr>
+<td><strong>Reject ≠ fallthrough</strong></td>
+<td>With FreeRADIUS <em>running</em>, SSH as a username it doesn't know</td>
+<td>Rejected outright — IOS does <strong>not</strong> try <code>local</code>. This is the fact from the top of the doc, felt.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="part-c-ise-the-policy-engine-per-command-authorization">Part C — ISE: the policy engine (per-command authorization)<a class="headerlink" href="#part-c-ise-the-policy-engine-per-command-authorization" title="Permanent link">&para;</a></h2>
+<p>tac_plus authenticates. <strong>ISE decides what you're allowed to type.</strong> That's the TACACS+ superpower RADIUS doesn't have — and it's the exam point.</p>
+<blockquote>
+<p>ISE GUI paths drift between 3.x releases; treat these as approximate and navigate by name. The verification at C.5 is the ground truth.</p>
+</blockquote>
+<h3 id="c1-enable-device-admin">C.1 Enable Device Admin<a class="headerlink" href="#c1-enable-device-admin" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Administration → System → Licensing</strong> — confirm a Device Admin license is present (the eval covers it).</li>
+<li><strong>Administration → System → Deployment →</strong> your node <strong>→ Edit →</strong> tick <strong>Enable Device Admin Service</strong> → Save. (ISE will restart services — this takes a while. Go make tea.)</li>
+</ul>
+<h3 id="c2-add-q-sw39-as-a-network-device">C.2 Add Q-SW39 as a network device<a class="headerlink" href="#c2-add-q-sw39-as-a-network-device" title="Permanent link">&para;</a></h3>
+<p><strong>Administration → Network Resources → Network Devices → Add</strong>
+- Name <code>Q-SW39</code>, IP = Q-SW39's Vlan99 address
+- Tick <strong>TACACS+ Authentication Settings</strong> → Shared Secret: <code>REMOVED</code></p>
+<h3 id="c3-two-users-two-roles">C.3 Two users, two roles<a class="headerlink" href="#c3-two-users-two-roles" title="Permanent link">&para;</a></h3>
+<p><strong>Administration → Identity Management → Identities → Users → Add</strong> — create:
+- <code>netops-admin</code> (put it in a group, e.g. <code>Network Admins</code>)
+- <code>netops-ro</code> (group e.g. <code>Network Read Only</code>)</p>
+<h3 id="c4-the-results-objects">C.4 The results objects<a class="headerlink" href="#c4-the-results-objects" title="Permanent link">&para;</a></h3>
+<p><strong>Work Centers → Device Administration → Policy Elements → Results:</strong></p>
+<ul>
+<li><strong>TACACS Profiles → Add:</strong> <code>Shell-Priv15</code> — Common Task Type = <strong>Shell</strong>, Default Privilege <strong>15</strong>, Maximum Privilege <strong>15</strong>.</li>
+<li><strong>TACACS Profiles → Add:</strong> <code>Shell-Priv1</code> — Default Privilege <strong>1</strong>, Maximum <strong>1</strong>.</li>
+<li><strong>TACACS Command Sets → Add:</strong> <code>CMD-ReadOnly</code> — leave <strong>"Permit any command that is not listed below" unticked</strong>, then permit only:</li>
+<li><code>show</code> (arguments: <code>.*</code>)</li>
+<li><code>ping</code> (arguments: <code>.*</code>)</li>
+<li><code>exit</code></li>
+<li><strong>TACACS Command Sets → Add:</strong> <code>CMD-Full</code> — tick <strong>"Permit any command that is not listed below"</strong>.</li>
+</ul>
+<h3 id="c5-the-policy-set">C.5 The policy set<a class="headerlink" href="#c5-the-policy-set" title="Permanent link">&para;</a></h3>
+<p><strong>Work Centers → Device Administration → Device Admin Policy Sets → Add</strong>
+- Name <code>Lab-DeviceAdmin</code>, condition: Device Type / Network Device Name matches your lab (or just <code>Any</code> for now)
+- <strong>Authentication Policy:</strong> Identity Source = <strong>Internal Users</strong>
+- <strong>Authorization Policy</strong> — two rules:
+  - <code>netops-admin</code> in <em>Network Admins</em> → Shell Profile <code>Shell-Priv15</code> + Command Set <code>CMD-Full</code>
+  - <code>netops-ro</code> in <em>Network Read Only</em> → Shell Profile <code>Shell-Priv1</code> + Command Set <code>CMD-ReadOnly</code></p>
+<h3 id="c6-point-q-sw39-at-ise-with-command-authorization">C.6 Point Q-SW39 at ISE — with command authorization<a class="headerlink" href="#c6-point-q-sw39-at-ise-with-command-authorization" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>tacacs server ISE-TAC
+ address ipv4 &lt;ISE-IP&gt;
+ key REMOVED
+!
+aaa group server tacacs+ ISE-GROUP
+ server name ISE-TAC
+!
+aaa authentication login VTY-ISE group ISE-GROUP local
+aaa authorization exec VTY-ISE-AUTHZ group ISE-GROUP local
+aaa authorization commands 15 CMD-AUTHZ group ISE-GROUP local
+aaa authorization commands 1 CMD-AUTHZ1 group ISE-GROUP local
+aaa accounting commands 15 CMD-ACCT start-stop group ISE-GROUP
+!
+line vty 0 4
+ login authentication VTY-ISE
+ authorization exec VTY-ISE-AUTHZ
+ authorization commands 15 CMD-AUTHZ
+ authorization commands 1 CMD-AUTHZ1
+ accounting commands 15 CMD-ACCT
+</code></pre></div>
+<p><strong>This is the one that can bite.</strong> Command authorization means <em>every command you type is a TACACS+ round trip</em>. If ISE misbehaves, your VTY session becomes read-only or worse. Console is exempt (no <code>aaa authorization console</code> configured) — that's your way back in. <code>local</code> on the end means an ISE outage degrades to local authorization rather than a lockout.</p>
+<h3 id="c7-the-demo-this-is-the-moment">C.7 The demo — this is the moment<a class="headerlink" href="#c7-the-demo-this-is-the-moment" title="Permanent link">&para;</a></h3>
+<p>Two SSH sessions:</p>
+<div class="highlight"><pre><span></span><code>! as netops-admin
+Q-SW39# conf t                         ← works
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>! as netops-ro
+Q-SW39&gt; show ip interface brief        ← works
+Q-SW39&gt; ping 10.99.0.12                ← works
+Q-SW39&gt; conf t
+Command authorization failed.          ← ✅ THE POINT
+</code></pre></div>
+<p>Then look at <strong>Operations → TACACS → Live Logs</strong> in ISE: every command, per user, per device, accepted or denied. That is exactly why TACACS+ owns device administration and RADIUS doesn't — RADIUS authorizes the <em>session</em>, TACACS+ authorizes <em>every command</em>, and it accounts for them individually.</p>
+<hr />
+<h2 id="part-d-the-crown-otp-through-ise-with-command-authorization">Part D — the crown: OTP <em>through</em> ISE, with command authorization<a class="headerlink" href="#part-d-the-crown-otp-through-ise-with-command-authorization" title="Permanent link">&para;</a></h2>
+<p>Now join the two halves. ISE can use an external <strong>RADIUS Token Server</strong> as its identity source — that's how enterprises wire RSA SecurID in, and FreeRADIUS-with-TOTP slots into exactly the same socket.</p>
+<h3 id="d1-freeradius-trust-ise-as-a-client">D.1 FreeRADIUS: trust ISE as a client<a class="headerlink" href="#d1-freeradius-trust-ise-as-a-client" title="Permanent link">&para;</a></h3>
+<p>Add to <code>/etc/freeradius/3.0/clients.conf</code> (if ISE isn't already inside the <code>10.99.0.0/16</code> block from A.6, add it explicitly):</p>
+<p><div class="highlight"><pre><span></span><code>client ise {
+        ipaddr = &lt;ISE-IP&gt;
+        secret = REMOVED
+        shortname = ise
+}
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>freeradius
+</code></pre></div></p>
+<h3 id="d2-ise-define-the-token-server">D.2 ISE: define the token server<a class="headerlink" href="#d2-ise-define-the-token-server" title="Permanent link">&para;</a></h3>
+<p><strong>Administration → Identity Management → External Identity Sources → RADIUS Token → Add</strong>
+- Name: <code>FREERAD-OTP</code>
+- <strong>Connection</strong> tab: Host IP <code>10.99.0.12</code>, Shared Secret <code>REMOVED</code>, Authentication Port <code>1812</code>
+- Save, then use the <strong>Test Connection</strong> button if your version offers one.</p>
+<h3 id="d3-sequence-it-then-use-it">D.3 Sequence it, then use it<a class="headerlink" href="#d3-sequence-it-then-use-it" title="Permanent link">&para;</a></h3>
+<p><strong>Administration → Identity Management → Identity Source Sequences → Add</strong>
+- Name <code>SEQ-OTP</code>, add <code>FREERAD-OTP</code> to the authentication search list.</p>
+<p>Then in your <code>Lab-DeviceAdmin</code> policy set:
+- <strong>Authentication Policy</strong> → change Identity Source from <em>Internal Users</em> to <strong><code>SEQ-OTP</code></strong>
+- <strong>Allowed Protocols</strong> must permit <strong>PAP/ASCII</strong> (TACACS+ ASCII login carries the password in the clear to ISE, which is exactly what lets ISE forward it to the token server)
+- <strong>Authorization Policy</strong> → the <code>netadmin</code> user needs a rule → give it <code>Shell-Priv15</code> + <code>CMD-Full</code> (or <code>CMD-ReadOnly</code> if you want an OTP-protected read-only role — arguably the most realistic combination of all)</p>
+<h3 id="d4-verify">D.4 Verify<a class="headerlink" href="#d4-verify" title="Permanent link">&para;</a></h3>
+<p>SSH to Q-SW39 as <code>netadmin</code>, password = <code>REMOVED</code> (password + code, per B.3).</p>
+<p><strong>What happens:</strong> switch → TACACS+ → ISE → RADIUS/PAP → FreeRADIUS → PAM → TOTP validated → back up the chain → ISE applies shell profile and command set. You are logged in with a phone code <strong>and</strong> ISE is authorizing every command you type.</p>
+<p>Watch it in <strong>Operations → TACACS → Live Logs</strong> — the authentication shows the external identity store in the detail view.</p>
+<blockquote>
+<p><strong>If your ISE version won't accept a RADIUS Token source for a <em>device admin</em> policy set</strong> (some releases restrict token servers to RADIUS/network-access policy sets), don't fight it: keep OTP on the direct Q-SW39→FreeRADIUS path from Part B, and keep ISE for command authorization. You've still built and understood both halves — and "the product wouldn't do X, so I designed around it" is a better interview story than a clean happy path.</p>
+</blockquote>
+<hr />
+<h2 id="part-e-fleet-rollout-the-safe-pattern">Part E — fleet rollout (the safe pattern)<a class="headerlink" href="#part-e-fleet-rollout-the-safe-pattern" title="Permanent link">&para;</a></h2>
+<p>Never roll AAA to the fleet in one go. Per device:</p>
+<ol>
+<li>Add the device in ISE (<strong>Network Devices</strong>) with the shared secret.</li>
+<li>Paste the C.6 block, adjusting <code>&lt;source-interface&gt;</code> to that device's mgmt SVI/loopback.</li>
+<li><strong>Before logging out</strong>, from your existing session: <code>test aaa group ISE-GROUP netops-admin &lt;password&gt; new-code</code></li>
+<li>Open a <em>second</em> SSH session and log in as <code>netops-admin</code>. Only when that works, close the first.</li>
+<li><code>local</code> stays on every method list, forever. Non-negotiable.</li>
+</ol>
+<p>NX-OS differs (<code>feature tacacs+</code>, <code>tacacs-server host … key …</code>, <code>aaa authentication login default group ISE-GROUP local</code>) — worth doing on one Nexus just to meet the syntax, since your estate is multi-OS and the exam is IOS-flavoured.</p>
+<hr />
+<h2 id="part-f-stretch-8021x-radius-network-access">Part F — stretch: 802.1X (RADIUS network access)<a class="headerlink" href="#part-f-stretch-8021x-radius-network-access" title="Permanent link">&para;</a></h2>
+<p>This is where RADIUS earns its keep, and where TOTP explicitly <strong>cannot</strong> follow (see the top of the doc).</p>
+<p>On an access port:
+<div class="highlight"><pre><span></span><code>aaa authentication dot1x default group RAD-GROUP
+aaa authorization network default group RAD-GROUP
+dot1x system-auth-control
+!
+interface &lt;access-port&gt;
+ authentication port-control auto
+ authentication host-mode single-host
+ mab
+ dot1x pae authenticator
+ spanning-tree portfast
+</code></pre></div></p>
+<p>Honest caveats: you need a <strong>real supplicant</strong> — VPCS can't do 802.1X. Use the Linux node with <code>wpa_supplicant</code> (EAP-MD5 is easiest against FreeRADIUS; PEAP needs a server cert). If that's too much yak-shaving, <strong>MAB</strong> (MAC Authentication Bypass) demonstrates the RADIUS network-access flow with no supplicant at all: FreeRADIUS just needs a users-file entry keyed on the MAC. For ENCOR, understanding the flow and the role of the authenticator/supplicant/auth-server triangle matters more than a working supplicant.</p>
+<hr />
+<h2 id="rollback">Rollback<a class="headerlink" href="#rollback" title="Permanent link">&para;</a></h2>
+<p><div class="highlight"><pre><span></span><code>! Q-SW39 — remove applications first, then the objects
+line vty 0 4
+ no authorization commands 15 CMD-AUTHZ
+ no authorization commands 1 CMD-AUTHZ1
+ no authorization exec VTY-ISE-AUTHZ
+ no login authentication VTY-ISE
+ login authentication default
+!
+no aaa authorization commands 15 CMD-AUTHZ
+no aaa authorization commands 1 CMD-AUTHZ1
+no aaa authentication login VTY-ISE
+no aaa authentication login VTY-OTP
+no aaa group server radius RAD-GROUP
+no radius server LNMS-RAD
+no tacacs server ISE-TAC
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># Ubuntu</span>
+sudo<span class="w"> </span>systemctl<span class="w"> </span>disable<span class="w"> </span>--now<span class="w"> </span>freeradius<span class="w"> </span>tac_plus
+sudo<span class="w"> </span>gpasswd<span class="w"> </span>-d<span class="w"> </span>freerad<span class="w"> </span>shadow<span class="w">          </span><span class="c1"># undo the shadow-group grant</span>
+</code></pre></div>
+ISE: disable the policy set rather than deleting objects — you'll want them again.</p>
+<hr />
+<h2 id="checklist-mapping">Checklist mapping<a class="headerlink" href="#checklist-mapping" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>ENCOR line</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AAA authentication</td>
+<td>Parts A, B (RADIUS+PAP+TOTP), C (TACACS+ via ISE)</td>
+</tr>
+<tr>
+<td>AAA authorisation</td>
+<td>C.4–C.7 — shell profiles, command sets, per-command authz</td>
+</tr>
+<tr>
+<td>AAA accounting</td>
+<td>C.6 (<code>aaa accounting commands 15</code>) + ISE Live Logs</td>
+</tr>
+<tr>
+<td>TACACS+ vs RADIUS</td>
+<td>The whole phase — you build both and feel <em>why</em> device admin uses one and network access the other</td>
+</tr>
+<tr>
+<td>ACLs / CoPP tie-in</td>
+<td>The <code>COPP-MGMT</code> class in Phase 3 already protects tcp/49 and udp/1812 — now it's protecting something real</td>
+</tr>
+<tr>
+<td>REST API security (MFA, least privilege)</td>
+<td>B.3 security note, C.4 read-only role</td>
+</tr>
+<tr>
+<td>TrustSec / ISE / endpoint</td>
+<td>Parts C–D give you first-hand ISE policy-engine experience — the describe-level topics stop being abstract</td>
+</tr>
+<tr>
+<td>802.1X</td>
+<td>Part F</td>
+</tr>
+</tbody>
+</table>
+<h2 id="what-this-adds-to-the-story">What this adds to the story<a class="headerlink" href="#what-this-adds-to-the-story" title="Permanent link">&para;</a></h2>
+<p>"I built TACACS+ from source, stood up FreeRADIUS with TOTP against Google Authenticator, and fronted both with ISE so that device logins take a phone code <em>and</em> every command is authorized per-role — then I proved the local fallback works by killing the servers." That's not a cert lab answer. That's an engineer's answer.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "search.suggest"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>

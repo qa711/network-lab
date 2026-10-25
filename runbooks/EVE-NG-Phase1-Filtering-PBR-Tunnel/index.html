@@ -1,0 +1,724 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Three sites, four Cisco operating systems, and the operations stack that runs them">
+      
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>Phase 1 — OSPF Filtering, PBR + IP SLA, Second GRE/IPsec Tunnel - Multi-Site Enterprise Network Lab</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="light-blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#phase-1-ospf-filtering-pbr-ip-sla-second-greipsec-tunnel" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Multi-Site Enterprise Network Lab" class="md-header__button md-logo" aria-label="Multi-Site Enterprise Network Lab" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Multi-Site Enterprise Network Lab
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Phase 1 — OSPF Filtering, PBR + IP SLA, Second GRE/IPsec Tunnel
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="light-blue"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Multi-Site Enterprise Network Lab" class="md-nav__button md-logo" aria-label="Multi-Site Enterprise Network Lab" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Multi-Site Enterprise Network Lab
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../verify/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Verify It Yourself
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../build-it-yourself/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build It Yourself
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="phase-1-ospf-filtering-pbr-ip-sla-second-greipsec-tunnel">Phase 1 — OSPF Filtering, PBR + IP SLA, Second GRE/IPsec Tunnel<a class="headerlink" href="#phase-1-ospf-filtering-pbr-ip-sla-second-greipsec-tunnel" title="Permanent link">&para;</a></h1>
+<p>Three tasks, one evening each, zero new nodes. Covers the checklist lines: <strong>OSPF filtering</strong> (four methods, including the LSDB-vs-RIB distinction), <strong>conditional debug</strong>, <strong>PBR</strong> (upgraded with tracking), <strong>IP SLA</strong>, and <strong>GRE tunnelling + IPsec</strong> (second tunnel, plus reading crypto failures).</p>
+<p>Order doesn't depend on Phase 2 — run these in either sequence. All object names below (<code>PBR-POLICY</code>, <code>PBR-ACL20/40</code>, <code>GRE-TS</code>, <code>GRE-IPSEC-PROFILE</code>) are your existing ones, verified from the current export.</p>
+<p><strong>Prerequisite</strong> (skip if you did Phase 2 Part 0): the NEXUS-A dead sub-if deletions —
+<div class="highlight"><pre><span></span><code>! NEXUS-A
+no interface Ethernet1/6.30
+no interface Ethernet1/7.30
+</code></pre></div></p>
+<hr />
+<h1 id="task-1-ospf-filtering-on-your-real-abrs">Task 1 — OSPF filtering on your real ABRs<a class="headerlink" href="#task-1-ospf-filtering-on-your-real-abrs" title="Permanent link">&para;</a></h1>
+<p>You built genuine ABRs when the user SVIs moved to area 0.0.0.10. Site A's prefixes (10.1.0.0/24, 10.2.0.0/24, 10.4.0.0/24, 10.98.0.0/24) enter the backbone as Type-3 summaries generated by NEXUS-A. That boundary is where three of the four filtering methods live.</p>
+<h3 id="10-baseline-know-what-youre-about-to-remove">1.0 Baseline — know what you're about to remove<a class="headerlink" href="#10-baseline-know-what-youre-about-to-remove" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>! PBR-B
+show ip route 10.4.0.0 255.255.255.0        ! O IA, learned from area 0
+show ip ospf database summary | i 10.4.0.0  ! the Type-3, advertised by 1.1.1.1 (NEXUS-A)
+</code></pre></div>
+<p>Expect both present. Every method below makes one or both disappear — the <em>which</em> is the lesson.</p>
+<h3 id="11-method-1-area-filter-list-at-the-abr">1.1 Method 1 — <code>area filter-list</code> at the ABR<a class="headerlink" href="#11-method-1-area-filter-list-at-the-abr" title="Permanent link">&para;</a></h3>
+<p>Blocks the Type-3 from ever being <strong>generated</strong> into area 0. NX-OS flavour uses a route-map (IOS uses a prefix-list directly — know both for the exam).</p>
+<div class="highlight"><pre><span></span><code>! NEXUS-A
+ip prefix-list PL-AREA10-OUT seq 5 deny 10.4.0.0/24
+ip prefix-list PL-AREA10-OUT seq 10 permit 0.0.0.0/0 le 32
+!
+route-map RM-AREA10-OUT permit 10
+  match ip address prefix-list PL-AREA10-OUT
+!
+router ospf 1
+  vrf CISCO-CORP
+    area 0.0.0.10 filter-list route-map RM-AREA10-OUT out
+</code></pre></div>
+<blockquote>
+<p>IOS equivalent for your notes: <code>router ospf 1</code> → <code>area 10 filter-list prefix PL-AREA10-OUT out</code></p>
+</blockquote>
+<p><strong>Verify on PBR-B:</strong> route gone <strong>and</strong> LSA gone — <code>show ip ospf database summary | i 10.4.0.0</code> returns nothing. The ABR never created it, so nobody in area 0 has it. Site-A VLAN40 is now unreachable inter-site (flows die at whichever hop runs out of route — note that PBR shifts the drop point but can't save a flow nobody can route).</p>
+<p>Remove before the next method:
+<div class="highlight"><pre><span></span><code>router ospf 1
+  vrf CISCO-CORP
+    no area 0.0.0.10 filter-list route-map RM-AREA10-OUT out
+</code></pre></div>
+Confirm 10.4.0.0/24 returns on PBR-B.</p>
+<h3 id="12-method-2-range-not-advertise-summarisation-as-a-filter">1.2 Method 2 — <code>range … not-advertise</code> (summarisation as a filter)<a class="headerlink" href="#12-method-2-range-not-advertise-summarisation-as-a-filter" title="Permanent link">&para;</a></h3>
+<p>Same observable, different mechanism: the range that <em>creates</em> the summary is told not to advertise it. You already have the range line — just re-enter it with the keyword:</p>
+<div class="highlight"><pre><span></span><code>! NEXUS-A
+router ospf 1
+  vrf CISCO-CORP
+    area 0.0.0.10 range 10.4.0.0/24 not-advertise
+</code></pre></div>
+<p>Verify identical disappearance on PBR-B, then restore:
+<div class="highlight"><pre><span></span><code>    area 0.0.0.10 range 10.4.0.0/24
+</code></pre></div></p>
+<p>Exam framing: method 1 is a <em>filter applied at the boundary</em>; method 2 is <em>the summarisation machinery itself</em> suppressing. Same result here because your ranges are 1:1 — with real aggregation they behave differently (a range hides components; a filter-list can kill the aggregate).</p>
+<h3 id="13-method-3-distribute-list-in-the-lsdb-vs-rib-demonstration">1.3 Method 3 — <code>distribute-list in</code> (the LSDB-vs-RIB demonstration)<a class="headerlink" href="#13-method-3-distribute-list-in-the-lsdb-vs-rib-demonstration" title="Permanent link">&para;</a></h3>
+<p>The one the guide warns about, experienced. This filters <strong>RIB installation only</strong> — the LSA stays, the flooding continues, downstream routers still compute paths <em>through you</em>.</p>
+<p>Deliberately using <strong>10.1.0.0/24</strong> (Vlan10, site A) here, not 10.2.0.0/24 — reason at the end.</p>
+<div class="highlight"><pre><span></span><code>! PBR-B
+ip prefix-list PL-RIB-DENY seq 5 deny 10.1.0.0/24
+ip prefix-list PL-RIB-DENY seq 10 permit 0.0.0.0/0 le 32
+!
+router ospf 1
+ distribute-list prefix PL-RIB-DENY in
+</code></pre></div>
+<p><strong>Now read the three truths:</strong>
+<div class="highlight"><pre><span></span><code>! PBR-B — route gone from RIB:
+show ip route 10.1.0.0 255.255.255.0          ! % Network not in table
+
+! PBR-B — but the LSA is still right there:
+show ip ospf database summary | i 10.1.0.0    ! present, untouched
+
+! NEXUS-B — still trusts PBR-B completely:
+show ip route 10.1.0.0/24 vrf CISCO-CORP      ! installed, next-hop 10.10.71.2 (PBR-B!)
+</code></pre></div></p>
+<p>Prove the blackhole:
+<div class="highlight"><pre><span></span><code>! NEXUS-B
+ping 10.1.0.1 vrf CISCO-CORP source 10.1.1.1   ! dies - AT PBR-B
+</code></pre></div></p>
+<p>NEXUS-B forwards to PBR-B because the LSDB says so; PBR-B has no route and drops. <strong>That's why <code>distribute-list in</code> is dangerous on a link-state transit router</strong> — you filtered your own RIB but kept advertising competence you no longer have.</p>
+<p><em>Why not 10.2.0.0/24?</em> Try it after, if curious: flows from 10.2.1.0/24 to 10.2.0.0/24 match PBR-ACL20 on Gi1, and <strong>PBR is consulted before the RIB</strong> — the policy forces next-hop 10.20.30.1 and the traffic sails straight over the hole. PBR masking a missing route is a great thing to have seen once (and a preview of Task 2's theme).</p>
+<p>Cleanup:
+<div class="highlight"><pre><span></span><code>router ospf 1
+ no distribute-list prefix PL-RIB-DENY in
+no ip prefix-list PL-RIB-DENY
+</code></pre></div></p>
+<h3 id="14-method-4-filtering-at-redistribution-asbr">1.4 Method 4 — filtering at redistribution (ASBR)<a class="headerlink" href="#14-method-4-filtering-at-redistribution-asbr" title="Permanent link">&para;</a></h3>
+<p>The guide's example, run for real. PBR-A becomes an ASBR:</p>
+<div class="highlight"><pre><span></span><code>! CORP-PBR-A
+ip route 192.168.100.0 255.255.255.0 Null0
+ip prefix-list REDIST-STATIC seq 5 permit 192.168.100.0/24
+route-map STATIC-TO-OSPF permit 10
+ match ip address prefix-list REDIST-STATIC
+!
+router ospf 1
+ redistribute static subnets route-map STATIC-TO-OSPF
+</code></pre></div>
+<p>Verify it floods domain-wide as external:
+<div class="highlight"><pre><span></span><code>show ip route ospf | i 192.168.100           ! on PBR-B: O E2
+show ip route 192.168.100.0/24 vrf CISCO-CORP ! on CSW1: same
+show ip ospf | i boundary                    ! PBR-A now reports ASBR
+</code></pre></div></p>
+<p>Now tighten the filter and watch the Type-5 get flushed:
+<div class="highlight"><pre><span></span><code>no ip prefix-list REDIST-STATIC seq 5 permit 192.168.100.0/24
+ip prefix-list REDIST-STATIC seq 5 deny 192.168.100.0/24
+</code></pre></div>
+The E2 vanishes everywhere within seconds. Cleanup: remove the <code>redistribute</code> line, the static, the prefix-list and route-map.</p>
+<h3 id="15-conditional-debug-capture-a-full-adjacency-fsm">1.5 Conditional debug — capture a full adjacency FSM<a class="headerlink" href="#15-conditional-debug-capture-a-full-adjacency-fsm" title="Permanent link">&para;</a></h3>
+<p>PBR-A has multiple OSPF neighbors; the condition keeps the noise down to one interface — that's the entire point of the technique.</p>
+<div class="highlight"><pre><span></span><code>! CORP-PBR-A
+debug condition interface GigabitEthernet1
+debug ip ospf adj
+show debug condition          ! confirm the gate is set
+</code></pre></div>
+<p>Bounce the far end:
+<div class="highlight"><pre><span></span><code>! NEXUS-A
+interface Ethernet1/8
+  shutdown
+  no shutdown
+</code></pre></div></p>
+<p><strong>Expected on PBR-A:</strong> only the Gi1 neighbor's events — DOWN, then INIT → EXSTART → EXCHANGE → LOADING → FULL (2-WAY flashes past on point-to-point). Write down which state does what; it's a favourite exam sequence. Then, always, in this order:</p>
+<div class="highlight"><pre><span></span><code>undebug all
+no debug condition all
+</code></pre></div>
+<p>NX-OS side of the same story, no debug needed: <code>show ip ospf internal event-history adjacency</code> on NEXUS-A — the always-on flight recorder is the NX-OS answer to conditional debugging.</p>
+<h3 id="16-stubnssa-why-its-parked">1.6 Stub/NSSA — why it's parked<a class="headerlink" href="#16-stubnssa-why-its-parked" title="Permanent link">&para;</a></h3>
+<p>Area 0.0.0.10 contains no routers other than the ABR itself (the DSWs are L2), so converting it to stub changes nothing observable — there's nobody inside to receive the injected default. It'll be a proper exercise in the 3-router pod (Phase 4).</p>
+<hr />
+<h1 id="task-2-pbr-grows-reflexes-ip-sla-verify-availability">Task 2 — PBR grows reflexes: IP SLA + verify-availability<a class="headerlink" href="#task-2-pbr-grows-reflexes-ip-sla-verify-availability" title="Permanent link">&para;</a></h1>
+<p>Current behaviour: <code>PBR-POLICY</code> seq 10 forces VLAN20-sourced inter-site traffic to CSW1 (10.10.30.1), seq 20 forces VLAN40 to CSW2 (10.10.60.1), seq 30 lets everything else route normally. If a next-hop dies, plain <code>set ip next-hop</code> only gives up when the interface goes down. Tracking makes each class fail over to the <em>other</em> core switch deliberately.</p>
+<h3 id="21-probes-and-tracks">2.1 Probes and tracks<a class="headerlink" href="#21-probes-and-tracks" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>! CORP-PBR-A
+ip sla 10
+ icmp-echo 10.10.30.1 source-interface GigabitEthernet2
+ frequency 5
+ip sla schedule 10 life forever start-time now
+ip sla 20
+ icmp-echo 10.10.60.1 source-interface GigabitEthernet3
+ frequency 5
+ip sla schedule 20 life forever start-time now
+!
+track 10 ip sla 10 reachability
+track 20 ip sla 20 reachability
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>! CORP-PBR-B — mirror
+ip sla 10
+ icmp-echo 10.20.30.1 source-interface GigabitEthernet2
+ frequency 5
+ip sla schedule 10 life forever start-time now
+ip sla 20
+ icmp-echo 10.20.60.1 source-interface GigabitEthernet3
+ frequency 5
+ip sla schedule 20 life forever start-time now
+!
+track 10 ip sla 10 reachability
+track 20 ip sla 20 reachability
+</code></pre></div>
+<p>Confirm before touching the route-map: <code>show track brief</code> → both Up; <code>show ip sla statistics | i Latest</code> → return codes OK.</p>
+<h3 id="22-swap-the-set-clauses">2.2 Swap the set clauses<a class="headerlink" href="#22-swap-the-set-clauses" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>! CORP-PBR-A
+route-map PBR-POLICY permit 10
+ no set ip next-hop 10.10.30.1
+ set ip next-hop verify-availability 10.10.30.1 1 track 10
+ set ip next-hop verify-availability 10.10.60.1 2 track 20
+route-map PBR-POLICY permit 20
+ no set ip next-hop 10.10.60.1
+ set ip next-hop verify-availability 10.10.60.1 1 track 20
+ set ip next-hop verify-availability 10.10.30.1 2 track 10
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>! CORP-PBR-B
+route-map PBR-POLICY permit 10
+ no set ip next-hop 10.20.30.1
+ set ip next-hop verify-availability 10.20.30.1 1 track 10
+ set ip next-hop verify-availability 10.20.60.1 2 track 20
+route-map PBR-POLICY permit 20
+ no set ip next-hop 10.20.60.1
+ set ip next-hop verify-availability 10.20.60.1 1 track 20
+ set ip next-hop verify-availability 10.20.30.1 2 track 10
+</code></pre></div>
+<p>Each class: primary next-hop gated by its track, backup gated by the other. Sequence numbers (1, 2) are the preference order.</p>
+<h3 id="23-prove-normal-operation">2.3 Prove normal operation<a class="headerlink" href="#23-prove-normal-operation" title="Permanent link">&para;</a></h3>
+<p>Test traffic that matches the ACLs — source the pings from the site SVIs:</p>
+<div class="highlight"><pre><span></span><code>! NEXUS-A
+ping 10.2.1.1 vrf CISCO-CORP source 10.2.0.1    ! matches PBR-ACL20 -&gt; via CSW1
+ping 10.2.1.1 vrf CISCO-CORP source 10.4.0.1    ! matches PBR-ACL40 -&gt; via CSW2
+</code></pre></div>
+<p><div class="highlight"><pre><span></span><code>! CORP-PBR-A
+show route-map PBR-POLICY        ! match counters on seq 10 / seq 20 incrementing
+show ip policy                   ! Gi1 -&gt; PBR-POLICY
+debug condition interface GigabitEthernet1
+debug ip policy                  ! per-packet: "policy match" + "FIB policy route" lines
+</code></pre></div>
+(<code>undebug all</code> / <code>no debug condition all</code> when done — it's per-packet.)</p>
+<h3 id="24-break-1-real-failover">2.4 Break 1 — real failover<a class="headerlink" href="#24-break-1-real-failover" title="Permanent link">&para;</a></h3>
+<p>Start a long ping from NEXUS-A (<code>ping 10.2.1.1 vrf CISCO-CORP source 10.2.0.1 count 500</code>), then:</p>
+<div class="highlight"><pre><span></span><code>! CSW1
+interface Ethernet1/5
+  shutdown
+</code></pre></div>
+<p><strong>Expected:</strong> a few drops while the probe times out (frequency 5s — a couple of cycles), then the stream continues. <code>show track brief</code> → track 10 <strong>Down</strong>, 20 Up. <code>debug ip policy</code> now shows the VLAN20 class using 10.10.60.1 — same policy, second next-hop. <code>no shutdown</code>, watch track 10 return.</p>
+<h3 id="25-break-2-everything-down-and-pbr-fails-open">2.5 Break 2 — everything down, and PBR fails <em>open</em><a class="headerlink" href="#25-break-2-everything-down-and-pbr-fails-open" title="Permanent link">&para;</a></h3>
+<p>No topology damage needed — point both probes somewhere unrouted (an SLA op must be deleted to change its target):</p>
+<div class="highlight"><pre><span></span><code>! CORP-PBR-A
+no ip sla 10
+ip sla 10
+ icmp-echo 192.0.2.1 source-interface GigabitEthernet2
+ frequency 5
+ip sla schedule 10 life forever start-time now
+no ip sla 20
+ip sla 20
+ icmp-echo 192.0.2.1 source-interface GigabitEthernet3
+ frequency 5
+ip sla schedule 20 life forever start-time now
+</code></pre></div>
+<p>Both tracks go Down — and the pings from NEXUS-A <strong>keep working</strong>. <code>debug ip policy</code> shows the tell: <code>policy rejected -- normal forwarding</code>. With every verified next-hop dead, PBR steps aside and the routing table carries the traffic. That's the behaviour the exam (and change reviews) ask about: tracked PBR degrades to normal routing, it doesn't blackhole.</p>
+<p>Restore both SLAs to their real targets (10.10.30.1 / 10.10.60.1) the same delete-and-recreate way.</p>
+<hr />
+<h1 id="task-3-the-second-greipsec-tunnel-60-path">Task 3 — the second GRE/IPsec tunnel (…60 path)<a class="headerlink" href="#task-3-the-second-greipsec-tunnel-60-path" title="Permanent link">&para;</a></h1>
+<p>You pre-provisioned this without noticing: both PBRs already carry <code>network 172.16.12.4 0.0.0.3 area 0</code>, and the isakmp keys for the Gi3-side peers are in place (and correctly spelled, now). The OSPF adjacency will form the moment the tunnel exists — which makes it the perfect conditional-debug subject.</p>
+<h3 id="31-arm-the-debug-first">3.1 Arm the debug first<a class="headerlink" href="#31-arm-the-debug-first" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>! CORP-PBR-A
+debug condition interface Tunnel1
+debug ip ospf adj
+</code></pre></div>
+<h3 id="32-build-both-ends">3.2 Build both ends<a class="headerlink" href="#32-build-both-ends" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>! CORP-PBR-A
+interface Tunnel1
+ description GREto-PBR-B-via-60path
+ ip address 172.16.12.5 255.255.255.252
+ ip mtu 1400
+ ip tcp adjust-mss 1360
+ tunnel source GigabitEthernet3
+ tunnel destination 10.20.60.2
+ tunnel protection ipsec profile GRE-IPSEC-PROFILE
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>! CORP-PBR-B
+interface Tunnel1
+ description GREto-PBR-A-via-60path
+ ip address 172.16.12.6 255.255.255.252
+ ip mtu 1400
+ ip tcp adjust-mss 1360
+ tunnel source GigabitEthernet3
+ tunnel destination 10.10.60.2
+ tunnel protection ipsec profile GRE-IPSEC-PROFILE
+</code></pre></div>
+<p>(<code>tunnel mode gre ip</code> is the default; sharing GRE-IPSEC-PROFILE across both tunnels is fine — each source/destination pair negotiates its own SAs.)</p>
+<p><strong>Expected on PBR-A's debug:</strong> IKE completes, Tunnel1 comes up, and the OSPF FSM scrolls past for the new neighbor only — the pre-existing <code>network 172.16.12.4</code> statement catches it with zero further config. <code>undebug all</code> / <code>no debug condition all</code>.</p>
+<h3 id="33-verify-the-pair">3.3 Verify the pair<a class="headerlink" href="#33-verify-the-pair" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>show ip ospf neighbor                       ! new FULL neighbor on Tunnel1
+show crypto session                         ! TWO sessions: peers 10.20.30.2 and 10.20.60.2
+show crypto isakmp sa                       ! both QM_IDLE
+show crypto ipsec sa | i peer|encaps|decaps ! counters on both peers
+show ip ospf interface Tunnel1 | i Cost     ! ~1000 (default 100 kbps tunnel bandwidth)
+</code></pre></div>
+<p>That cost is why neither tunnel attracts transit traffic — physical paths cost single digits. The tunnels are overlay-in-waiting, exactly as designed.</p>
+<p>While you're here, Tunnel0 on both ends is missing the MTU/MSS hardening — add it:
+<div class="highlight"><pre><span></span><code>interface Tunnel0
+ ip mtu 1400
+ ip tcp adjust-mss 1360
+</code></pre></div>
+(GRE adds 24 bytes, the IPsec transform another ~56 — without these, full-size TCP through the tunnel fragments or blackholes on PMTUD-hostile paths. A classic real-world GRE/IPsec gotcha.)</p>
+<h3 id="34-break-phase-2-mismatch-and-the-diagnostic-that-names-it">3.4 Break — phase-2 mismatch, and the diagnostic that names it<a class="headerlink" href="#34-break-phase-2-mismatch-and-the-diagnostic-that-names-it" title="Permanent link">&para;</a></h3>
+<p>On one side only, wrap Tunnel1 in a deliberately wrong transform:</p>
+<div class="highlight"><pre><span></span><code>! CORP-PBR-B
+crypto ipsec transform-set TS-WRONG esp-aes esp-sha256-hmac
+ mode tunnel
+crypto ipsec profile PROF-WRONG
+ set transform-set TS-WRONG
+!
+interface Tunnel1
+ tunnel protection ipsec profile PROF-WRONG
+</code></pre></div>
+<p>(Your live set is <code>esp-aes 256 esp-sha-hmac</code>; TS-WRONG differs in both cipher strength and hash, so the phase-2 proposal can't match.)</p>
+<p><strong>Read the failure signature:</strong>
+<div class="highlight"><pre><span></span><code>show crypto isakmp sa                        ! peer 10.10.60.2 STILL QM_IDLE - phase 1 is fine
+show crypto ipsec sa peer 10.10.60.2         ! no SAs / zero counters
+show crypto session                          ! that peer: DOWN-NEGOTIATING
+show interface Tunnel1 | i line protocol     ! down (protection configured, no SA)
+</code></pre></div></p>
+<p><strong>ISAKMP up + IPsec down = phase-2 problem</strong> (transform or proxy mismatch). Compare with the phase-1 signature you've already lived through in this lab: a PSK mismatch never reaches QM_IDLE — it thrashes in MM_NO_STATE. You ran that experiment involuntarily with a mistyped key; now you know both failure faces on sight.</p>
+<p>Restore:
+<div class="highlight"><pre><span></span><code>! CORP-PBR-B
+interface Tunnel1
+ tunnel protection ipsec profile GRE-IPSEC-PROFILE
+no crypto ipsec profile PROF-WRONG
+no crypto ipsec transform-set TS-WRONG esp-aes esp-sha256-hmac
+</code></pre></div></p>
+<p>If you ran Phase 2 already and left PIM on Tunnel0, one line (<code>ip pim sparse-mode</code>) on each Tunnel1 keeps the tunnels symmetric.</p>
+<hr />
+<h2 id="rollback-complete">Rollback (complete)<a class="headerlink" href="#rollback-complete" title="Permanent link">&para;</a></h2>
+<p><strong>Task 1</strong> cleans up as it goes — nothing persists except knowledge.
+<strong>Task 2:</strong> to revert to untracked PBR: re-enter plain <code>set ip next-hop &lt;primary&gt;</code> under each sequence, <code>no set ip next-hop verify-availability …</code> for both entries, then <code>no track 10/20</code>, <code>no ip sla 10/20</code> (per PBR).
+<strong>Task 3:</strong> <code>no interface Tunnel1</code> both ends (the <code>network 172.16.12.4</code> statement can stay, as it did before); MTU/MSS lines on Tunnel0 are keepers.</p>
+<h2 id="checklist-mapping">Checklist mapping<a class="headerlink" href="#checklist-mapping" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>ENCOR line</th>
+<th>Where you did it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OSPF filtering — area filter-list</td>
+<td>1.1 (NX-OS route-map flavour + IOS syntax noted)</td>
+</tr>
+<tr>
+<td>OSPF filtering — summarisation/not-advertise</td>
+<td>1.2</td>
+</tr>
+<tr>
+<td>OSPF filtering — distribute-list in / LSDB vs RIB</td>
+<td>1.3 (with the transit blackhole proven)</td>
+</tr>
+<tr>
+<td>OSPF filtering — redistribution route-map</td>
+<td>1.4</td>
+</tr>
+<tr>
+<td>Conditional debug</td>
+<td>1.5, 2.3, 3.1 (three different uses)</td>
+</tr>
+<tr>
+<td>PBR</td>
+<td>Task 2 (verify-availability, fail-over, fail-open)</td>
+</tr>
+<tr>
+<td>IP SLA</td>
+<td>Task 2 probes + tracks</td>
+</tr>
+<tr>
+<td>GRE tunnelling + IPsec</td>
+<td>Task 3 (build, MTU/MSS, phase-1 vs phase-2 failure signatures)</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "search.suggest"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>

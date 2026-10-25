@@ -1,0 +1,1227 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Three sites, four Cisco operating systems, and the operations stack that runs them">
+      
+      
+      
+      
+        <link rel="prev" href="../verify/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>Build It Yourself - Multi-Site Enterprise Network Lab</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="light-blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#build-this-lab-yourself-eve-ng-on-a-windows-pc" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Multi-Site Enterprise Network Lab" class="md-header__button md-logo" aria-label="Multi-Site Enterprise Network Lab" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Multi-Site Enterprise Network Lab
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Build It Yourself
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="light-blue"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Multi-Site Enterprise Network Lab" class="md-nav__button md-logo" aria-label="Multi-Site Enterprise Network Lab" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Multi-Site Enterprise Network Lab
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../verify/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Verify It Yourself
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build It Yourself
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build It Yourself
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-what-youll-build-and-what-you-need" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. What you'll build, and what you need
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-prepare-the-windows-pc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Prepare the Windows PC
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-install-eve-ng-community-edition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Install EVE-NG Community Edition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-get-the-images-upload-and-name-them" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Get the images, upload and name them
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-build-the-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Build the topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-load-the-configs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Load the configs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-connect-the-lab-to-your-network" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Connect the lab to your network
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-remote-access-and-port-forwarding-your-router-your-risk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Remote access and port forwarding: your router, your risk
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-the-operations-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. The operations stack
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-what-youll-build-and-what-you-need" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. What you'll build, and what you need
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-prepare-the-windows-pc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Prepare the Windows PC
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-install-eve-ng-community-edition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Install EVE-NG Community Edition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-get-the-images-upload-and-name-them" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Get the images, upload and name them
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-build-the-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Build the topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-load-the-configs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Load the configs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-connect-the-lab-to-your-network" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Connect the lab to your network
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-remote-access-and-port-forwarding-your-router-your-risk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Remote access and port forwarding: your router, your risk
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-the-operations-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. The operations stack
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sources
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="build-this-lab-yourself-eve-ng-on-a-windows-pc">Build this lab yourself: EVE-NG on a Windows PC<a class="headerlink" href="#build-this-lab-yourself-eve-ng-on-a-windows-pc" title="Permanent link">&para;</a></h1>
+<p>This guide takes you from a Windows PC to a running copy of the lab: EVE-NG installed, images added, the topology rebuilt and the configs loaded. It points at the configs, screenshots and runbooks in this repo.</p>
+<p><em>Last updated October 2026.</em></p>
+<h2 id="1-what-youll-build-and-what-you-need">1. What you'll build, and what you need<a class="headerlink" href="#1-what-youll-build-and-what-you-need" title="Permanent link">&para;</a></h2>
+<p>The full lab is about 45 nodes: three sites, a shared core, an MPLS provider network, an SD-WAN overlay, two firewalls, ISE, and an Ubuntu operations server. Running all of it at once needs a host in the 128 GB RAM class. You don't need that to start: build it in stages and grow into it.</p>
+<p><strong>Before you begin, know four things:</strong></p>
+<ul>
+<li><strong>No images are provided.</strong> Every Cisco and Palo Alto image here is licensed software, and you need your own (section 4).</li>
+<li><strong>There is no lab export file.</strong> You rebuild the topology by hand from the screenshot at <code>docs/evidence/EVE-NG-Topology.png</code> (section 5), then load the configs.</li>
+<li><strong>The published configs are sanitised.</strong> Every password, key and community has been replaced with a placeholder, and you put your own values in before they'll work (section 6).</li>
+<li><strong>Not every device has a published config.</strong> <code>configs/</code> covers the campus, core and Site Q switches and routers, CE1 and CE2, and the three SD-WAN edge routers. PE1, PE2 and the P routers, the SD-WAN controllers, both firewalls, ISE and the WLC have none, so you build those from the vendors' guides and, for ISE, the AAA runbook.</li>
+</ul>
+<p>The routers in <code>enarsi/configs/</code> belong to the ENARSI build, which is still in progress. This guide doesn't cover them yet.</p>
+<p><strong>Hardware</strong> (approximate; check each vendor's sizing guide for the versions you use)</p>
+<table>
+<thead>
+<tr>
+<th>Build stage</th>
+<th>Host RAM</th>
+<th>CPU</th>
+<th>Disk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Platform, core and campus (steps 1–2)</td>
+<td>32 GB</td>
+<td>8 threads with VT-x / AMD-V</td>
+<td>200 GB SSD</td>
+</tr>
+<tr>
+<td>Adding WAN, SD-WAN and firewalls (steps 3–5)</td>
+<td>64 GB</td>
+<td>12+ threads</td>
+<td>350 GB SSD</td>
+</tr>
+<tr>
+<td>Everything at once, including ISE</td>
+<td>128 GB</td>
+<td>16+ threads</td>
+<td>500 GB SSD</td>
+</tr>
+</tbody>
+</table>
+<p>ISE, vManage and the Nexus 9000v switches are the memory-hungry ones. You can run the lab in pieces: start only the nodes for the part you're working on.</p>
+<p><strong>What costs money</strong></p>
+<ul>
+<li><strong>Free:</strong> EVE-NG Community Edition, VMware Workstation Pro (personal use), Ubuntu, OPNsense, and the whole ops stack (LibreNMS, Oxidized, Akvorado, FreeRADIUS, tac_plus).</li>
+<li><strong>Licensed:</strong> all Cisco images (IOL, IOSv, CSR1000v, Nexus 9000v, XRv, the SD-WAN controllers and edges, ISE, C9800-CL) and the Palo Alto PA-VM.</li>
+</ul>
+<p><strong>Suggested build order</strong></p>
+<ol>
+<li>Platform: Windows prep, VMware, EVE-NG (sections 2–3)</li>
+<li>Core and campus: CSW1/2, NEXUS-A/B, distribution and access switches, the two PBR routers</li>
+<li>WAN: the MPLS PE/P routers, the CE routers, Site Q</li>
+<li>SD-WAN: vManage, vSmart, vBond and the three edges</li>
+<li>Security: Palo Alto, OPNsense, ISE, the WLC</li>
+<li>Operations: the Ubuntu server and its stack (section 9)</li>
+</ol>
+<p>Expect a weekend for the platform and core. The full build is weeks of evenings.</p>
+<h2 id="2-prepare-the-windows-pc">2. Prepare the Windows PC<a class="headerlink" href="#2-prepare-the-windows-pc" title="Permanent link">&para;</a></h2>
+<p>EVE-NG runs as a virtual machine inside VMware Workstation, and the devices run as VMs inside that. This nesting only works if the CPU's virtualisation extensions reach VMware directly: Intel VT-x/EPT or AMD's equivalent is a mandatory requirement. <a href="https://www.eve-ng.net/index.php/supported-hardware-and-software-systems/">Source: EVE-NG</a></p>
+<ol>
+<li><strong>Enable virtualisation in the BIOS/UEFI.</strong> Reboot into firmware setup and turn on Intel VT-x (Intel) or SVM / AMD-V (AMD). Without it, EVE-NG installs but nodes won't start.</li>
+<li>
+<p><strong>Turn off the Windows hypervisor.</strong> Windows features that use Hyper-V take the virtualisation extensions for themselves, and VMware can't nest. In an admin PowerShell:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">Disable-WindowsOptionalFeature</span> <span class="n">-Online</span> <span class="n">-FeatureName</span> <span class="n">Microsoft-Hyper-V-All</span>
+<span class="nb">Disable-WindowsOptionalFeature</span> <span class="n">-Online</span> <span class="n">-FeatureName</span> <span class="n">VirtualMachinePlatform</span>
+<span class="nb">Disable-WindowsOptionalFeature</span> <span class="n">-Online</span> <span class="n">-FeatureName</span> <span class="n">HypervisorPlatform</span>
+<span class="n">bcdedit</span> <span class="p">/</span><span class="nb">set </span><span class="n">hypervisorlaunchtype</span> <span class="n">off</span>
+</code></pre></div>
+</li>
+<li>
+<p><strong>Turn off Memory Integrity.</strong> Windows Security → Device security → Core isolation → Memory integrity: Off. This is virtualisation-based security, and it also holds the hypervisor.</p>
+</li>
+<li><strong>Reboot, then check.</strong> Run <code>msinfo32</code>. At the bottom of System Summary you want <em>Virtualization Enabled in Firmware: Yes</em>, and <strong>not</strong> <em>A hypervisor has been detected</em>. If that line is still there, something above is still on.</li>
+<li><strong>Install VMware Workstation Pro.</strong> It's free with no licence key; you need a free Broadcom account to download it from the Broadcom Support Portal. <a href="https://techdocs.broadcom.com/us/en/vmware-cis/desktop-hypervisors/workstation-pro/17-0/release-notes/vmware-workstation-1763-pro-release-notes.html">Source: Broadcom</a> EVE-NG supports Workstation 16.0 or later.</li>
+<li><strong>Install the helper tools on Windows:</strong> WinSCP (to copy images onto EVE-NG), and PuTTY or the EVE-NG Windows client pack (so console links open in a terminal).</li>
+</ol>
+<p><strong>The trade-off:</strong> turning off Hyper-V also breaks WSL2, Docker Desktop and Windows Sandbox, which depend on it. If you use those, you'll be switching between the two setups with a reboot. A dedicated machine, or EVE-NG installed directly on hardware, avoids this and runs faster.</p>
+<h2 id="3-install-eve-ng-community-edition">3. Install EVE-NG Community Edition<a class="headerlink" href="#3-install-eve-ng-community-edition" title="Permanent link">&para;</a></h2>
+<p>Download the free Community Edition, build a VM in Workstation with nested virtualisation ticked, and give it as much RAM as you can spare. EVE-NG's own step-by-step for VMware is section 3.1 of the <a href="https://www.eve-ng.net/index.php/documentation/professional-cookbook/">EVE-NG Cookbook</a>; this is the short version.</p>
+<ol class="task-list">
+<li><strong>Download</strong> the Community Edition ISO from the <a href="https://www.eve-ng.net/index.php/download/">EVE-NG download page</a>.</li>
+<li><strong>Create the VM</strong> in Workstation: Custom → <em>I will install the operating system later</em> → Linux, Ubuntu 64-bit.</li>
+<li><strong>CPU:</strong> as many cores as you can spare. Under Processors, tick <strong>Virtualize Intel VT-x/EPT or AMD-V/RVI</strong>. This one checkbox is what makes nested devices work.</li>
+<li><strong>Memory:</strong> as much as possible, leaving about 8 GB for Windows. RAM is what limits how much of the lab runs at once.</li>
+<li><strong>Disk:</strong> one virtual disk large enough for every image you'll add (see the table in section 1).</li>
+<li><strong>Network adapter:</strong> NAT to start self-contained, or Bridged to put EVE-NG on your home LAN.</li>
+<li><strong>Install:</strong> attach the ISO, boot, run the installer. On first boot EVE-NG asks for the root password, hostname and IP settings, and EVE-NG's <a href="https://www.eve-ng.net/index.php/documentation/installation/howto-configure-eve-during-first-boot/">first-boot guide</a> walks through each prompt.</li>
+<li><strong>Log in</strong> to the web UI at the IP shown on the console. Change the default admin password straight away.</li>
+<li>
+<p><strong>Update</strong> from the EVE-NG console in VMware Workstation: <code>apt update &amp;&amp; apt upgrade</code>.</p>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox" disabled/> Web UI loads from your Windows browser</p>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Default passwords changed (CLI and web)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> <strong>Images and nodes work:</strong> a node from any image you have starts and shows a console. That proves nesting works before you invest hours in images.</li>
+</ol>
+<h2 id="4-get-the-images-upload-and-name-them">4. Get the images, upload and name them<a class="headerlink" href="#4-get-the-images-upload-and-name-them" title="Permanent link">&para;</a></h2>
+<p>Every Cisco and Palo Alto image here is licensed software, and the licence decides where you may run it. Free "image hub" sites redistribute these images without the vendors' permission, so this guide doesn't point to them.</p>
+<p><strong>CML images can't be used in EVE-NG.</strong> <a href="https://developer.cisco.com/docs/modeling-labs/vm-images-for-cml-labs/">Cisco Modeling Labs</a> (CML) includes nearly every Cisco image this lab uses, but Cisco licenses those images only for use inside CML: "Downloading these VM images and using them outside Cisco Modeling Labs without a proper license is prohibited." That covers IOL, IOL L2, IOSv and XRv, which Cisco distributes with CML. For the other Cisco images, EVE-NG needs downloads from Cisco Software Central under an entitlement, such as an employer's support contract.</p>
+<p><strong>No entitlement? Build the Cisco side in CML instead.</strong> CML's reference platforms cover IOL, IOSv, CSR1000v, Nexus 9000v, IOS XRv 9000, Catalyst SD-WAN, C9800-CL and ISE, and it ships FreeRADIUS and TACACS+ containers too. The topology, configs and runbooks here carry over; only the platform changes. Check your CML edition's node limit, because the full lab is about 45 nodes.</p>
+<table>
+<thead>
+<tr>
+<th>Image</th>
+<th>Lab nodes</th>
+<th>Get it from</th>
+<th>EVE-NG folder</th>
+<th>Disk file</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.eve-ng.net/index.php/documentation/howtos/howto-add-cisco-iol-ios-on-linux/">Cisco IOL L2 17.12</a></td>
+<td>ASW/DSW-A and -B, the Q-SW switches</td>
+<td>Distributed with CML, for use in CML only</td>
+<td><code>/opt/unetlab/addons/iol/bin/</code> (a <code>.bin</code> file, no folder)</td>
+<td>none</td>
+</tr>
+<tr>
+<td><a href="https://www.eve-ng.net/index.php/documentation/howtos/howto-add-cisco-vios-from-virl/">Cisco IOSv 15.9</a></td>
+<td>Q-EDGE</td>
+<td>Distributed with CML, for use in CML only</td>
+<td><code>vios-</code></td>
+<td><code>virtioa.qcow2</code></td>
+</tr>
+<tr>
+<td><a href="https://www.eve-ng.net/index.php/documentation/howtos/howto-add-cisco-csrv1000-16-x-denali-everest-fuji/">Cisco CSR1000v 17.x</a></td>
+<td>CORP-PBR-A/B</td>
+<td>Cisco Software Central, with an entitlement</td>
+<td><code>csr1000vng-</code></td>
+<td><code>virtioa.qcow2</code></td>
+</tr>
+<tr>
+<td><a href="https://www.eve-ng.net/index.php/documentation/howtos/howto-add-cisco-csrv1000-sd-wan/">CSR1000v for SD-WAN</a></td>
+<td>Gret-Edge, Belv-Edge, Q-SDWANedge</td>
+<td>Cisco Software Central, with an entitlement</td>
+<td><code>csr1000vng-</code></td>
+<td><code>virtioa.qcow2</code></td>
+</tr>
+<tr>
+<td><a href="https://www.eve-ng.net/index.php/documentation/howtos/howto-add-cisco-nexus-9000v-switch/">Cisco Nexus 9000v</a></td>
+<td>CSW1/2, NEXUS-A/B</td>
+<td>Cisco Software Central, with an entitlement</td>
+<td><code>nxosv9k-</code></td>
+<td><code>sataa.qcow2</code></td>
+</tr>
+<tr>
+<td><a href="https://www.eve-ng.net/index.php/documentation/howtos/howto-add-cisco-xrv/">Cisco XRv</a></td>
+<td>CE1/CE2, PE1/PE2</td>
+<td>Distributed with CML, for use in CML only</td>
+<td><code>xrv-</code></td>
+<td><code>hda.qcow2</code></td>
+</tr>
+<tr>
+<td><a href="https://www.eve-ng.net/index.php/documentation/howtos/howto-add-cisco-viptela-images-set/">SD-WAN controllers</a></td>
+<td>vManage, vSmart, vBond</td>
+<td>Cisco Software Central, with an entitlement</td>
+<td><code>vtmgmt-</code>, <code>vtsmart-</code>, <code>vtbond-</code></td>
+<td><code>virtioa.qcow2</code> (vManage adds <code>virtiob.qcow2</code>)</td>
+</tr>
+<tr>
+<td><a href="https://www.eve-ng.net/index.php/documentation/howtos/howto-add-cisco-ise/">Cisco ISE 3.x</a></td>
+<td>ISE</td>
+<td>Cisco Software Central, with an entitlement</td>
+<td><code>ise-</code></td>
+<td><code>virtioa.qcow2</code></td>
+</tr>
+<tr>
+<td><a href="https://www.eve-ng.net/index.php/documentation/howtos/cisco-wireless-c9800-cl/">Cisco C9800-CL</a></td>
+<td>Gret-WLC</td>
+<td>Cisco Software Central, with an entitlement</td>
+<td>per the how-to</td>
+<td>per the how-to</td>
+</tr>
+<tr>
+<td><a href="https://www.eve-ng.net/index.php/documentation/howtos/howto-add-palo-alto/">Palo Alto PA-VM</a></td>
+<td>PaloAlto</td>
+<td>Palo Alto customer support portal</td>
+<td><code>paloalto-</code></td>
+<td><code>virtioa.qcow2</code></td>
+</tr>
+<tr>
+<td><a href="https://www.eve-ng.net/index.php/documentation/howtos/opnsense-firewall/">OPNsense</a></td>
+<td>OPNsense-VPN</td>
+<td>opnsense.org, free</td>
+<td>per the how-to</td>
+<td>per the how-to</td>
+</tr>
+<tr>
+<td><a href="https://www.eve-ng.net/index.php/documentation/howtos/howto-create-own-linux-host-image/">Ubuntu 24.04 Server</a></td>
+<td>NOC-NMS-OPS</td>
+<td>ubuntu.com, free</td>
+<td><code>linux-</code></td>
+<td><code>virtioa.qcow2</code></td>
+</tr>
+</tbody>
+</table>
+<p>Folder prefixes and disk names are from <a href="https://www.eve-ng.net/index.php/documentation/qemu-image-namings/">EVE-NG's naming table</a>. After the prefix you add your own version label, e.g. <code>nxosv9k-10.3.1</code>. The EIR-MPLS P routers have no published config, so use any IOS or IOS-XR router image you have.</p>
+<p><strong>Upload each image</strong></p>
+<ol>
+<li>Connect WinSCP to the EVE-NG IP as <code>root</code>.</li>
+<li>Create the folder, e.g. <code>/opt/unetlab/addons/qemu/csr1000vng-17.3.8a/</code>, and copy the disk in.</li>
+<li>
+<p>Rename the disk to the name in the table. If the vendor ships a <code>.vmdk</code>, convert it on the EVE-NG console:</p>
+<div class="highlight"><pre><span></span><code>qemu-img<span class="w"> </span>convert<span class="w"> </span>-f<span class="w"> </span>vmdk<span class="w"> </span>-O<span class="w"> </span>qcow2<span class="w"> </span>image.vmdk<span class="w"> </span>virtioa.qcow2
+</code></pre></div>
+</li>
+<li>
+<p>Fix permissions. EVE-NG won't see the image without this:</p>
+<div class="highlight"><pre><span></span><code>/opt/unetlab/wrappers/unl_wrapper<span class="w"> </span>-a<span class="w"> </span>fixpermissions
+</code></pre></div>
+</li>
+<li>
+<p>In a blank lab, add one node of that type and boot it before moving on to the next image.</p>
+</li>
+</ol>
+<h2 id="5-build-the-topology">5. Build the topology<a class="headerlink" href="#5-build-the-topology" title="Permanent link">&para;</a></h2>
+<p>There's no lab export file, so you recreate the topology by hand from the screenshot, one site at a time. It's the slowest step: about 45 nodes and their links. The screenshot is <code>docs/evidence/EVE-NG-Topology.png</code>, and the interface labels on every link are what you match.</p>
+<ol>
+<li><strong>Create a new lab</strong> in EVE-NG and give it a name.</li>
+<li><strong>Add nodes with the exact names</strong> from the screenshot: CSW1, NEXUS-A, CORP-PBR-A and so on. The configs, the Oxidized node list and the runbooks all refer to devices by those names.</li>
+<li><strong>Set enough interfaces</strong> when you add each node. The Nexus switches use Ethernet1/x ports well above 1/8, and the IOL switches need extra port groups for e0/0–e3/3. Too few, and links have nowhere to land.</li>
+<li><strong>Connect links port for port as labelled.</strong> The configs depend on the exact interfaces: a link on E1/5 instead of E1/6 leaves an IP address and an OSPF neighbour on a dead port.</li>
+<li><strong>Build in the order from section 1:</strong> the core first, then the campus switches and PBR routers. Get OSPF neighbours up in the core before adding the next site, so problems stay small.</li>
+<li><strong>Export the lab</strong> once it's built (More actions → Export). That file is your backup and your rebuild point.</li>
+</ol>
+<p><strong>Sites at a glance</strong></p>
+<table>
+<thead>
+<tr>
+<th>Site</th>
+<th>Nodes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Core</td>
+<td>CSW1, CSW2 (Nexus), CE1, CE2 (IOS XR)</td>
+</tr>
+<tr>
+<td>EIR-MPLS</td>
+<td>PE1, PE2 (IOS XR), and P routers EIR-MPLS-1–4, -A, -B</td>
+</tr>
+<tr>
+<td>Gret A</td>
+<td>Gret-Edge, NEXUS-A, CORP-PBR-A, DSW-A1/A2, ASW-A1–A3, Palo Alto, OPNsense, ISE, Gret-WLC, NOC-NMS-OPS</td>
+</tr>
+<tr>
+<td>Belv B</td>
+<td>Belv-Edge, NEXUS-B, CORP-PBR-B, DSW-B1/B2, ASW-B1–B3</td>
+</tr>
+<tr>
+<td>Site Q</td>
+<td>Q-EDGE, Q-SDWANedge, Q-SW30–Q-SW34, Q-SW36</td>
+</tr>
+<tr>
+<td>SD-WAN</td>
+<td>vManage, vSmart, vBond, a controller switch, an Internet router</td>
+</tr>
+</tbody>
+</table>
+<h2 id="6-load-the-configs">6. Load the configs<a class="headerlink" href="#6-load-the-configs" title="Permanent link">&para;</a></h2>
+<p>The configs in <code>configs/</code> are the real running configs with every secret replaced by a placeholder. Paste one as-is and the device rejects or mis-applies those lines, so replace each placeholder with your own value first.</p>
+<p><strong>What you'll find, and what to put there</strong></p>
+<table>
+<thead>
+<tr>
+<th>Placeholder</th>
+<th>Was</th>
+<th>Replace with</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;REDACTED-KEY&gt;</code></td>
+<td>TACACS+/RADIUS keys</td>
+<td>Your AAA shared secrets, matching the server side</td>
+</tr>
+<tr>
+<td><code>&lt;SNMP-COMMUNITY&gt;</code></td>
+<td>SNMP v2c community</td>
+<td>One read-only community, used everywhere</td>
+</tr>
+<tr>
+<td><code>&lt;CERTIFICATE-REDACTED&gt;</code></td>
+<td>Self-signed certificate blocks</td>
+<td>Delete the line; the device generates its own</td>
+</tr>
+<tr>
+<td><code>&lt;REDACTED&gt;</code></td>
+<td>Local passwords and secrets</td>
+<td>Your own admin and automation passwords</td>
+</tr>
+<tr>
+<td><code>&lt;CONTACT&gt;</code></td>
+<td>SNMP contact</td>
+<td>Any address, or delete the line</td>
+</tr>
+<tr>
+<td><code>&lt;SNMP-V3-KEY&gt;</code> / <code>&lt;SNMP-V3-PASS&gt;</code></td>
+<td>SNMPv3 auth and priv keys</td>
+<td>Cleartext passwords; NX-OS hashes them for you</td>
+</tr>
+<tr>
+<td><code>&lt;TACACS-KEY&gt;</code></td>
+<td>TACACS+ server key</td>
+<td>The same value as your tac_plus / ISE config</td>
+</tr>
+<tr>
+<td><code>&lt;SERIAL&gt;</code></td>
+<td>CSR1000v licence serial</td>
+<td>Delete the line; it's generated per VM</td>
+</tr>
+<tr>
+<td><code>&lt;PSK&gt;</code></td>
+<td>IPsec pre-shared keys</td>
+<td>One long random key, the same on both tunnel ends</td>
+</tr>
+</tbody>
+</table>
+<p>Any other placeholder in angle brackets is a secret too and gets the same treatment. The domain name has also been rewritten to <code>lab.internal</code>, which works as-is.</p>
+<p><strong>Pick your values once, keep them in a file outside the repo, and reuse them.</strong> Several secrets have to match across devices: both ends of a tunnel, every switch and the RADIUS server. Making them up per device is how logins break.</p>
+<p><strong>Getting a config onto a node</strong></p>
+<ol>
+<li>Boot the node and open its console from EVE-NG.</li>
+<li>Fill in the placeholders in a copy of that device's file (they're named by management IP, e.g. <code>10.99.0.1</code> = NEXUS-A).</li>
+<li>Paste in chunks of 20–30 lines rather than the whole file, because consoles drop characters on long pastes.</li>
+<li>Save it: <code>write memory</code> (IOS/IOS-XE), <code>copy run start</code> (NX-OS), <code>commit</code> (IOS-XR).</li>
+<li>Check: <code>show ip interface brief</code> and <code>show ip ospf neighbor</code> before moving to the next device.</li>
+</ol>
+<p>The interface names in each config must match how you cabled the node in section 5. A mismatch is the most common reason a pasted config "doesn't work".</p>
+<h2 id="7-connect-the-lab-to-your-network">7. Connect the lab to your network<a class="headerlink" href="#7-connect-the-lab-to-your-network" title="Permanent link">&para;</a></h2>
+<p>The lab reaches the outside world only through EVE-NG <strong>cloud</strong> networks, and how they meet your home network is yours to design. The author's home addressing and router setup aren't in this repo, and wouldn't fit your network anyway.</p>
+<p><strong>How clouds map:</strong> the <em>Management (Cloud0)</em> network is <code>pnet0</code>, bridged to the EVE-NG VM's first network adapter. <em>Cloud1</em> to <em>Cloud9</em> are <code>pnet1</code>–<code>pnet9</code>, bridged to the VM's second to tenth adapters. Add adapters in VMware to use them, and choose for each whether it's NAT, host-only or bridged to your LAN.</p>
+<table>
+<thead>
+<tr>
+<th>Cloud in the screenshot</th>
+<th>What it does here</th>
+<th>Safe default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Management</td>
+<td>Out-of-band management for every device, and how the ops server reaches them</td>
+<td>Host-only or NAT, private to your PC</td>
+</tr>
+<tr>
+<td>Internet, SDWAN-Transit</td>
+<td>Internet path for the SD-WAN controllers and edges</td>
+<td>VMware NAT: outbound internet, nothing inbound</td>
+</tr>
+<tr>
+<td>HomeLAN</td>
+<td>The ops server's leg into a home network</td>
+<td>Leave unconnected unless you want the ops server reachable from your LAN</td>
+</tr>
+<tr>
+<td>GPoutside, WireGuard/IPsec VPN</td>
+<td>The firewalls' outside interfaces for remote-access VPN</td>
+<td>VMware NAT until you deliberately set up remote access (section 8)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Start with nothing bridged.</strong> Everything on host-only or NAT means nothing in the lab can be reached from your LAN or the internet. Add a bridge only when you have a reason for it.</p>
+<p><strong>Before you bridge anything, check two things:</strong></p>
+<ul>
+<li><strong>Addressing overlap.</strong> The lab uses <code>10.x</code>, <code>172.16.12.x</code> and <code>192.168.x</code> ranges. If your home LAN sits in one of them, re-address one side first, or routing breaks in confusing ways.</li>
+<li><strong>DHCP leaking.</strong> A lab device serving DHCP on a bridged network will hand addresses to your real devices. Check which lab interfaces run DHCP before bridging their segment.</li>
+</ul>
+<h2 id="8-remote-access-and-port-forwarding-your-router-your-risk">8. Remote access and port forwarding: your router, your risk<a class="headerlink" href="#8-remote-access-and-port-forwarding-your-router-your-risk" title="Permanent link">&para;</a></h2>
+<p><strong>This guide doesn't configure your home router, and nothing in the lab needs it to work.</strong> Remote access (reaching the lab from outside your home) is optional, and every port you forward is a door you've opened onto your home network. If you do it, you design it, and you own the result.</p>
+<p><strong>How this lab does it, as a pattern (not values to copy):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Forwarded port</th>
+<th>Lands on</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GlobalProtect remote-access VPN</td>
+<td>443 TCP/UDP</td>
+<td>Palo Alto outside interface</td>
+</tr>
+<tr>
+<td>WireGuard</td>
+<td>51820 UDP</td>
+<td>OPNsense</td>
+</tr>
+<tr>
+<td>IPsec (IKE, NAT-T)</td>
+<td>500 and 4500 UDP</td>
+<td>OPNsense</td>
+</tr>
+</tbody>
+</table>
+<p>Everything else (the EVE-NG web UI, LibreNMS, Oxidized, Akvorado, ISE, the firewall admin pages) is reached <em>through</em> a VPN, never forwarded directly.</p>
+<p><strong>If you set up your own:</strong></p>
+<ul class="task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Forward only VPN ports. Never forward a management web interface.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Require more than a password: certificate authentication, MFA, or both. A forwarded portal gets scanned within days. This lab's GlobalProtect logs show failed attempts from scanners in several countries, all stopped by the certificate requirement.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Keep PAN-OS and OPNsense patched. An exposed VPN on an old build is the standing risk.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Make the firewall rule between the lab and your home LAN deny-by-default, so a compromised lab VM can't reach your NAS, backups or personal machines.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Test from outside: from a phone on mobile data, run <code>nmap -Pn -F &lt;your WAN IP&gt;</code>. Anything open beyond the VPN ports you chose is a finding.</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Don't be surprised by ports you didn't open. Some ISP routers answer on their own management ports (80, 443, 8080, 8443) from the WAN side. Those belong to the ISP's box, not your lab, and port forwarding can't close them.</li>
+</ul>
+<p><strong>If you publish your own build,</strong> keep your WAN IP, VPN keys, certificates and router screenshots out of it. Those are what turn a write-up into a map of your network.</p>
+<h2 id="9-the-operations-stack">9. The operations stack<a class="headerlink" href="#9-the-operations-stack" title="Permanent link">&para;</a></h2>
+<p>The ops tools all run on one Ubuntu 24.04 Server node, NOC-NMS-OPS, on the management network. Install each tool from its own project documentation, then use the runbooks in <code>docs/runbooks/</code> for the lab-specific wiring. The runbooks carry placeholders for secrets too, so use the same values you chose in section 6.</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Job</th>
+<th>Lab-specific guide in this repo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LibreNMS</td>
+<td>SNMP monitoring and alerting</td>
+<td>Uses the SNMP community / v3 credentials from section 6</td>
+</tr>
+<tr>
+<td>Oxidized</td>
+<td>Scheduled config backup into git</td>
+<td>Poll each device once, by management IP. Its config file holds the device login, so keep it outside any repo and <code>chmod 600</code> it</td>
+</tr>
+<tr>
+<td>Akvorado</td>
+<td>NetFlow collection and analysis</td>
+<td><code>EVE-NG-SidePhase-Lab-Wide-Flows.md</code></td>
+</tr>
+<tr>
+<td>FreeRADIUS + Google Authenticator</td>
+<td>RADIUS with phone-based one-time passwords</td>
+<td><code>EVE-NG-SidePhase-AAA-TACACS-RADIUS-OTP.md</code></td>
+</tr>
+<tr>
+<td>tac_plus</td>
+<td>TACACS+, built from source</td>
+<td>Same AAA runbook, Part 0</td>
+</tr>
+<tr>
+<td><code>scripts/lab-health.sh</code></td>
+<td>Health checks every 15 minutes</td>
+<td>Needs <code>SNMP_COMMUNITY</code> and <code>RADIUS_LOCAL_SECRET</code> set in its environment</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The phase runbooks</strong> build the routing features in order once the topology is up:</p>
+<ol>
+<li><code>EVE-NG-Phase1-Filtering-PBR-Tunnel.md</code>: OSPF filtering, policy-based routing with IP SLA, the second GRE/IPsec tunnel</li>
+<li><code>EVE-NG-Phase2-Multicast.md</code>: PIM sparse-mode, SSM, anycast RP with MSDP</li>
+<li><code>EVE-NG-Phase3-Assurance-Automation.md</code>: QoS, NetFlow, RESTCONF/NETCONF, AAA, control-plane policing</li>
+</ol>
+<p><strong>Publishing your own build?</strong> <code>scripts/sanitize-configs.sh</code> strips secrets from Oxidized exports and audits the result, and <code>.gitleaks.toml</code> adds the lab-specific secret rules gitleaks misses by default. Run both before anything goes public.</p>
+<h2 id="10-troubleshooting">10. Troubleshooting<a class="headerlink" href="#10-troubleshooting" title="Permanent link">&para;</a></h2>
+<p>Most failures come from four places: nesting, image naming, placeholders left in configs, and cabling that doesn't match the config.</p>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nodes start then stop at once; VMware says VT-x isn't supported</td>
+<td>Hyper-V or Memory Integrity still holds the hypervisor, or the VT-x box isn't ticked</td>
+<td>Redo section 2; <code>msinfo32</code> must not say "A hypervisor has been detected"</td>
+</tr>
+<tr>
+<td>An image doesn't appear in the Add Node list</td>
+<td>Wrong folder prefix or disk file name, or permissions not fixed</td>
+<td>Check against the table in section 4, then run <code>unl_wrapper -a fixpermissions</code></td>
+</tr>
+<tr>
+<td>Console is blank for a long time</td>
+<td>Some images boot slowly: Nexus 9000v, SD-WAN Manager and ISE take many minutes</td>
+<td>Wait, and watch the node's CPU in EVE-NG; ISE is the slowest by far</td>
+</tr>
+<tr>
+<td>Pasted config throws errors</td>
+<td>A placeholder wasn't replaced, or an interface name doesn't exist on that node</td>
+<td>Search the file for <code>&lt;</code> before pasting; match interfaces to section 5</td>
+</tr>
+<tr>
+<td>OSPF neighbours don't form</td>
+<td>Link on the wrong port, mismatched area, or MTU mismatch</td>
+<td><code>show ip ospf interface</code> on both ends; compare against the screenshot's port labels</td>
+</tr>
+<tr>
+<td>RADIUS test times out instead of rejecting</td>
+<td>Service not running, or the client secret doesn't match</td>
+<td>Run <code>freeradius -X</code> in the foreground and watch the packet arrive</td>
+</tr>
+<tr>
+<td>Akvorado drops flows as "metadata missing"</td>
+<td>Its SNMP poll to the exporter's source address is failing</td>
+<td>Check the community and the device's SNMP ACL; the flows runbook explains the check</td>
+</tr>
+<tr>
+<td>SD-WAN edges won't join the controllers</td>
+<td>Certificates, organisation name or vBond reachability</td>
+<td>Follow EVE-NG's <a href="https://www.eve-ng.net/index.php/documentation/howtos/howto-add-cisco-viptela-images-set/">SD-WAN images how-to</a> for the certificate setup</td>
+</tr>
+<tr>
+<td>Throughput is tiny on CSR1000v or PA-VM</td>
+<td>Unlicensed images run throttled or with limited features</td>
+<td>Expected in a lab; apply an evaluation licence if a test needs more</td>
+</tr>
+<tr>
+<td>Everything is sluggish</td>
+<td>More nodes running than RAM allows, so the host is swapping</td>
+<td>Stop nodes you're not using and run the lab in parts</td>
+</tr>
+</tbody>
+</table>
+<h2 id="sources">Sources<a class="headerlink" href="#sources" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://www.eve-ng.net/index.php/supported-hardware-and-software-systems/">EVE-NG: supported hardware and software</a></li>
+<li><a href="https://www.eve-ng.net/index.php/documentation/qemu-image-namings/">EVE-NG: QEMU image naming</a></li>
+<li><a href="https://www.eve-ng.net/index.php/documentation/installation/virtual-machine-install/">EVE-NG: virtual machine install</a></li>
+<li><a href="https://techdocs.broadcom.com/us/en/vmware-cis/desktop-hypervisors/workstation-pro/17-0/release-notes/vmware-workstation-1763-pro-release-notes.html">Broadcom: VMware Workstation 17.6.3 Pro release notes</a></li>
+<li><a href="https://developer.cisco.com/docs/modeling-labs/vm-images-for-cml-labs/">Cisco DevNet: VM images for CML labs</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.top", "content.code.copy", "search.suggest"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>
