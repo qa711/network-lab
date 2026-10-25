@@ -279,7 +279,7 @@ flowchart LR
 SNMP polling across the estate: interface throughput and errors, device health, availability alerting. Setting it up properly meant working through polling-interval tuning, RRD step conversion, `rrdcached`, PHP timezone problems and SNMPv3 credentials. None of it is interesting until it's wrong, and all of it is part of running a monitoring platform.
 
 <p align="center">
-  <a href="docs/evidence/LibreNMS-Dashboard.png"><img src="docs/evidence/LibreNMS-Dashboard.png" width="49%" alt="LibreNMS dashboard"></a>
+  <a href="docs/evidence/LibreNMS-Dashboard-01.png"><img src="docs/evidence/LibreNMS-Dashboard-01.png" width="49%" alt="LibreNMS dashboard"></a>
   <a href="docs/evidence/LibreNMS-Device-List.png"><img src="docs/evidence/LibreNMS-Device-List.png" width="49%" alt="LibreNMS device list"></a>
 </p>
 
