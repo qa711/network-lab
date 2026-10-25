@@ -81,7 +81,8 @@ snmp-server source-interface traps Vlan99
 snmp-server source-interface informs Vlan99
 snmp-server user admin priv-15 auth sha <SNMP-V3-KEY> priv aes-128 <SNMP-V3-PASS> localizedkey
 snmp-server user admin network-admin
-snmp-server host 10.99.0.12 informs version 2c <SNMP-COMMUNITY> udp-port 161
+snmp-server host 10.99.0.12 traps version 2c <SNMP-COMMUNITY>
+snmp-server host 10.99.0.12 use-vrf DMZ
 rmon event 1 description FATAL(1) owner PMON@FATAL
 rmon event 2 description CRITICAL(2) owner PMON@CRITICAL
 rmon event 3 description ERROR(3) owner PMON@ERROR
@@ -94,6 +95,7 @@ snmp-server enable traps system Clock-change-notification
 snmp-server enable traps syslog message-generated
 snmp-server community <SNMP-COMMUNITY> group network-operator
 ntp server 10.99.0.12 use-vrf DMZ
+ntp server 192.168.4.2 use-vrf DMZ
 ntp source 10.99.1.1
 aaa authentication login default group ISE-GROUP local 
 aaa authentication login console local 
@@ -479,5 +481,7 @@ router ospf 72
     area 0.0.0.0 range 10.99.1.0/24
     area 0.0.0.0 range 10.99.11.0/30
 
+logging server 10.99.0.12 6 use-vrf DMZ
+logging source-interface Vlan99
 
 

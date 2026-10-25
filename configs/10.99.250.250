@@ -22,8 +22,8 @@
 ! 
 ! 
 !
-! Last configuration change at 15:44:55 UTC Sat Oct 24 2026 by automate
-! NVRAM config last updated at 15:45:16 UTC Sat Oct 24 2026 by automate
+! Last configuration change at 10:25:03 UTC Sun Oct 25 2026 by automate
+! NVRAM config last updated at 10:25:21 UTC Sun Oct 25 2026 by automate
 !
 version 17.3
 service timestamps debug datetime msec
@@ -409,8 +409,12 @@ snmp-server group nms v3 priv
 snmp-server group NMSGROUP v3 priv read NMSVIEW access SNMP-NMS
 snmp-server view NMSVIEW iso included
 snmp-server community <SNMP-COMMUNITY> RO SNMP-NMS
+snmp-server trap-source Loopback99
 snmp-server location Gret
-snmp-server host 10.99.0.12 version 2c <SNMP-COMMUNITY> 
+snmp-server enable traps snmp linkdown linkup coldstart warmstart
+snmp-server enable traps ospf state-change
+snmp-server enable traps config
+snmp-server host 10.99.0.12 vrf DMZ version 2c <SNMP-COMMUNITY> 
 !
 tacacs server NMS-TAC
  address ipv4 10.99.0.12

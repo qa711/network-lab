@@ -12,7 +12,7 @@
 ! VTP: show vtp status
 ! 
 !
-! Last configuration change at 17:32:38 UTC Sat Oct 24 2026 by automate
+! Last configuration change at 13:22:39 UTC Sun Oct 25 2026 by automate
 !
 version 17.12
 service timestamps debug datetime msec
@@ -224,9 +224,10 @@ snmp-server group nms v3 priv
 snmp-server group NMSGROUP v3 priv 
 snmp-server view NMSVIEW iso included
 snmp-server community <SNMP-COMMUNITY> RO SNMP-NMS
+snmp-server trap-source Ethernet0/0
 snmp-server location Outside
 snmp-server contact <CONTACT>
-snmp-server enable traps snmp linkdown linkup
+snmp-server enable traps snmp linkdown linkup coldstart warmstart
 snmp-server enable traps ospf state-change
 snmp-server enable traps ospf errors
 snmp-server enable traps ospf retransmit
@@ -239,8 +240,6 @@ snmp-server enable traps ospf cisco-specific retransmit
 snmp-server enable traps ospf cisco-specific lsa
 snmp-server enable traps event-manager
 snmp-server enable traps hsrp
-snmp-server host 10.99.0.12 vrf DMZ informs version 2c <SNMP-COMMUNITY> 
-snmp-server host 10.99.0.12 version 2c <SNMP-COMMUNITY> 
 snmp-server host 10.99.0.12 vrf DMZ version 2c <SNMP-COMMUNITY> 
 tacacs server NMS-TAC
  address ipv4 10.99.0.12

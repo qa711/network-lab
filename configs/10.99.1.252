@@ -83,7 +83,8 @@ snmp-server source-interface informs loopback99
 snmp-server user admin priv-15 auth sha <SNMP-V3-KEY> priv aes-128 <SNMP-V3-PASS> localizedkey
 snmp-server user admin network-admin
 snmp-server user automate network-admin auth sha <SNMP-V3-KEY> priv aes-128 <SNMP-V3-PASS> localizedkey
-snmp-server host 10.99.0.12 informs version 2c <SNMP-COMMUNITY>
+snmp-server host 10.99.0.12 traps version 2c <SNMP-COMMUNITY>
+snmp-server host 10.99.0.12 use-vrf DMZ
 rmon event 1 description FATAL(1) owner PMON@FATAL
 rmon event 2 description CRITICAL(2) owner PMON@CRITICAL
 rmon event 3 description ERROR(3) owner PMON@ERROR
@@ -479,5 +480,7 @@ router ospf 72
     area 0.0.0.0 range 192.168.2.0/30
     area 0.0.0.0 range 192.168.4.0/30
 
+logging server 10.99.0.12 6 use-vrf DMZ
+logging source-interface loopback99
 
 

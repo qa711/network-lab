@@ -1,0 +1,242 @@
+---
+# snmp-traps-all.yaml - send SNMP traps from every Cisco box to the NMS.
+#
+# How each box's settings are worked out - the same way as ntp-all.yaml:
+#   1. Take the address Ansible logs in on (normally the one LibreNMS polls).
+#   2. Find which interface holds that address, and which VRF it's in.
+#   3. Send traps from that interface, in that VRF, so each trap arrives
+#      from the address LibreNMS knows the box by.
+#
+# It also tidies what's already there. Any other trap or inform line aimed at
+# the NMS (informs, the wrong VRF, the wrong port) is removed, so each box
+# sends one copy of each trap to the right place.
+#
+# The trap line reuses the community the box already uses, so no community
+# string is written in this file.
+#
+# Dry run first - shows what each box would get, changes nothing:
+#   ansible-playbook snmp-traps-all.yaml --check -v
+# One box only:
+#   ansible-playbook snmp-traps-all.yaml --limit dsw-a1
+#
+# Needs LAB_USER / LAB_PASS exported (~/.lab-creds).
+# Covers the XE and Nexus inventory groups. No XR play: CE1/CE2 are CSRs now
+# and no XR box is in the Oxidized backups. Not the firewalls or SD-WAN edges.
+
+- name: SNMP traps | IOS and IOS-XE
+  hosts: XE
+  gather_facts: false
+  connection: ansible.netcommon.network_cli
+  vars:
+    ansible_network_os: cisco.ios.ios
+    ansible_user: "{{ lookup('env', 'LAB_USER') }}"
+    ansible_password: "{{ lookup('env', 'LAB_PASS') }}"
+    ansible_become: true
+    ansible_become_method: enable
+
+    # Where traps go. Listed once here (&trap_receivers) and reused by the
+    # NX-OS play below (*trap_receivers).
+    trap_receivers: &trap_receivers
+      - 10.99.0.12    # NMS (snmptrapd -> LibreNMS)
+
+    # The address Ansible logs in on - same as ntp-all.yaml.
+    mgmt_name: &mgmt_name "{{ ansible_host | default(inventory_hostname) }}"
+    mgmt_ip: &mgmt_ip >-
+      {{ mgmt_name if mgmt_name is match('^[0-9.]+$')
+         else lookup('ansible.builtin.pipe',
+                     'getent ahostsv4 ' ~ mgmt_name ~ " | awk 'NR==1{print $1}'") }}
+
+    # What an interface or VRF name looks like: letters, digits and / . : - _
+    name_re: &name_re '[A-Za-z0-9_./:-]+'
+
+    # Matches a "snmp-server host" line aimed at any of the receivers above.
+    nms_re: &nms_re "^snmp-server host ({{ trap_receivers | map('regex_escape') | join('|') }}) "
+
+  tasks:
+    - name: List interface addresses
+      cisco.ios.ios_command:
+        commands: show ip interface brief
+      register: brief
+
+    - name: Find the interface that holds the management address
+      ansible.builtin.set_fact:
+        mgmt_if: >-
+          {{ brief.stdout[0]
+             | regex_findall('^(' ~ name_re ~ ') +' ~ (mgmt_ip | regex_escape) ~ '(?: |$)', multiline=True)
+             | first | default('') }}
+
+    - name: Stop on this box if it wasn't found
+      ansible.builtin.assert:
+        that: mgmt_if | length > 0
+        fail_msg: "{{ mgmt_ip }} isn't on any interface here - set this box up by hand"
+        quiet: true
+
+    - name: Read that interface's config, the SNMP config, and the routing protocols
+      cisco.ios.ios_command:
+        commands:
+          - "show running-config interface {{ mgmt_if }}"
+          - show running-config | include ^snmp-server
+          - show running-config | include ^router
+      register: cfg
+
+    - name: Work out what this box has now
+      ansible.builtin.set_fact:
+        # Blank VRF means the normal routing table.
+        mgmt_vrf: >-
+          {{ cfg.stdout[0]
+             | regex_findall('vrf forwarding (' ~ name_re ~ ')')
+             | first | default('') }}
+        # Every trap or inform line aimed at the NMS today.
+        nms_hosts: "{{ snmp_lines | select('match', nms_re) | list }}"
+        # Prefer the community the box already sends to the NMS with,
+        # otherwise its read-only polling community.
+        trap_community: >-
+          {{ ((snmp_lines | select('match', nms_re) | join(' ')
+                | regex_findall('version 2c ([^ ]+)'))
+              + (snmp_lines | select('match', 'snmp-server community [^ ]+ (view [^ ]+ )?RO')
+                | join(' ') | regex_findall('snmp-server community ([^ ]+)')))
+             | first | default('') }}
+        routers: "{{ cfg.stdout[2] }}"
+      vars:
+        snmp_lines: "{{ cfg.stdout[1].splitlines() | map('trim') | list }}"
+
+    - name: Stop on this box if it has no v2c community to send with
+      ansible.builtin.assert:
+        that: trap_community | length > 0
+        fail_msg: "No SNMP v2c community on this box - set traps up by hand"
+        quiet: true
+
+    - name: Build the lines this box should have
+      ansible.builtin.set_fact:
+        host_lines: >-
+          {{ trap_receivers | map('regex_replace', '^', 'snmp-server host ')
+             | map('regex_replace', '$', vrf_part ~ ' version 2c ' ~ trap_community) | list }}
+        # Link up/down and reboots on every box. OSPF and BGP only where that
+        # protocol runs, so switches that don't route aren't sent commands they
+        # may not have. No config-change traps: the IOL router image rejects
+        # them, and syslog already reports config changes.
+        trap_lines: >-
+          {{ ['snmp-server enable traps snmp linkdown linkup coldstart warmstart']
+             + (['snmp-server enable traps ospf state-change'] if 'router ospf' in routers else [])
+             + (['snmp-server enable traps bgp'] if 'router bgp' in routers else []) }}
+      vars:
+        vrf_part: "{{ ' vrf ' ~ mgmt_vrf if mgmt_vrf else '' }}"
+
+    - name: Show what was found
+      ansible.builtin.debug:
+        msg: >-
+          {{ mgmt_ip }} is on {{ mgmt_if }}, VRF {{ mgmt_vrf or 'none (normal routing table)' }}.
+          {{ nms_hosts | length }} trap/inform line(s) aimed at the NMS now,
+          {{ nms_hosts | reject('in', host_lines) | list | length }} to remove.
+
+    # Removed in a step of its own, so the next step re-reads the config and
+    # puts the right line back even if IOS took more out than asked.
+    - name: Remove other trap/inform lines aimed at the NMS
+      cisco.ios.ios_config:
+        lines: "{{ nms_hosts | reject('in', host_lines) | map('regex_replace', '^', 'no ') | list }}"
+      when: nms_hosts | reject('in', host_lines) | list | length > 0
+
+    - name: Set where traps go, where they come from, and which are sent
+      cisco.ios.ios_config:
+        lines: "{{ host_lines + ['snmp-server trap-source ' ~ mgmt_if] + trap_lines }}"
+        save_when: modified
+
+
+- name: SNMP traps | NX-OS
+  hosts: Nexus
+  gather_facts: false
+  connection: ansible.netcommon.network_cli
+  vars:
+    ansible_network_os: cisco.nxos.nxos
+    ansible_user: "{{ lookup('env', 'LAB_USER') }}"
+    ansible_password: "{{ lookup('env', 'LAB_PASS') }}"
+    trap_receivers: *trap_receivers
+    mgmt_name: *mgmt_name
+    mgmt_ip: *mgmt_ip
+    name_re: *name_re
+    nms_re: *nms_re
+
+  tasks:
+    - name: List interface addresses in every VRF
+      cisco.nxos.nxos_command:
+        commands: show ip interface brief vrf all
+      register: brief
+
+    - name: Find the interface that holds the management address
+      ansible.builtin.set_fact:
+        mgmt_if: >-
+          {{ brief.stdout[0]
+             | regex_findall('^(' ~ name_re ~ ') +' ~ (mgmt_ip | regex_escape) ~ '(?: |$)', multiline=True)
+             | first | default('') }}
+
+    - name: Stop on this box if it wasn't found
+      ansible.builtin.assert:
+        that: mgmt_if | length > 0
+        fail_msg: "{{ mgmt_ip }} isn't on any interface here - set this box up by hand"
+        quiet: true
+
+    - name: Read that interface's config and the SNMP config
+      cisco.nxos.nxos_command:
+        commands:
+          - "show running-config interface {{ mgmt_if }}"
+          - show running-config snmp
+      register: cfg
+
+    - name: Work out what this box has now
+      ansible.builtin.set_fact:
+        mgmt_vrf: >-
+          {{ cfg.stdout[0]
+             | regex_findall('vrf member (' ~ name_re ~ ')')
+             | first | default('default') }}
+        # NX-OS keeps "use-vrf" and "source-interface" on lines of their own;
+        # these are just the lines that say traps or informs.
+        nms_hosts: "{{ snmp_lines | select('match', nms_re) | select('search', ' (traps|informs) ') | list }}"
+        trap_community: >-
+          {{ ((snmp_lines | select('match', nms_re) | join(' ')
+                | regex_findall('version 2c ([^ ]+)'))
+              + (snmp_lines | select('match', 'snmp-server community [^ ]+ group network-operator')
+                | join(' ') | regex_findall('snmp-server community ([^ ]+)')))
+             | first | default('') }}
+      vars:
+        snmp_lines: "{{ cfg.stdout[1].splitlines() | map('trim') | list }}"
+
+    - name: Stop on this box if it has no v2c community to send with
+      ansible.builtin.assert:
+        that: trap_community | length > 0
+        fail_msg: "No SNMP v2c community on this box - set traps up by hand"
+        quiet: true
+
+    # The source command needs the interface's full name, so Lo99 becomes
+    # loopback99 - the name the running config shows.
+    - name: Build the lines this box should have
+      ansible.builtin.set_fact:
+        notify_lines: >-
+          {{ trap_receivers | map('regex_replace', '^', 'snmp-server host ')
+             | map('regex_replace', '$', ' traps version 2c ' ~ trap_community) | list }}
+        vrf_lines: >-
+          {{ trap_receivers | map('regex_replace', '^', 'snmp-server host ')
+             | map('regex_replace', '$', ' use-vrf ' ~ mgmt_vrf) | list }}
+        long_if: >-
+          {{ 'loopback' ~ mgmt_if[2:] if mgmt_if is match('Lo[0-9]')
+             else 'Ethernet' ~ mgmt_if[3:] if mgmt_if is match('Eth[0-9]')
+             else 'port-channel' ~ mgmt_if[2:] if mgmt_if is match('Po[0-9]')
+             else mgmt_if }}
+
+    - name: Show what was found
+      ansible.builtin.debug:
+        msg: >-
+          {{ mgmt_ip }} is on {{ mgmt_if }}, VRF {{ mgmt_vrf }}.
+          {{ nms_hosts | length }} trap/inform line(s) aimed at the NMS now,
+          {{ nms_hosts | reject('in', notify_lines) | list | length }} to remove.
+
+    - name: Remove other trap/inform lines aimed at the NMS
+      cisco.nxos.nxos_config:
+        lines: "{{ nms_hosts | reject('in', notify_lines) | map('regex_replace', '^', 'no ') | list }}"
+      when: nms_hosts | reject('in', notify_lines) | list | length > 0
+
+    # Trap types are left as they are on the Nexus boxes: they already send
+    # OSPF, config-change and link traps. This only fixes where they go.
+    - name: Set where traps go and where they come from
+      cisco.nxos.nxos_config:
+        lines: "{{ notify_lines + vrf_lines + ['snmp-server source-interface traps ' ~ long_if] }}"
+        save_when: modified

@@ -25,6 +25,7 @@
 ! VTP:                                     0xC6 0xB5 0x6F 0x0C 0x84 0x7C 0x0D 0xFE 
 ! 
 !
+! Last configuration change at 11:23:43 UTC Sun Oct 25 2026 by automate
 !
 version 17.12
 service timestamps debug datetime msec
@@ -246,6 +247,8 @@ ip access-list standard SNMP-NMS
 !
 !
 ip radius source-interface Vlan99 
+logging source-interface Vlan99
+logging host 10.99.0.12
 !
 snmp-server view NMSVIEW iso included
 snmp-server community <SNMP-COMMUNITY> RO SNMP-NMS
@@ -253,7 +256,7 @@ snmp-server trap-source Vlan99
 snmp-server source-interface informs Vlan99
 snmp-server location Belv
 snmp-server contact <CONTACT>
-snmp-server enable traps snmp linkdown linkup
+snmp-server enable traps snmp linkdown linkup coldstart warmstart
 snmp-server enable traps ospf state-change
 snmp-server enable traps ospf errors
 snmp-server enable traps ospf retransmit
@@ -264,6 +267,7 @@ snmp-server enable traps ospf cisco-specific state-change shamlink neighbor
 snmp-server enable traps ospf cisco-specific errors
 snmp-server enable traps ospf cisco-specific retransmit
 snmp-server enable traps ospf cisco-specific lsa
+snmp-server enable traps config
 snmp-server enable traps event-manager
 snmp-server enable traps hsrp
 snmp-server host 10.99.0.12 version 2c <SNMP-COMMUNITY> 
